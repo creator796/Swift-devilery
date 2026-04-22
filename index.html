@@ -834,6 +834,29 @@ nav button.active-tab { color: var(--accent); }
 <div id="toast"></div>
 
 <!-- Firebase SDK -->
+<style>
+/* ADMIN */
+.admin-card { background:var(--card-bg); border:1px solid #2a1a1a; border-left:3px solid var(--accent); border-radius:var(--radius); padding:14px; margin-bottom:10px; }
+.admin-badge { display:inline-flex;align-items:center;gap:4px;background:rgba(255,60,60,0.15);color:var(--accent);border:1px solid rgba(255,60,60,0.3);border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px; }
+.ban-badge { display:inline-flex;align-items:center;gap:4px;background:rgba(255,60,60,0.2);color:#ff6b6b;border:1px solid rgba(255,60,60,0.4);border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700; }
+.online-dot { width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;margin-right:4px;box-shadow:0 0 6px var(--green); }
+.busy-dot { width:8px;height:8px;border-radius:50%;background:var(--yellow);display:inline-block;margin-right:4px;box-shadow:0 0 6px var(--yellow); }
+.tab-row { display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px; }
+.tab-btn { padding:7px 12px;border-radius:20px;border:1px solid var(--border);background:var(--bg3);color:var(--muted2);font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:Manrope,sans-serif;transition:all 0.15s; }
+.tab-btn.active { background:var(--accent);color:white;border-color:var(--accent); }
+.stat-mini { background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center; }
+.stat-mini .n { font-family:Bebas Neue,sans-serif;font-size:28px;color:var(--accent);letter-spacing:1px; }
+.stat-mini .l { font-size:10px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px; }
+.search-input { width:100%;padding:11px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:24px;color:var(--text);font-family:Manrope,sans-serif;font-size:14px;outline:none;margin-bottom:12px; }
+.search-input:focus { border-color:var(--accent); }
+.sysmsg-banner { background:rgba(255,60,60,0.1);border:1px solid rgba(255,60,60,0.3);border-radius:10px;padding:12px;margin-bottom:12px;font-size:13px; }
+.otp-row { display:flex;gap:10px;justify-content:center;margin:16px 0; }
+.otp-input { width:48px;height:56px;text-align:center;background:var(--bg3);border:2px solid var(--border);border-radius:12px;color:var(--text);font-size:22px;font-weight:700;font-family:Bebas Neue,sans-serif;outline:none;transition:border-color 0.2s; }
+.otp-input:focus { border-color:var(--accent); }
+.otp-input.error { border-color:#ff6b6b;animation:shake 0.3s ease; }
+.otp-input.success { border-color:var(--green); }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+</style>
 <script>
 var supabase=(function(e){function t(e,t){var n={};for(var r in e)Object.prototype.hasOwnProperty.call(e,r)&&t.indexOf(r)<0&&(n[r]=e[r]);if(e!=null&&typeof Object.getOwnPropertySymbols==`function`)for(var i=0,r=Object.getOwnPropertySymbols(e);i<r.length;i++)t.indexOf(r[i])<0&&Object.prototype.propertyIsEnumerable.call(e,r[i])&&(n[r[i]]=e[r[i]]);return n}function n(e,t,n,r){function i(e){return e instanceof n?e:new n(function(t){t(e)})}return new(n||=Promise)(function(n,a){function o(e){try{c(r.next(e))}catch(e){a(e)}}function s(e){try{c(r.throw(e))}catch(e){a(e)}}function c(e){e.done?n(e.value):i(e.value).then(o,s)}c((r=r.apply(e,t||[])).next())})}let r=e=>e?(...t)=>e(...t):(...e)=>fetch(...e);var i=class extends Error{constructor(e,t=`FunctionsError`,n){super(e),this.name=t,this.context=n}toJSON(){return{name:this.name,message:this.message,context:this.context}}},a=class extends i{constructor(e){super(`Failed to send a request to the Edge Function`,`FunctionsFetchError`,e)}},o=class extends i{constructor(e){super(`Relay Error invoking the Edge Function`,`FunctionsRelayError`,e)}},s=class extends i{constructor(e){super(`Edge Function returned a non-2xx status code`,`FunctionsHttpError`,e)}},c;(function(e){e.Any=`any`,e.ApNortheast1=`ap-northeast-1`,e.ApNortheast2=`ap-northeast-2`,e.ApSouth1=`ap-south-1`,e.ApSoutheast1=`ap-southeast-1`,e.ApSoutheast2=`ap-southeast-2`,e.CaCentral1=`ca-central-1`,e.EuCentral1=`eu-central-1`,e.EuWest1=`eu-west-1`,e.EuWest2=`eu-west-2`,e.EuWest3=`eu-west-3`,e.SaEast1=`sa-east-1`,e.UsEast1=`us-east-1`,e.UsWest1=`us-west-1`,e.UsWest2=`us-west-2`})(c||={});var l=class{constructor(e,{headers:t={},customFetch:n,region:i=c.Any}={}){this.url=e,this.headers=t,this.region=i,this.fetch=r(n)}setAuth(e){this.headers.Authorization=`Bearer ${e}`}invoke(e){return n(this,arguments,void 0,function*(e,t={}){let n,r;try{let{headers:i,method:c,body:l,signal:u,timeout:d}=t,f={},{region:p}=t;p||=this.region;let m=new URL(`${this.url}/${e}`);p&&p!==`any`&&(f[`x-region`]=p,m.searchParams.set(`forceFunctionRegion`,p));let h;l&&(i&&!Object.prototype.hasOwnProperty.call(i,`Content-Type`)||!i)?typeof Blob<`u`&&l instanceof Blob||l instanceof ArrayBuffer?(f[`Content-Type`]=`application/octet-stream`,h=l):typeof l==`string`?(f[`Content-Type`]=`text/plain`,h=l):typeof FormData<`u`&&l instanceof FormData?h=l:(f[`Content-Type`]=`application/json`,h=JSON.stringify(l)):h=l&&typeof l!=`string`&&!(typeof Blob<`u`&&l instanceof Blob)&&!(l instanceof ArrayBuffer)&&!(typeof FormData<`u`&&l instanceof FormData)?JSON.stringify(l):l;let ee=u;d&&(r=new AbortController,n=setTimeout(()=>r.abort(),d),u?(ee=r.signal,u.addEventListener(`abort`,()=>r.abort())):ee=r.signal);let g=yield this.fetch(m.toString(),{method:c||`POST`,headers:Object.assign(Object.assign(Object.assign({},f),this.headers),i),body:h,signal:ee}).catch(e=>{throw new a(e)}),te=g.headers.get(`x-relay-error`);if(te&&te===`true`)throw new o(g);if(!g.ok)throw new s(g);let _=(g.headers.get(`Content-Type`)??`text/plain`).split(`;`)[0].trim(),ne;return ne=_===`application/json`?yield g.json():_===`application/octet-stream`||_===`application/pdf`?yield g.blob():_===`text/event-stream`?g:_===`multipart/form-data`?yield g.formData():yield g.text(),{data:ne,error:null,response:g}}catch(e){return{data:null,error:e,response:e instanceof s||e instanceof o?e.context:void 0}}finally{n&&clearTimeout(n)}})}};let u=e=>Math.min(1e3*2**e,3e4),d=[520,503],f=[`GET`,`HEAD`,`OPTIONS`];var p=class extends Error{constructor(e){super(e.message),this.name=`PostgrestError`,this.details=e.details,this.hint=e.hint,this.code=e.code}toJSON(){return{name:this.name,message:this.message,details:this.details,hint:this.hint,code:this.code}}};function m(e,t){return new Promise(n=>{if(t?.aborted){n();return}let r=setTimeout(()=>{t?.removeEventListener(`abort`,i),n()},e);function i(){clearTimeout(r),n()}t?.addEventListener(`abort`,i)})}function h(e,t,n,r){return!(!r||n>=3||!f.includes(e)||!d.includes(t))}var ee=class{constructor(e){this.shouldThrowOnError=!1,this.retryEnabled=!0,this.method=e.method,this.url=e.url,this.headers=new Headers(e.headers),this.schema=e.schema,this.body=e.body,this.shouldThrowOnError=e.shouldThrowOnError??!1,this.signal=e.signal,this.isMaybeSingle=e.isMaybeSingle??!1,this.shouldStripNulls=e.shouldStripNulls??!1,this.urlLengthLimit=e.urlLengthLimit??8e3,this.retryEnabled=e.retry??!0,e.fetch?this.fetch=e.fetch:this.fetch=fetch}throwOnError(){return this.shouldThrowOnError=!0,this}stripNulls(){if(this.headers.get(`Accept`)===`text/csv`)throw Error(`stripNulls() cannot be used with csv()`);return this.shouldStripNulls=!0,this}setHeader(e,t){return this.headers=new Headers(this.headers),this.headers.set(e,t),this}retry(e){return this.retryEnabled=e,this}then(e,t){var n=this;if(this.schema===void 0||([`GET`,`HEAD`].includes(this.method)?this.headers.set(`Accept-Profile`,this.schema):this.headers.set(`Content-Profile`,this.schema)),this.method!==`GET`&&this.method!==`HEAD`&&this.headers.set(`Content-Type`,`application/json`),this.shouldStripNulls){let e=this.headers.get(`Accept`);e===`application/vnd.pgrst.object+json`?this.headers.set(`Accept`,`application/vnd.pgrst.object+json;nulls=stripped`):(!e||e===`application/json`)&&this.headers.set(`Accept`,`application/vnd.pgrst.array+json;nulls=stripped`)}let r=this.fetch,i=(async()=>{let e=0;for(;;){let t=new Headers(n.headers);e>0&&t.set(`X-Retry-Count`,String(e));let i;try{i=await r(n.url.toString(),{method:n.method,headers:t,body:JSON.stringify(n.body,(e,t)=>typeof t==`bigint`?t.toString():t),signal:n.signal})}catch(t){if(t?.name===`AbortError`||t?.code===`ABORT_ERR`||!f.includes(n.method))throw t;if(n.retryEnabled&&e<3){let t=u(e);e++,await m(t,n.signal);continue}throw t}if(h(n.method,i.status,e,n.retryEnabled)){let t=i.headers?.get(`Retry-After`)??null,r=t===null?u(e):Math.max(0,parseInt(t,10)||0)*1e3;await i.text(),e++,await m(r,n.signal);continue}return await n.processResponse(i)}})();return this.shouldThrowOnError||(i=i.catch(e=>{let t=``,n=``,r=``,i=e?.cause;if(i){let n=i?.message??``,r=i?.code??``;t=`${e?.name??`FetchError`}: ${e?.message}`,t+=`\n\nCaused by: ${i?.name??`Error`}: ${n}`,r&&(t+=` (${r})`),i?.stack&&(t+=`\n${i.stack}`)}else t=e?.stack??``;let a=this.url.toString().length;return e?.name===`AbortError`||e?.code===`ABORT_ERR`?(r=``,n=`Request was aborted (timeout or manual cancellation)`,a>this.urlLengthLimit&&(n+=`. Note: Your request URL is ${a} characters, which may exceed server limits. If selecting many fields, consider using views. If filtering with large arrays (e.g., .in('id', [many IDs])), consider using an RPC function to pass values server-side.`)):(i?.name===`HeadersOverflowError`||i?.code===`UND_ERR_HEADERS_OVERFLOW`)&&(r=``,n=`HTTP headers exceeded server limits (typically 16KB)`,a>this.urlLengthLimit&&(n+=`. Your request URL is ${a} characters. If selecting many fields, consider using views. If filtering with large arrays (e.g., .in('id', [200+ IDs])), consider using an RPC function instead.`)),{success:!1,error:{message:`${e?.name??`FetchError`}: ${e?.message}`,details:t,hint:n,code:r},data:null,count:null,status:0,statusText:``}})),i.then(e,t)}async processResponse(e){var t=this;let n=null,r=null,i=null,a=e.status,o=e.statusText;if(e.ok){if(t.method!==`HEAD`){let n=await e.text();n===``||(r=t.headers.get(`Accept`)===`text/csv`||t.headers.get(`Accept`)&&t.headers.get(`Accept`)?.includes(`application/vnd.pgrst.plan+text`)?n:JSON.parse(n))}let s=t.headers.get(`Prefer`)?.match(/count=(exact|planned|estimated)/),c=e.headers.get(`content-range`)?.split(`/`);s&&c&&c.length>1&&(i=parseInt(c[1])),t.isMaybeSingle&&Array.isArray(r)&&(r.length>1?(n={code:`PGRST116`,details:`Results contain ${r.length} rows, application/vnd.pgrst.object+json requires 1 row`,hint:null,message:`JSON object requested, multiple (or no) rows returned`},r=null,i=null,a=406,o=`Not Acceptable`):r=r.length===1?r[0]:null)}else{let i=await e.text();try{n=JSON.parse(i),Array.isArray(n)&&e.status===404&&(r=[],n=null,a=200,o=`OK`)}catch{e.status===404&&i===``?(a=204,o=`No Content`):n={message:i}}if(n&&t.shouldThrowOnError)throw new p(n)}return{success:n===null,error:n,data:r,count:i,status:a,statusText:o}}returns(){return this}overrideTypes(){return this}},g=class extends ee{select(e){let t=!1,n=(e??`*`).split(``).map(e=>/\s/.test(e)&&!t?``:(e===`"`&&(t=!t),e)).join(``);return this.url.searchParams.set(`select`,n),this.headers.append(`Prefer`,`return=representation`),this}order(e,{ascending:t=!0,nullsFirst:n,foreignTable:r,referencedTable:i=r}={}){let a=i?`${i}.order`:`order`,o=this.url.searchParams.get(a);return this.url.searchParams.set(a,`${o?`${o},`:``}${e}.${t?`asc`:`desc`}${n===void 0?``:n?`.nullsfirst`:`.nullslast`}`),this}limit(e,{foreignTable:t,referencedTable:n=t}={}){let r=n===void 0?`limit`:`${n}.limit`;return this.url.searchParams.set(r,`${e}`),this}range(e,t,{foreignTable:n,referencedTable:r=n}={}){let i=r===void 0?`offset`:`${r}.offset`,a=r===void 0?`limit`:`${r}.limit`;return this.url.searchParams.set(i,`${e}`),this.url.searchParams.set(a,`${t-e+1}`),this}abortSignal(e){return this.signal=e,this}single(){return this.headers.set(`Accept`,`application/vnd.pgrst.object+json`),this}maybeSingle(){return this.isMaybeSingle=!0,this}csv(){return this.headers.set(`Accept`,`text/csv`),this}geojson(){return this.headers.set(`Accept`,`application/geo+json`),this}explain({analyze:e=!1,verbose:t=!1,settings:n=!1,buffers:r=!1,wal:i=!1,format:a=`text`}={}){let o=[e?`analyze`:null,t?`verbose`:null,n?`settings`:null,r?`buffers`:null,i?`wal`:null].filter(Boolean).join(`|`),s=this.headers.get(`Accept`)??`application/json`;return this.headers.set(`Accept`,`application/vnd.pgrst.plan+${a}; for="${s}"; options=${o};`),this}rollback(){return this.headers.append(`Prefer`,`tx=rollback`),this}returns(){return this}maxAffected(e){return this.headers.append(`Prefer`,`handling=strict`),this.headers.append(`Prefer`,`max-affected=${e}`),this}};let te=RegExp(`[,()]`);var _=class extends g{eq(e,t){return this.url.searchParams.append(e,`eq.${t}`),this}neq(e,t){return this.url.searchParams.append(e,`neq.${t}`),this}gt(e,t){return this.url.searchParams.append(e,`gt.${t}`),this}gte(e,t){return this.url.searchParams.append(e,`gte.${t}`),this}lt(e,t){return this.url.searchParams.append(e,`lt.${t}`),this}lte(e,t){return this.url.searchParams.append(e,`lte.${t}`),this}like(e,t){return this.url.searchParams.append(e,`like.${t}`),this}likeAllOf(e,t){return this.url.searchParams.append(e,`like(all).{${t.join(`,`)}}`),this}likeAnyOf(e,t){return this.url.searchParams.append(e,`like(any).{${t.join(`,`)}}`),this}ilike(e,t){return this.url.searchParams.append(e,`ilike.${t}`),this}ilikeAllOf(e,t){return this.url.searchParams.append(e,`ilike(all).{${t.join(`,`)}}`),this}ilikeAnyOf(e,t){return this.url.searchParams.append(e,`ilike(any).{${t.join(`,`)}}`),this}regexMatch(e,t){return this.url.searchParams.append(e,`match.${t}`),this}regexIMatch(e,t){return this.url.searchParams.append(e,`imatch.${t}`),this}is(e,t){return this.url.searchParams.append(e,`is.${t}`),this}isDistinct(e,t){return this.url.searchParams.append(e,`isdistinct.${t}`),this}in(e,t){let n=Array.from(new Set(t)).map(e=>typeof e==`string`&&te.test(e)?`"${e}"`:`${e}`).join(`,`);return this.url.searchParams.append(e,`in.(${n})`),this}notIn(e,t){let n=Array.from(new Set(t)).map(e=>typeof e==`string`&&te.test(e)?`"${e}"`:`${e}`).join(`,`);return this.url.searchParams.append(e,`not.in.(${n})`),this}contains(e,t){return typeof t==`string`?this.url.searchParams.append(e,`cs.${t}`):Array.isArray(t)?this.url.searchParams.append(e,`cs.{${t.join(`,`)}}`):this.url.searchParams.append(e,`cs.${JSON.stringify(t)}`),this}containedBy(e,t){return typeof t==`string`?this.url.searchParams.append(e,`cd.${t}`):Array.isArray(t)?this.url.searchParams.append(e,`cd.{${t.join(`,`)}}`):this.url.searchParams.append(e,`cd.${JSON.stringify(t)}`),this}rangeGt(e,t){return this.url.searchParams.append(e,`sr.${t}`),this}rangeGte(e,t){return this.url.searchParams.append(e,`nxl.${t}`),this}rangeLt(e,t){return this.url.searchParams.append(e,`sl.${t}`),this}rangeLte(e,t){return this.url.searchParams.append(e,`nxr.${t}`),this}rangeAdjacent(e,t){return this.url.searchParams.append(e,`adj.${t}`),this}overlaps(e,t){return typeof t==`string`?this.url.searchParams.append(e,`ov.${t}`):this.url.searchParams.append(e,`ov.{${t.join(`,`)}}`),this}textSearch(e,t,{config:n,type:r}={}){let i=``;r===`plain`?i=`pl`:r===`phrase`?i=`ph`:r===`websearch`&&(i=`w`);let a=n===void 0?``:`(${n})`;return this.url.searchParams.append(e,`${i}fts${a}.${t}`),this}match(e){return Object.entries(e).filter(([e,t])=>t!==void 0).forEach(([e,t])=>{this.url.searchParams.append(e,`eq.${t}`)}),this}not(e,t,n){return this.url.searchParams.append(e,`not.${t}.${n}`),this}or(e,{foreignTable:t,referencedTable:n=t}={}){let r=n?`${n}.or`:`or`;return this.url.searchParams.append(r,`(${e})`),this}filter(e,t,n){return this.url.searchParams.append(e,`${t}.${n}`),this}},ne=class{constructor(e,{headers:t={},schema:n,fetch:r,urlLengthLimit:i=8e3,retry:a}){this.url=e,this.headers=new Headers(t),this.schema=n,this.fetch=r,this.urlLengthLimit=i,this.retry=a}cloneRequestState(){return{url:new URL(this.url.toString()),headers:new Headers(this.headers)}}select(e,t){let{head:n=!1,count:r}=t??{},i=n?`HEAD`:`GET`,a=!1,o=(e??`*`).split(``).map(e=>/\s/.test(e)&&!a?``:(e===`"`&&(a=!a),e)).join(``),{url:s,headers:c}=this.cloneRequestState();return s.searchParams.set(`select`,o),r&&c.append(`Prefer`,`count=${r}`),new _({method:i,url:s,headers:c,schema:this.schema,fetch:this.fetch,urlLengthLimit:this.urlLengthLimit,retry:this.retry})}insert(e,{count:t,defaultToNull:n=!0}={}){let{url:r,headers:i}=this.cloneRequestState();if(t&&i.append(`Prefer`,`count=${t}`),n||i.append(`Prefer`,`missing=default`),Array.isArray(e)){let t=e.reduce((e,t)=>e.concat(Object.keys(t)),[]);if(t.length>0){let e=[...new Set(t)].map(e=>`"${e}"`);r.searchParams.set(`columns`,e.join(`,`))}}return new _({method:`POST`,url:r,headers:i,schema:this.schema,body:e,fetch:this.fetch??fetch,urlLengthLimit:this.urlLengthLimit,retry:this.retry})}upsert(e,{onConflict:t,ignoreDuplicates:n=!1,count:r,defaultToNull:i=!0}={}){let{url:a,headers:o}=this.cloneRequestState();if(o.append(`Prefer`,`resolution=${n?`ignore`:`merge`}-duplicates`),t!==void 0&&a.searchParams.set(`on_conflict`,t),r&&o.append(`Prefer`,`count=${r}`),i||o.append(`Prefer`,`missing=default`),Array.isArray(e)){let t=e.reduce((e,t)=>e.concat(Object.keys(t)),[]);if(t.length>0){let e=[...new Set(t)].map(e=>`"${e}"`);a.searchParams.set(`columns`,e.join(`,`))}}return new _({method:`POST`,url:a,headers:o,schema:this.schema,body:e,fetch:this.fetch??fetch,urlLengthLimit:this.urlLengthLimit,retry:this.retry})}update(e,{count:t}={}){let{url:n,headers:r}=this.cloneRequestState();return t&&r.append(`Prefer`,`count=${t}`),new _({method:`PATCH`,url:n,headers:r,schema:this.schema,body:e,fetch:this.fetch??fetch,urlLengthLimit:this.urlLengthLimit,retry:this.retry})}delete({count:e}={}){let{url:t,headers:n}=this.cloneRequestState();return e&&n.append(`Prefer`,`count=${e}`),new _({method:`DELETE`,url:t,headers:n,schema:this.schema,fetch:this.fetch??fetch,urlLengthLimit:this.urlLengthLimit,retry:this.retry})}};function re(e){"@babel/helpers - typeof";return re=typeof Symbol==`function`&&typeof Symbol.iterator==`symbol`?function(e){return typeof e}:function(e){return e&&typeof Symbol==`function`&&e.constructor===Symbol&&e!==Symbol.prototype?`symbol`:typeof e},re(e)}function ie(e,t){if(re(e)!=`object`||!e)return e;var n=e[Symbol.toPrimitive];if(n!==void 0){var r=n.call(e,t||`default`);if(re(r)!=`object`)return r;throw TypeError(`@@toPrimitive must return a primitive value.`)}return(t===`string`?String:Number)(e)}function ae(e){var t=ie(e,`string`);return re(t)==`symbol`?t:t+``}function oe(e,t,n){return(t=ae(t))in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}function se(e,t){var n=Object.keys(e);if(Object.getOwnPropertySymbols){var r=Object.getOwnPropertySymbols(e);t&&(r=r.filter(function(t){return Object.getOwnPropertyDescriptor(e,t).enumerable})),n.push.apply(n,r)}return n}function ce(e){for(var t=1;t<arguments.length;t++){var n=arguments[t]==null?{}:arguments[t];t%2?se(Object(n),!0).forEach(function(t){oe(e,t,n[t])}):Object.getOwnPropertyDescriptors?Object.defineProperties(e,Object.getOwnPropertyDescriptors(n)):se(Object(n)).forEach(function(t){Object.defineProperty(e,t,Object.getOwnPropertyDescriptor(n,t))})}return e}var le=class e{constructor(e,{headers:t={},schema:n,fetch:r,timeout:i,urlLengthLimit:a=8e3,retry:o}={}){this.url=e,this.headers=new Headers(t),this.schemaName=n,this.urlLengthLimit=a;let s=r??globalThis.fetch;i!==void 0&&i>0?this.fetch=(e,t)=>{let n=new AbortController,r=setTimeout(()=>n.abort(),i),a=t?.signal;if(a){if(a.aborted)return clearTimeout(r),s(e,t);let i=()=>{clearTimeout(r),n.abort()};return a.addEventListener(`abort`,i,{once:!0}),s(e,ce(ce({},t),{},{signal:n.signal})).finally(()=>{clearTimeout(r),a.removeEventListener(`abort`,i)})}return s(e,ce(ce({},t),{},{signal:n.signal})).finally(()=>clearTimeout(r))}:this.fetch=s,this.retry=o}from(e){if(!e||typeof e!=`string`||e.trim()===``)throw Error(`Invalid relation name: relation must be a non-empty string.`);return new ne(new URL(`${this.url}/${e}`),{headers:new Headers(this.headers),schema:this.schemaName,fetch:this.fetch,urlLengthLimit:this.urlLengthLimit,retry:this.retry})}schema(t){return new e(this.url,{headers:this.headers,schema:t,fetch:this.fetch,urlLengthLimit:this.urlLengthLimit,retry:this.retry})}rpc(e,t={},{head:n=!1,get:r=!1,count:i}={}){let a,o=new URL(`${this.url}/rpc/${e}`),s,c=e=>typeof e==`object`&&!!e&&(!Array.isArray(e)||e.some(c)),l=n&&Object.values(t).some(c);l?(a=`POST`,s=t):n||r?(a=n?`HEAD`:`GET`,Object.entries(t).filter(([e,t])=>t!==void 0).map(([e,t])=>[e,Array.isArray(t)?`{${t.join(`,`)}}`:`${t}`]).forEach(([e,t])=>{o.searchParams.append(e,t)})):(a=`POST`,s=t);let u=new Headers(this.headers);return l?u.set(`Prefer`,i?`count=${i},return=minimal`:`return=minimal`):i&&u.set(`Prefer`,`count=${i}`),new _({method:a,url:o,headers:u,schema:this.schemaName,body:s,fetch:this.fetch??fetch,urlLengthLimit:this.urlLengthLimit,retry:this.retry})}},ue=class{constructor(){}static detectEnvironment(){if(typeof WebSocket<`u`)return{type:`native`,constructor:WebSocket};if(typeof globalThis<`u`&&globalThis.WebSocket!==void 0)return{type:`native`,constructor:globalThis.WebSocket};if(typeof global<`u`&&global.WebSocket!==void 0)return{type:`native`,constructor:global.WebSocket};if(typeof globalThis<`u`&&globalThis.WebSocketPair!==void 0&&globalThis.WebSocket===void 0)return{type:`cloudflare`,error:`Cloudflare Workers detected. WebSocket clients are not supported in Cloudflare Workers.`,workaround:`Use Cloudflare Workers WebSocket API for server-side WebSocket handling, or deploy to a different runtime.`};if(typeof globalThis<`u`&&globalThis.EdgeRuntime||typeof navigator<`u`&&navigator.userAgent?.includes(`Vercel-Edge`))return{type:`unsupported`,error:`Edge runtime detected (Vercel Edge/Netlify Edge). WebSockets are not supported in edge functions.`,workaround:`Use serverless functions or a different deployment target for WebSocket functionality.`};let e=globalThis.process;if(e){let t=e.versions;if(t&&t.node){let e=t.node,n=parseInt(e.replace(/^v/,``).split(`.`)[0]);return n>=22?globalThis.WebSocket===void 0?{type:`unsupported`,error:`Node.js ${n} detected but native WebSocket not found.`,workaround:`Provide a WebSocket implementation via the transport option.`}:{type:`native`,constructor:globalThis.WebSocket}:{type:`unsupported`,error:`Node.js ${n} detected without native WebSocket support.`,workaround:`For Node.js < 22, install "ws" package and provide it via the transport option:
 import ws from "ws"
@@ -859,53 +882,6 @@ Option 2: Install and provide the "ws" package:
 `))throw Error(`@supabase/auth-js: Invalid SIWE message field "statement". Statement must not include '\\n'. Provided value: ${e.statement}`);let f=Dr(e.address),p=`${l?`${l}://${n}`:n} wants you to sign in with your Ethereum account:\n${f}\n\n${e.statement?`${e.statement}\n`:``}`,m=`URI: ${u}\nVersion: ${d}\nChain ID: ${t}${a?`\nNonce: ${a}`:``}\nIssued At: ${i.toISOString()}`;if(r&&(m+=`\nExpiration Time: ${r.toISOString()}`),o&&(m+=`\nNot Before: ${o.toISOString()}`),s&&(m+=`\nRequest ID: ${s}`),c){let e=`
 Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/auth-js: Invalid SIWE message field "resources". Every resource must be a valid string. Provided value: ${t}`);e+=`\n- ${t}`}m+=e}return`${p}\n${m}`}var Q=class extends Error{constructor({message:e,code:t,cause:n,name:r}){super(e,{cause:n}),this.__isWebAuthnError=!0,this.name=r??(n instanceof Error?n.name:void 0)??`Unknown Error`,this.code=t}},jr=class extends Q{constructor(e,t){super({code:`ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY`,cause:t,message:e}),this.name=`WebAuthnUnknownError`,this.originalError=t}};function Mr({error:e,options:t}){let{publicKey:n}=t;if(!n)throw Error(`options was missing required publicKey property`);if(e.name===`AbortError`){if(t.signal instanceof AbortSignal)return new Q({message:`Registration ceremony was sent an abort signal`,code:`ERROR_CEREMONY_ABORTED`,cause:e})}else if(e.name===`ConstraintError`){if(n.authenticatorSelection?.requireResidentKey===!0)return new Q({message:`Discoverable credentials were required but no available authenticator supported it`,code:`ERROR_AUTHENTICATOR_MISSING_DISCOVERABLE_CREDENTIAL_SUPPORT`,cause:e});if(t.mediation===`conditional`&&n.authenticatorSelection?.userVerification===`required`)return new Q({message:`User verification was required during automatic registration but it could not be performed`,code:`ERROR_AUTO_REGISTER_USER_VERIFICATION_FAILURE`,cause:e});if(n.authenticatorSelection?.userVerification===`required`)return new Q({message:`User verification was required but no available authenticator supported it`,code:`ERROR_AUTHENTICATOR_MISSING_USER_VERIFICATION_SUPPORT`,cause:e})}else if(e.name===`InvalidStateError`)return new Q({message:`The authenticator was previously registered`,code:`ERROR_AUTHENTICATOR_PREVIOUSLY_REGISTERED`,cause:e});else if(e.name===`NotAllowedError`)return new Q({message:e.message,code:`ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY`,cause:e});else if(e.name===`NotSupportedError`)return n.pubKeyCredParams.filter(e=>e.type===`public-key`).length===0?new Q({message:`No entry in pubKeyCredParams was of type "public-key"`,code:`ERROR_MALFORMED_PUBKEYCREDPARAMS`,cause:e}):new Q({message:`No available authenticator supported any of the specified pubKeyCredParams algorithms`,code:`ERROR_AUTHENTICATOR_NO_SUPPORTED_PUBKEYCREDPARAMS_ALG`,cause:e});else if(e.name===`SecurityError`){let t=window.location.hostname;if(zr(t)){if(n.rp.id!==t)return new Q({message:`The RP ID "${n.rp.id}" is invalid for this domain`,code:`ERROR_INVALID_RP_ID`,cause:e})}else return new Q({message:`${window.location.hostname} is an invalid domain`,code:`ERROR_INVALID_DOMAIN`,cause:e})}else if(e.name===`TypeError`){if(n.user.id.byteLength<1||n.user.id.byteLength>64)return new Q({message:`User ID was not between 1 and 64 characters`,code:`ERROR_INVALID_USER_ID_LENGTH`,cause:e})}else if(e.name===`UnknownError`)return new Q({message:`The authenticator was unable to process the specified options, or could not create a new credential`,code:`ERROR_AUTHENTICATOR_GENERAL_ERROR`,cause:e});return new Q({message:`a Non-Webauthn related error has occurred`,code:`ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY`,cause:e})}function Nr({error:e,options:t}){let{publicKey:n}=t;if(!n)throw Error(`options was missing required publicKey property`);if(e.name===`AbortError`){if(t.signal instanceof AbortSignal)return new Q({message:`Authentication ceremony was sent an abort signal`,code:`ERROR_CEREMONY_ABORTED`,cause:e})}else if(e.name===`NotAllowedError`)return new Q({message:e.message,code:`ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY`,cause:e});else if(e.name===`SecurityError`){let t=window.location.hostname;if(zr(t)){if(n.rpId!==t)return new Q({message:`The RP ID "${n.rpId}" is invalid for this domain`,code:`ERROR_INVALID_RP_ID`,cause:e})}else return new Q({message:`${window.location.hostname} is an invalid domain`,code:`ERROR_INVALID_DOMAIN`,cause:e})}else if(e.name===`UnknownError`)return new Q({message:`The authenticator was unable to process the specified options, or could not create a new assertion signature`,code:`ERROR_AUTHENTICATOR_GENERAL_ERROR`,cause:e});return new Q({message:`a Non-Webauthn related error has occurred`,code:`ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY`,cause:e})}let Pr=new class{createNewAbortSignal(){if(this.controller){let e=Error(`Cancelling existing WebAuthn API call for new one`);e.name=`AbortError`,this.controller.abort(e)}let e=new AbortController;return this.controller=e,e.signal}cancelCeremony(){if(this.controller){let e=Error(`Manually cancelling existing WebAuthn API call`);e.name=`AbortError`,this.controller.abort(e),this.controller=void 0}}};function Fr(e){if(!e)throw Error(`Credential creation options are required`);if(typeof PublicKeyCredential<`u`&&`parseCreationOptionsFromJSON`in PublicKeyCredential&&typeof PublicKeyCredential.parseCreationOptionsFromJSON==`function`)return PublicKeyCredential.parseCreationOptionsFromJSON(e);let{challenge:n,user:r,excludeCredentials:i}=e,a=t(e,[`challenge`,`user`,`excludeCredentials`]),o=B(n).buffer,s=Object.assign(Object.assign({},r),{id:B(r.id).buffer}),c=Object.assign(Object.assign({},a),{challenge:o,user:s});if(i&&i.length>0){c.excludeCredentials=Array(i.length);for(let e=0;e<i.length;e++){let t=i[e];c.excludeCredentials[e]=Object.assign(Object.assign({},t),{id:B(t.id).buffer,type:t.type||`public-key`,transports:t.transports})}}return c}function Ir(e){if(!e)throw Error(`Credential request options are required`);if(typeof PublicKeyCredential<`u`&&`parseRequestOptionsFromJSON`in PublicKeyCredential&&typeof PublicKeyCredential.parseRequestOptionsFromJSON==`function`)return PublicKeyCredential.parseRequestOptionsFromJSON(e);let{challenge:n,allowCredentials:r}=e,i=t(e,[`challenge`,`allowCredentials`]),a=B(n).buffer,o=Object.assign(Object.assign({},i),{challenge:a});if(r&&r.length>0){o.allowCredentials=Array(r.length);for(let e=0;e<r.length;e++){let t=r[e];o.allowCredentials[e]=Object.assign(Object.assign({},t),{id:B(t.id).buffer,type:t.type||`public-key`,transports:t.transports})}}return o}function Lr(e){if(`toJSON`in e&&typeof e.toJSON==`function`)return e.toJSON();let t=e;return{id:e.id,rawId:e.id,response:{attestationObject:V(new Uint8Array(e.response.attestationObject)),clientDataJSON:V(new Uint8Array(e.response.clientDataJSON))},type:`public-key`,clientExtensionResults:e.getClientExtensionResults(),authenticatorAttachment:t.authenticatorAttachment??void 0}}function Rr(e){if(`toJSON`in e&&typeof e.toJSON==`function`)return e.toJSON();let t=e,n=e.getClientExtensionResults(),r=e.response;return{id:e.id,rawId:e.id,response:{authenticatorData:V(new Uint8Array(r.authenticatorData)),clientDataJSON:V(new Uint8Array(r.clientDataJSON)),signature:V(new Uint8Array(r.signature)),userHandle:r.userHandle?V(new Uint8Array(r.userHandle)):void 0},type:`public-key`,clientExtensionResults:n,authenticatorAttachment:t.authenticatorAttachment??void 0}}function zr(e){return e===`localhost`||/^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$/i.test(e)}function Br(){return!!(H()&&`PublicKeyCredential`in window&&window.PublicKeyCredential&&`credentials`in navigator&&typeof(navigator==null?void 0:navigator.credentials)?.create==`function`&&typeof(navigator==null?void 0:navigator.credentials)?.get==`function`)}async function Vr(e){try{let t=await navigator.credentials.create(e);return t?t instanceof PublicKeyCredential?{data:t,error:null}:{data:null,error:new jr(`Browser returned unexpected credential type`,t)}:{data:null,error:new jr(`Empty credential response`,t)}}catch(t){return{data:null,error:Mr({error:t,options:e})}}}async function Hr(e){try{let t=await navigator.credentials.get(e);return t?t instanceof PublicKeyCredential?{data:t,error:null}:{data:null,error:new jr(`Browser returned unexpected credential type`,t)}:{data:null,error:new jr(`Empty credential response`,t)}}catch(t){return{data:null,error:Nr({error:t,options:e})}}}let Ur={hints:[`security-key`],authenticatorSelection:{authenticatorAttachment:`cross-platform`,requireResidentKey:!1,userVerification:`preferred`,residentKey:`discouraged`},attestation:`direct`},Wr={userVerification:`preferred`,hints:[`security-key`],attestation:`direct`};function Gr(...e){let t=e=>typeof e==`object`&&!!e&&!Array.isArray(e),n=e=>e instanceof ArrayBuffer||ArrayBuffer.isView(e),r={};for(let i of e)if(i)for(let e in i){let a=i[e];if(a!==void 0)if(Array.isArray(a))r[e]=a;else if(n(a))r[e]=a;else if(t(a)){let n=r[e];t(n)?r[e]=Gr(n,a):r[e]=Gr(a)}else r[e]=a}return r}function Kr(e,t){return Gr(Ur,e,t||{})}function qr(e,t){return Gr(Wr,e,t||{})}var Jr=class{constructor(e){this.client=e,this.enroll=this._enroll.bind(this),this.challenge=this._challenge.bind(this),this.verify=this._verify.bind(this),this.authenticate=this._authenticate.bind(this),this.register=this._register.bind(this)}async _enroll(e){return this.client.mfa.enroll(Object.assign(Object.assign({},e),{factorType:`webauthn`}))}async _challenge({factorId:e,webauthn:t,friendlyName:n,signal:r},i){try{let{data:a,error:o}=await this.client.mfa.challenge({factorId:e,webauthn:t});if(!a)return{data:null,error:o};let s=r??Pr.createNewAbortSignal();if(a.webauthn.type===`create`){let{user:e}=a.webauthn.credential_options.publicKey;if(!e.name){let t=n;if(t)e.name=`${e.id}:${t}`;else{let t=(await this.client.getUser()).data.user,n=t?.user_metadata?.name||t?.email||t?.id||`User`;e.name=`${e.id}:${n}`}}e.displayName||=e.name}switch(a.webauthn.type){case`create`:{let{data:t,error:n}=await Vr({publicKey:Kr(a.webauthn.credential_options.publicKey,i?.create),signal:s});return t?{data:{factorId:e,challengeId:a.id,webauthn:{type:a.webauthn.type,credential_response:t}},error:null}:{data:null,error:n}}case`request`:{let t=qr(a.webauthn.credential_options.publicKey,i?.request),{data:n,error:r}=await Hr(Object.assign(Object.assign({},a.webauthn.credential_options),{publicKey:t,signal:s}));return n?{data:{factorId:e,challengeId:a.id,webauthn:{type:a.webauthn.type,credential_response:n}},error:null}:{data:null,error:r}}}}catch(e){return F(e)?{data:null,error:e}:{data:null,error:new I(`Unexpected error in challenge`,e)}}}async _verify({challengeId:e,factorId:t,webauthn:n}){return this.client.mfa.verify({factorId:t,challengeId:e,webauthn:n})}async _authenticate({factorId:e,webauthn:{rpId:t=typeof window<`u`?window.location.hostname:void 0,rpOrigins:n=typeof window<`u`?[window.location.origin]:void 0,signal:r}={}},i){if(!t)return{data:null,error:new P(`rpId is required for WebAuthn authentication`)};try{if(!Br())return{data:null,error:new I(`Browser does not support WebAuthn`,null)};let{data:a,error:o}=await this.challenge({factorId:e,webauthn:{rpId:t,rpOrigins:n},signal:r},{request:i});if(!a)return{data:null,error:o};let{webauthn:s}=a;return this._verify({factorId:e,challengeId:a.challengeId,webauthn:{type:s.type,rpId:t,rpOrigins:n,credential_response:s.credential_response}})}catch(e){return F(e)?{data:null,error:e}:{data:null,error:new I(`Unexpected error in authenticate`,e)}}}async _register({friendlyName:e,webauthn:{rpId:t=typeof window<`u`?window.location.hostname:void 0,rpOrigins:n=typeof window<`u`?[window.location.origin]:void 0,signal:r}={}},i){if(!t)return{data:null,error:new P(`rpId is required for WebAuthn registration`)};try{if(!Br())return{data:null,error:new I(`Browser does not support WebAuthn`,null)};let{data:a,error:o}=await this._enroll({friendlyName:e});if(!a)return await this.client.mfa.listFactors().then(t=>t.data?.all.find(t=>t.factor_type===`webauthn`&&t.friendly_name===e&&t.status!==`unverified`)).then(e=>e?this.client.mfa.unenroll({factorId:e?.id}):void 0),{data:null,error:o};let{data:s,error:c}=await this._challenge({factorId:a.id,friendlyName:a.friendly_name,webauthn:{rpId:t,rpOrigins:n},signal:r},{create:i});return s?this._verify({factorId:a.id,challengeId:s.challengeId,webauthn:{rpId:t,rpOrigins:n,type:s.webauthn.type,credential_response:s.webauthn.credential_response}}):{data:null,error:c}}catch(e){return F(e)?{data:null,error:e}:{data:null,error:new I(`Unexpected error in register`,e)}}}};Er();let Yr={url:`http://localhost:9999`,storageKey:`supabase.auth.token`,autoRefreshToken:!0,persistSession:!0,detectSessionInUrl:!0,headers:un,flowType:`implicit`,debug:!1,hasCustomAuthorizationHeader:!1,throwOnError:!1,lockAcquireTimeout:5e3,skipAutoInitialize:!1};async function Xr(e,t,n){return await n()}let $={};var Zr=class e{get jwks(){return $[this.storageKey]?.jwks??{keys:[]}}set jwks(e){$[this.storageKey]=Object.assign(Object.assign({},$[this.storageKey]),{jwks:e})}get jwks_cached_at(){return $[this.storageKey]?.cachedAt??-(2**53-1)}set jwks_cached_at(e){$[this.storageKey]=Object.assign(Object.assign({},$[this.storageKey]),{cachedAt:e})}constructor(t){var n;this.userStorage=null,this.memoryStorage=null,this.stateChangeEmitters=new Map,this.autoRefreshTicker=null,this.autoRefreshTickTimeout=null,this.visibilityChangedCallback=null,this.refreshingDeferred=null,this.initializePromise=null,this.detectSessionInUrl=!0,this.hasCustomAuthorizationHeader=!1,this.suppressGetSessionWarning=!1,this.lockAcquired=!1,this.pendingInLock=[],this.broadcastChannel=null,this.logger=console.log;let r=Object.assign(Object.assign({},Yr),t);if(this.storageKey=r.storageKey,this.instanceID=e.nextInstanceID[this.storageKey]??0,e.nextInstanceID[this.storageKey]=this.instanceID+1,this.logDebugMessages=!!r.debug,typeof r.debug==`function`&&(this.logger=r.debug),this.instanceID>0&&H()){let e=`${this._logPrefix()} Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.`;console.warn(e),this.logDebugMessages&&console.trace(e)}if(this.persistSession=r.persistSession,this.autoRefreshToken=r.autoRefreshToken,this.admin=new vr({url:r.url,headers:r.headers,fetch:r.fetch}),this.url=r.url,this.headers=r.headers,this.fetch=Hn(r.fetch),this.lock=r.lock||Xr,this.detectSessionInUrl=r.detectSessionInUrl,this.flowType=r.flowType,this.hasCustomAuthorizationHeader=r.hasCustomAuthorizationHeader,this.throwOnError=r.throwOnError,this.lockAcquireTimeout=r.lockAcquireTimeout,r.lock?this.lock=r.lock:this.persistSession&&H()&&(globalThis==null?void 0:globalThis.navigator)?.locks?this.lock=Cr:this.lock=Xr,this.jwks||(this.jwks={keys:[]},this.jwks_cached_at=-(2**53-1)),this.mfa={verify:this._verify.bind(this),enroll:this._enroll.bind(this),unenroll:this._unenroll.bind(this),challenge:this._challenge.bind(this),listFactors:this._listFactors.bind(this),challengeAndVerify:this._challengeAndVerify.bind(this),getAuthenticatorAssuranceLevel:this._getAuthenticatorAssuranceLevel.bind(this),webauthn:new Jr(this)},this.oauth={getAuthorizationDetails:this._getAuthorizationDetails.bind(this),approveAuthorization:this._approveAuthorization.bind(this),denyAuthorization:this._denyAuthorization.bind(this),listGrants:this._listOAuthGrants.bind(this),revokeGrant:this._revokeOAuthGrant.bind(this)},this.persistSession?(r.storage?this.storage=r.storage:Bn()?this.storage=globalThis.localStorage:(this.memoryStorage={},this.storage=yr(this.memoryStorage)),r.userStorage&&(this.userStorage=r.userStorage)):(this.memoryStorage={},this.storage=yr(this.memoryStorage)),H()&&globalThis.BroadcastChannel&&this.persistSession&&this.storageKey){try{this.broadcastChannel=new globalThis.BroadcastChannel(this.storageKey)}catch(e){console.error(`Failed to create a new BroadcastChannel, multi-tab state changes will not be available`,e)}(n=this.broadcastChannel)==null||n.addEventListener(`message`,async e=>{this._debug(`received broadcast notification from other tab or client`,e);try{await this._notifyAllSubscribers(e.data.event,e.data.session,!1)}catch(e){this._debug(`#broadcastChannel`,`error`,e)}})}r.skipAutoInitialize||this.initialize().catch(e=>{this._debug(`#initialize()`,`error`,e)})}isThrowOnErrorEnabled(){return this.throwOnError}_returnResult(e){if(this.throwOnError&&e&&e.error)throw e.error;return e}_logPrefix(){return`GoTrueClient@${this.storageKey}:${this.instanceID} (${cn}) ${new Date().toISOString()}`}_debug(...e){return this.logDebugMessages&&this.logger(this._logPrefix(),...e),this}async initialize(){return this.initializePromise||=(async()=>await this._acquireLock(this.lockAcquireTimeout,async()=>await this._initialize()))(),await this.initializePromise}async _initialize(){try{let e={},t=`none`;if(H()&&(e=Vn(window.location.href),this._isImplicitGrantCallback(e)?t=`implicit`:await this._isPKCECallback(e)&&(t=`pkce`)),H()&&this.detectSessionInUrl&&t!==`none`){let{data:n,error:r}=await this._getSessionFromURL(e,t);if(r){if(this._debug(`#_initialize()`,`error detecting session from URL`,r),yn(r)){let e=r.details?.code;if(e===`identity_already_exists`||e===`identity_not_found`||e===`single_identity_not_deletable`)return{error:r}}return{error:r}}let{session:i,redirectType:a}=n;return this._debug(`#_initialize()`,`detected session in URL`,i,`redirect type`,a),await this._saveSession(i),setTimeout(async()=>{a===`recovery`?await this._notifyAllSubscribers(`PASSWORD_RECOVERY`,i):await this._notifyAllSubscribers(`SIGNED_IN`,i)},0),{error:null}}return await this._recoverAndRefresh(),{error:null}}catch(e){return F(e)?this._returnResult({error:e}):this._returnResult({error:new I(`Unexpected error during initialization`,e)})}finally{await this._handleVisibilityChange(),this._debug(`#_initialize()`,`end`)}}async signInAnonymously(e){try{let{data:t,error:n}=await J(this.fetch,`POST`,`${this.url}/signup`,{headers:this.headers,body:{data:e?.options?.data??{},gotrue_meta_security:{captcha_token:e?.options?.captchaToken}},xform:Y});if(n||!t)return this._returnResult({data:{user:null,session:null},error:n});let r=t.session,i=t.user;return t.session&&(await this._saveSession(t.session),await this._notifyAllSubscribers(`SIGNED_IN`,r)),this._returnResult({data:{user:i,session:r},error:null})}catch(e){if(F(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async signUp(e){try{let t;if(`email`in e){let{email:n,password:r,options:i}=e,a=null,o=null;this.flowType===`pkce`&&([a,o]=await Qn(this.storage,this.storageKey)),t=await J(this.fetch,`POST`,`${this.url}/signup`,{headers:this.headers,redirectTo:i?.emailRedirectTo,body:{email:n,password:r,data:i?.data??{},gotrue_meta_security:{captcha_token:i?.captchaToken},code_challenge:a,code_challenge_method:o},xform:Y})}else if(`phone`in e){let{phone:n,password:r,options:i}=e;t=await J(this.fetch,`POST`,`${this.url}/signup`,{headers:this.headers,body:{phone:n,password:r,data:i?.data??{},channel:i?.channel??`sms`,gotrue_meta_security:{captcha_token:i?.captchaToken}},xform:Y})}else throw new _n(`You must provide either an email or phone number and a password`);let{data:n,error:r}=t;if(r||!n)return await K(this.storage,`${this.storageKey}-code-verifier`),this._returnResult({data:{user:null,session:null},error:r});let i=n.session,a=n.user;return n.session&&(await this._saveSession(n.session),await this._notifyAllSubscribers(`SIGNED_IN`,i)),this._returnResult({data:{user:a,session:i},error:null})}catch(e){if(await K(this.storage,`${this.storageKey}-code-verifier`),F(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async signInWithPassword(e){try{let t;if(`email`in e){let{email:n,password:r,options:i}=e;t=await J(this.fetch,`POST`,`${this.url}/token?grant_type=password`,{headers:this.headers,body:{email:n,password:r,gotrue_meta_security:{captcha_token:i?.captchaToken}},xform:fr})}else if(`phone`in e){let{phone:n,password:r,options:i}=e;t=await J(this.fetch,`POST`,`${this.url}/token?grant_type=password`,{headers:this.headers,body:{phone:n,password:r,gotrue_meta_security:{captcha_token:i?.captchaToken}},xform:fr})}else throw new _n(`You must provide either an email or phone number and a password`);let{data:n,error:r}=t;if(r)return this._returnResult({data:{user:null,session:null},error:r});if(!n||!n.session||!n.user){let e=new z;return this._returnResult({data:{user:null,session:null},error:e})}return n.session&&(await this._saveSession(n.session),await this._notifyAllSubscribers(`SIGNED_IN`,n.session)),this._returnResult({data:Object.assign({user:n.user,session:n.session},n.weak_password?{weakPassword:n.weak_password}:null),error:r})}catch(e){if(F(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async signInWithOAuth(e){return await this._handleProviderSignIn(e.provider,{redirectTo:e.options?.redirectTo,scopes:e.options?.scopes,queryParams:e.options?.queryParams,skipBrowserRedirect:e.options?.skipBrowserRedirect})}async exchangeCodeForSession(e){return await this.initializePromise,this._acquireLock(this.lockAcquireTimeout,async()=>this._exchangeCodeForSession(e))}async signInWithWeb3(e){let{chain:t}=e;switch(t){case`ethereum`:return await this.signInWithEthereum(e);case`solana`:return await this.signInWithSolana(e);default:throw Error(`@supabase/auth-js: Unsupported chain "${t}"`)}}async signInWithEthereum(e){let t,n;if(`message`in e)t=e.message,n=e.signature;else{let{chain:r,wallet:i,statement:a,options:o}=e,s;if(H())if(typeof i==`object`)s=i;else{let e=window;if(`ethereum`in e&&typeof e.ethereum==`object`&&`request`in e.ethereum&&typeof e.ethereum.request==`function`)s=e.ethereum;else throw Error(`@supabase/auth-js: No compatible Ethereum wallet interface on the window object (window.ethereum) detected. Make sure the user already has a wallet installed and connected for this app. Prefer passing the wallet interface object directly to signInWithWeb3({ chain: 'ethereum', wallet: resolvedUserWallet }) instead.`)}else{if(typeof i!=`object`||!o?.url)throw Error(`@supabase/auth-js: Both wallet and url must be specified in non-browser environments.`);s=i}let c=new URL(o?.url??window.location.href),l=await s.request({method:`eth_requestAccounts`}).then(e=>e).catch(()=>{throw Error(`@supabase/auth-js: Wallet method eth_requestAccounts is missing or invalid`)});if(!l||l.length===0)throw Error(`@supabase/auth-js: No accounts available. Please ensure the wallet is connected.`);let u=Dr(l[0]),d=o?.signInWithEthereum?.chainId;d||=Or(await s.request({method:`eth_chainId`})),t=Ar({domain:c.host,address:u,statement:a,uri:c.href,version:`1`,chainId:d,nonce:o?.signInWithEthereum?.nonce,issuedAt:o?.signInWithEthereum?.issuedAt??new Date,expirationTime:o?.signInWithEthereum?.expirationTime,notBefore:o?.signInWithEthereum?.notBefore,requestId:o?.signInWithEthereum?.requestId,resources:o?.signInWithEthereum?.resources}),n=await s.request({method:`personal_sign`,params:[kr(t),u]})}try{let{data:r,error:i}=await J(this.fetch,`POST`,`${this.url}/token?grant_type=web3`,{headers:this.headers,body:Object.assign({chain:`ethereum`,message:t,signature:n},e.options?.captchaToken?{gotrue_meta_security:{captcha_token:e.options?.captchaToken}}:null),xform:Y});if(i)throw i;if(!r||!r.session||!r.user){let e=new z;return this._returnResult({data:{user:null,session:null},error:e})}return r.session&&(await this._saveSession(r.session),await this._notifyAllSubscribers(`SIGNED_IN`,r.session)),this._returnResult({data:Object.assign({},r),error:i})}catch(e){if(F(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async signInWithSolana(e){let t,n;if(`message`in e)t=e.message,n=e.signature;else{let{chain:r,wallet:i,statement:a,options:o}=e,s;if(H())if(typeof i==`object`)s=i;else{let e=window;if(`solana`in e&&typeof e.solana==`object`&&(`signIn`in e.solana&&typeof e.solana.signIn==`function`||`signMessage`in e.solana&&typeof e.solana.signMessage==`function`))s=e.solana;else throw Error(`@supabase/auth-js: No compatible Solana wallet interface on the window object (window.solana) detected. Make sure the user already has a wallet installed and connected for this app. Prefer passing the wallet interface object directly to signInWithWeb3({ chain: 'solana', wallet: resolvedUserWallet }) instead.`)}else{if(typeof i!=`object`||!o?.url)throw Error(`@supabase/auth-js: Both wallet and url must be specified in non-browser environments.`);s=i}let c=new URL(o?.url??window.location.href);if(`signIn`in s&&s.signIn){let e=await s.signIn(Object.assign(Object.assign(Object.assign({issuedAt:new Date().toISOString()},o?.signInWithSolana),{version:`1`,domain:c.host,uri:c.href}),a?{statement:a}:null)),r;if(Array.isArray(e)&&e[0]&&typeof e[0]==`object`)r=e[0];else if(e&&typeof e==`object`&&`signedMessage`in e&&`signature`in e)r=e;else throw Error(`@supabase/auth-js: Wallet method signIn() returned unrecognized value`);if(`signedMessage`in r&&`signature`in r&&(typeof r.signedMessage==`string`||r.signedMessage instanceof Uint8Array)&&r.signature instanceof Uint8Array)t=typeof r.signedMessage==`string`?r.signedMessage:new TextDecoder().decode(r.signedMessage),n=r.signature;else throw Error(`@supabase/auth-js: Wallet method signIn() API returned object without signedMessage and signature fields`)}else{if(!(`signMessage`in s)||typeof s.signMessage!=`function`||!(`publicKey`in s)||typeof s!=`object`||!s.publicKey||!(`toBase58`in s.publicKey)||typeof s.publicKey.toBase58!=`function`)throw Error(`@supabase/auth-js: Wallet does not have a compatible signMessage() and publicKey.toBase58() API`);t=[`${c.host} wants you to sign in with your Solana account:`,s.publicKey.toBase58(),...a?[``,a,``]:[``],`Version: 1`,`URI: ${c.href}`,`Issued At: ${o?.signInWithSolana?.issuedAt??new Date().toISOString()}`,...o?.signInWithSolana?.notBefore?[`Not Before: ${o.signInWithSolana.notBefore}`]:[],...o?.signInWithSolana?.expirationTime?[`Expiration Time: ${o.signInWithSolana.expirationTime}`]:[],...o?.signInWithSolana?.chainId?[`Chain ID: ${o.signInWithSolana.chainId}`]:[],...o?.signInWithSolana?.nonce?[`Nonce: ${o.signInWithSolana.nonce}`]:[],...o?.signInWithSolana?.requestId?[`Request ID: ${o.signInWithSolana.requestId}`]:[],...o?.signInWithSolana?.resources?.length?[`Resources`,...o.signInWithSolana.resources.map(e=>`- ${e}`)]:[]].join(`
 `);let e=await s.signMessage(new TextEncoder().encode(t),`utf8`);if(!e||!(e instanceof Uint8Array))throw Error(`@supabase/auth-js: Wallet signMessage() API returned an recognized value`);n=e}}try{let{data:r,error:i}=await J(this.fetch,`POST`,`${this.url}/token?grant_type=web3`,{headers:this.headers,body:Object.assign({chain:`solana`,message:t,signature:V(n)},e.options?.captchaToken?{gotrue_meta_security:{captcha_token:e.options?.captchaToken}}:null),xform:Y});if(i)throw i;if(!r||!r.session||!r.user){let e=new z;return this._returnResult({data:{user:null,session:null},error:e})}return r.session&&(await this._saveSession(r.session),await this._notifyAllSubscribers(`SIGNED_IN`,r.session)),this._returnResult({data:Object.assign({},r),error:i})}catch(e){if(F(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async _exchangeCodeForSession(e){let[t,n]=(await G(this.storage,`${this.storageKey}-code-verifier`)??``).split(`/`);try{if(!t&&this.flowType===`pkce`)throw new xn;let{data:r,error:i}=await J(this.fetch,`POST`,`${this.url}/token?grant_type=pkce`,{headers:this.headers,body:{auth_code:e,code_verifier:t},xform:Y});if(await K(this.storage,`${this.storageKey}-code-verifier`),i)throw i;if(!r||!r.session||!r.user){let e=new z;return this._returnResult({data:{user:null,session:null,redirectType:null},error:e})}return r.session&&(await this._saveSession(r.session),await this._notifyAllSubscribers(`SIGNED_IN`,r.session)),this._returnResult({data:Object.assign(Object.assign({},r),{redirectType:n??null}),error:i})}catch(e){if(await K(this.storage,`${this.storageKey}-code-verifier`),F(e))return this._returnResult({data:{user:null,session:null,redirectType:null},error:e});throw e}}async signInWithIdToken(e){try{let{options:t,provider:n,token:r,access_token:i,nonce:a}=e,{data:o,error:s}=await J(this.fetch,`POST`,`${this.url}/token?grant_type=id_token`,{headers:this.headers,body:{provider:n,id_token:r,access_token:i,nonce:a,gotrue_meta_security:{captcha_token:t?.captchaToken}},xform:Y});if(s)return this._returnResult({data:{user:null,session:null},error:s});if(!o||!o.session||!o.user){let e=new z;return this._returnResult({data:{user:null,session:null},error:e})}return o.session&&(await this._saveSession(o.session),await this._notifyAllSubscribers(`SIGNED_IN`,o.session)),this._returnResult({data:o,error:s})}catch(e){if(F(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async signInWithOtp(e){try{if(`email`in e){let{email:t,options:n}=e,r=null,i=null;this.flowType===`pkce`&&([r,i]=await Qn(this.storage,this.storageKey));let{error:a}=await J(this.fetch,`POST`,`${this.url}/otp`,{headers:this.headers,body:{email:t,data:n?.data??{},create_user:n?.shouldCreateUser??!0,gotrue_meta_security:{captcha_token:n?.captchaToken},code_challenge:r,code_challenge_method:i},redirectTo:n?.emailRedirectTo});return this._returnResult({data:{user:null,session:null},error:a})}if(`phone`in e){let{phone:t,options:n}=e,{data:r,error:i}=await J(this.fetch,`POST`,`${this.url}/otp`,{headers:this.headers,body:{phone:t,data:n?.data??{},create_user:n?.shouldCreateUser??!0,gotrue_meta_security:{captcha_token:n?.captchaToken},channel:n?.channel??`sms`}});return this._returnResult({data:{user:null,session:null,messageId:r?.message_id},error:i})}throw new _n(`You must provide either an email or phone number.`)}catch(e){if(await K(this.storage,`${this.storageKey}-code-verifier`),F(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async verifyOtp(e){try{let t,n;`options`in e&&(t=e.options?.redirectTo,n=e.options?.captchaToken);let{data:r,error:i}=await J(this.fetch,`POST`,`${this.url}/verify`,{headers:this.headers,body:Object.assign(Object.assign({},e),{gotrue_meta_security:{captcha_token:n}}),redirectTo:t,xform:Y});if(i)throw i;if(!r)throw Error(`An error occurred on token verification.`);let a=r.session,o=r.user;return a?.access_token&&(await this._saveSession(a),await this._notifyAllSubscribers(e.type==`recovery`?`PASSWORD_RECOVERY`:`SIGNED_IN`,a)),this._returnResult({data:{user:o,session:a},error:null})}catch(e){if(F(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async signInWithSSO(e){try{let t=null,n=null;this.flowType===`pkce`&&([t,n]=await Qn(this.storage,this.storageKey));let r=await J(this.fetch,`POST`,`${this.url}/sso`,{body:Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({},`providerId`in e?{provider_id:e.providerId}:null),`domain`in e?{domain:e.domain}:null),{redirect_to:e.options?.redirectTo??void 0}),e?.options?.captchaToken?{gotrue_meta_security:{captcha_token:e.options.captchaToken}}:null),{skip_http_redirect:!0,code_challenge:t,code_challenge_method:n}),headers:this.headers,xform:pr});return r.data?.url&&H()&&!e.options?.skipBrowserRedirect&&window.location.assign(r.data.url),this._returnResult(r)}catch(e){if(await K(this.storage,`${this.storageKey}-code-verifier`),F(e))return this._returnResult({data:null,error:e});throw e}}async reauthenticate(){return await this.initializePromise,await this._acquireLock(this.lockAcquireTimeout,async()=>await this._reauthenticate())}async _reauthenticate(){try{return await this._useSession(async e=>{let{data:{session:t},error:n}=e;if(n)throw n;if(!t)throw new R;let{error:r}=await J(this.fetch,`GET`,`${this.url}/reauthenticate`,{headers:this.headers,jwt:t.access_token});return this._returnResult({data:{user:null,session:null},error:r})})}catch(e){if(F(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async resend(e){try{let t=`${this.url}/resend`;if(`email`in e){let{email:n,type:r,options:i}=e,{error:a}=await J(this.fetch,`POST`,t,{headers:this.headers,body:{email:n,type:r,gotrue_meta_security:{captcha_token:i?.captchaToken}},redirectTo:i?.emailRedirectTo});return this._returnResult({data:{user:null,session:null},error:a})}else if(`phone`in e){let{phone:n,type:r,options:i}=e,{data:a,error:o}=await J(this.fetch,`POST`,t,{headers:this.headers,body:{phone:n,type:r,gotrue_meta_security:{captcha_token:i?.captchaToken}}});return this._returnResult({data:{user:null,session:null,messageId:a?.message_id},error:o})}throw new _n(`You must provide either an email or phone number and a type`)}catch(e){if(F(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async getSession(){return await this.initializePromise,await this._acquireLock(this.lockAcquireTimeout,async()=>this._useSession(async e=>e))}async _acquireLock(e,t){this._debug(`#_acquireLock`,`begin`,e);try{if(this.lockAcquired){let e=this.pendingInLock.length?this.pendingInLock[this.pendingInLock.length-1]:Promise.resolve(),n=(async()=>(await e,await t()))();return this.pendingInLock.push((async()=>{try{await n}catch{}})()),n}return await this.lock(`lock:${this.storageKey}`,e,async()=>{this._debug(`#_acquireLock`,`lock acquired for storage key`,this.storageKey);try{this.lockAcquired=!0;let e=t();for(this.pendingInLock.push((async()=>{try{await e}catch{}})()),await e;this.pendingInLock.length;){let e=[...this.pendingInLock];await Promise.all(e),this.pendingInLock.splice(0,e.length)}return await e}finally{this._debug(`#_acquireLock`,`lock released for storage key`,this.storageKey),this.lockAcquired=!1}})}finally{this._debug(`#_acquireLock`,`end`)}}async _useSession(e){this._debug(`#_useSession`,`begin`);try{return await e(await this.__loadSession())}finally{this._debug(`#_useSession`,`end`)}}async __loadSession(){this._debug(`#__loadSession()`,`begin`),this.lockAcquired||this._debug(`#__loadSession()`,`used outside of an acquired lock!`,Error().stack);try{let e=null,t=await G(this.storage,this.storageKey);if(this._debug(`#getSession()`,`session from storage`,t),t!==null&&(this._isValidSession(t)?e=t:(this._debug(`#getSession()`,`session from storage is not valid`),await this._removeSession())),!e)return{data:{session:null},error:null};let n=e.expires_at?e.expires_at*1e3-Date.now()<ln:!1;if(this._debug(`#__loadSession()`,`session has${n?``:` not`} expired`,`expires_at`,e.expires_at),!n){if(this.userStorage){let t=await G(this.userStorage,this.storageKey+`-user`);t?.user?e.user=t.user:e.user=ar()}if(this.storage.isServer&&e.user&&!e.user.__isUserNotAvailableProxy){let t={value:this.suppressGetSessionWarning};e.user=or(e.user,t),t.value&&(this.suppressGetSessionWarning=!0)}return{data:{session:e},error:null}}let{data:r,error:i}=await this._callRefreshToken(e.refresh_token);return i?this._returnResult({data:{session:null},error:i}):this._returnResult({data:{session:r},error:null})}finally{this._debug(`#__loadSession()`,`end`)}}async getUser(e){if(e)return await this._getUser(e);await this.initializePromise;let t=await this._acquireLock(this.lockAcquireTimeout,async()=>await this._getUser());return t.data.user&&(this.suppressGetSessionWarning=!0),t}async _getUser(e){try{return e?await J(this.fetch,`GET`,`${this.url}/user`,{headers:this.headers,jwt:e,xform:X}):await this._useSession(async e=>{let{data:t,error:n}=e;if(n)throw n;return!t.session?.access_token&&!this.hasCustomAuthorizationHeader?{data:{user:null},error:new R}:await J(this.fetch,`GET`,`${this.url}/user`,{headers:this.headers,jwt:t.session?.access_token??void 0,xform:X})})}catch(e){if(F(e))return gn(e)&&(await this._removeSession(),await K(this.storage,`${this.storageKey}-code-verifier`)),this._returnResult({data:{user:null},error:e});throw e}}async updateUser(e,t={}){return await this.initializePromise,await this._acquireLock(this.lockAcquireTimeout,async()=>await this._updateUser(e,t))}async _updateUser(e,t={}){try{return await this._useSession(async n=>{let{data:r,error:i}=n;if(i)throw i;if(!r.session)throw new R;let a=r.session,o=null,s=null;this.flowType===`pkce`&&e.email!=null&&([o,s]=await Qn(this.storage,this.storageKey));let{data:c,error:l}=await J(this.fetch,`PUT`,`${this.url}/user`,{headers:this.headers,redirectTo:t?.emailRedirectTo,body:Object.assign(Object.assign({},e),{code_challenge:o,code_challenge_method:s}),jwt:a.access_token,xform:X});if(l)throw l;return a.user=c.user,await this._saveSession(a),await this._notifyAllSubscribers(`USER_UPDATED`,a),this._returnResult({data:{user:a.user},error:null})})}catch(e){if(await K(this.storage,`${this.storageKey}-code-verifier`),F(e))return this._returnResult({data:{user:null},error:e});throw e}}async setSession(e){return await this.initializePromise,await this._acquireLock(this.lockAcquireTimeout,async()=>await this._setSession(e))}async _setSession(e){try{if(!e.access_token||!e.refresh_token)throw new R;let t=Date.now()/1e3,n=t,r=!0,i=null,{payload:a}=Gn(e.access_token);if(a.exp&&(n=a.exp,r=n<=t),r){let{data:t,error:n}=await this._callRefreshToken(e.refresh_token);if(n)return this._returnResult({data:{user:null,session:null},error:n});if(!t)return{data:{user:null,session:null},error:null};i=t}else{let{data:r,error:a}=await this._getUser(e.access_token);if(a)return this._returnResult({data:{user:null,session:null},error:a});i={access_token:e.access_token,refresh_token:e.refresh_token,user:r.user,token_type:`bearer`,expires_in:n-t,expires_at:n},await this._saveSession(i),await this._notifyAllSubscribers(`SIGNED_IN`,i)}return this._returnResult({data:{user:i.user,session:i},error:null})}catch(e){if(F(e))return this._returnResult({data:{session:null,user:null},error:e});throw e}}async refreshSession(e){return await this.initializePromise,await this._acquireLock(this.lockAcquireTimeout,async()=>await this._refreshSession(e))}async _refreshSession(e){try{return await this._useSession(async t=>{if(!e){let{data:n,error:r}=t;if(r)throw r;e=n.session??void 0}if(!e?.refresh_token)throw new R;let{data:n,error:r}=await this._callRefreshToken(e.refresh_token);return r?this._returnResult({data:{user:null,session:null},error:r}):n?this._returnResult({data:{user:n.user,session:n},error:null}):this._returnResult({data:{user:null,session:null},error:null})})}catch(e){if(F(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async _getSessionFromURL(e,t){try{if(!H())throw new vn(`No browser detected.`);if(e.error||e.error_description||e.error_code)throw new vn(e.error_description||`Error in URL with unspecified error_description`,{error:e.error||`unspecified_error`,code:e.error_code||`unspecified_code`});switch(t){case`implicit`:if(this.flowType===`pkce`)throw new bn(`Not a valid PKCE flow url.`);break;case`pkce`:if(this.flowType===`implicit`)throw new vn(`Not a valid implicit grant flow url.`);break;default:}if(t===`pkce`){if(this._debug(`#_initialize()`,`begin`,`is PKCE flow`,!0),!e.code)throw new bn(`No code detected.`);let{data:t,error:n}=await this._exchangeCodeForSession(e.code);if(n)throw n;let r=new URL(window.location.href);return r.searchParams.delete(`code`),window.history.replaceState(window.history.state,``,r.toString()),{data:{session:t.session,redirectType:null},error:null}}let{provider_token:n,provider_refresh_token:r,access_token:i,refresh_token:a,expires_in:o,expires_at:s,token_type:c}=e;if(!i||!o||!a||!c)throw new vn(`No session defined in URL`);let l=Math.round(Date.now()/1e3),u=parseInt(o),d=l+u;s&&(d=parseInt(s));let f=d-l;f*1e3<=N&&console.warn(`@supabase/gotrue-js: Session as retrieved from URL expires in ${f}s, should have been closer to ${u}s`);let p=d-u;l-p>=120?console.warn(`@supabase/gotrue-js: Session as retrieved from URL was issued over 120s ago, URL could be stale`,p,d,l):l-p<0&&console.warn(`@supabase/gotrue-js: Session as retrieved from URL was issued in the future? Check the device clock for skew`,p,d,l);let{data:m,error:h}=await this._getUser(i);if(h)throw h;let ee={provider_token:n,provider_refresh_token:r,access_token:i,expires_in:u,expires_at:d,refresh_token:a,token_type:c,user:m.user};return window.location.hash=``,this._debug(`#_getSessionFromURL()`,`clearing window.location.hash`),this._returnResult({data:{session:ee,redirectType:e.type},error:null})}catch(e){if(F(e))return this._returnResult({data:{session:null,redirectType:null},error:e});throw e}}_isImplicitGrantCallback(e){return typeof this.detectSessionInUrl==`function`?this.detectSessionInUrl(new URL(window.location.href),e):!!(e.access_token||e.error_description)}async _isPKCECallback(e){let t=await G(this.storage,`${this.storageKey}-code-verifier`);return!!(e.code&&t)}async signOut(e={scope:`global`}){return await this.initializePromise,await this._acquireLock(this.lockAcquireTimeout,async()=>await this._signOut(e))}async _signOut({scope:e}={scope:`global`}){return await this._useSession(async t=>{let{data:n,error:r}=t;if(r&&!gn(r))return this._returnResult({error:r});let i=n.session?.access_token;if(i){let{error:t}=await this.admin.signOut(i,e);if(t&&!(hn(t)&&(t.status===404||t.status===401||t.status===403)||gn(t)))return this._returnResult({error:t})}return e!==`others`&&(await this._removeSession(),await K(this.storage,`${this.storageKey}-code-verifier`)),this._returnResult({error:null})})}onAuthStateChange(e){let t=zn(),n={id:t,callback:e,unsubscribe:()=>{this._debug(`#unsubscribe()`,`state change callback with id removed`,t),this.stateChangeEmitters.delete(t)}};return this._debug(`#onAuthStateChange()`,`registered callback with id`,t),this.stateChangeEmitters.set(t,n),(async()=>{await this.initializePromise,await this._acquireLock(this.lockAcquireTimeout,async()=>{this._emitInitialSession(t)})})(),{data:{subscription:n}}}async _emitInitialSession(e){return await this._useSession(async t=>{try{let{data:{session:n},error:r}=t;if(r)throw r;await this.stateChangeEmitters.get(e)?.callback(`INITIAL_SESSION`,n),this._debug(`INITIAL_SESSION`,`callback id`,e,`session`,n)}catch(t){await this.stateChangeEmitters.get(e)?.callback(`INITIAL_SESSION`,null),this._debug(`INITIAL_SESSION`,`callback id`,e,`error`,t),gn(t)?console.warn(t):console.error(t)}})}async resetPasswordForEmail(e,t={}){let n=null,r=null;this.flowType===`pkce`&&([n,r]=await Qn(this.storage,this.storageKey,!0));try{return await J(this.fetch,`POST`,`${this.url}/recover`,{body:{email:e,code_challenge:n,code_challenge_method:r,gotrue_meta_security:{captcha_token:t.captchaToken}},headers:this.headers,redirectTo:t.redirectTo})}catch(e){if(await K(this.storage,`${this.storageKey}-code-verifier`),F(e))return this._returnResult({data:null,error:e});throw e}}async getUserIdentities(){try{let{data:e,error:t}=await this.getUser();if(t)throw t;return this._returnResult({data:{identities:e.user.identities??[]},error:null})}catch(e){if(F(e))return this._returnResult({data:null,error:e});throw e}}async linkIdentity(e){return`token`in e?this.linkIdentityIdToken(e):this.linkIdentityOAuth(e)}async linkIdentityOAuth(e){try{let{data:t,error:n}=await this._useSession(async t=>{let{data:n,error:r}=t;if(r)throw r;let i=await this._getUrlForProvider(`${this.url}/user/identities/authorize`,e.provider,{redirectTo:e.options?.redirectTo,scopes:e.options?.scopes,queryParams:e.options?.queryParams,skipBrowserRedirect:!0});return await J(this.fetch,`GET`,i,{headers:this.headers,jwt:n.session?.access_token??void 0})});if(n)throw n;return H()&&!e.options?.skipBrowserRedirect&&window.location.assign(t?.url),this._returnResult({data:{provider:e.provider,url:t?.url},error:null})}catch(t){if(F(t))return this._returnResult({data:{provider:e.provider,url:null},error:t});throw t}}async linkIdentityIdToken(e){return await this._useSession(async t=>{try{let{error:n,data:{session:r}}=t;if(n)throw n;let{options:i,provider:a,token:o,access_token:s,nonce:c}=e,{data:l,error:u}=await J(this.fetch,`POST`,`${this.url}/token?grant_type=id_token`,{headers:this.headers,jwt:r?.access_token??void 0,body:{provider:a,id_token:o,access_token:s,nonce:c,link_identity:!0,gotrue_meta_security:{captcha_token:i?.captchaToken}},xform:Y});return u?this._returnResult({data:{user:null,session:null},error:u}):!l||!l.session||!l.user?this._returnResult({data:{user:null,session:null},error:new z}):(l.session&&(await this._saveSession(l.session),await this._notifyAllSubscribers(`USER_UPDATED`,l.session)),this._returnResult({data:l,error:u}))}catch(e){if(await K(this.storage,`${this.storageKey}-code-verifier`),F(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}})}async unlinkIdentity(e){try{return await this._useSession(async t=>{let{data:n,error:r}=t;if(r)throw r;return await J(this.fetch,`DELETE`,`${this.url}/user/identities/${e.identity_id}`,{headers:this.headers,jwt:n.session?.access_token??void 0})})}catch(e){if(F(e))return this._returnResult({data:null,error:e});throw e}}async _refreshAccessToken(e){let t=`#_refreshAccessToken(${e.substring(0,5)}...)`;this._debug(t,`begin`);try{let n=Date.now();return await qn(async n=>(n>0&&await Kn(200*2**(n-1)),this._debug(t,`refreshing attempt`,n),await J(this.fetch,`POST`,`${this.url}/token?grant_type=refresh_token`,{body:{refresh_token:e},headers:this.headers,xform:Y})),(e,t)=>{let r=200*2**e;return t&&wn(t)&&Date.now()+r-n<N})}catch(e){if(this._debug(t,`error`,e),F(e))return this._returnResult({data:{session:null,user:null},error:e});throw e}finally{this._debug(t,`end`)}}_isValidSession(e){return typeof e==`object`&&!!e&&`access_token`in e&&`refresh_token`in e&&`expires_at`in e}async _handleProviderSignIn(e,t){let n=await this._getUrlForProvider(`${this.url}/authorize`,e,{redirectTo:t.redirectTo,scopes:t.scopes,queryParams:t.queryParams});return this._debug(`#_handleProviderSignIn()`,`provider`,e,`options`,t,`url`,n),H()&&!t.skipBrowserRedirect&&window.location.assign(n),{data:{provider:e,url:n},error:null}}async _recoverAndRefresh(){let e=`#_recoverAndRefresh()`;this._debug(e,`begin`);try{let t=await G(this.storage,this.storageKey);if(t&&this.userStorage){let e=await G(this.userStorage,this.storageKey+`-user`);!this.storage.isServer&&Object.is(this.storage,this.userStorage)&&!e&&(e={user:t.user},await W(this.userStorage,this.storageKey+`-user`,e)),t.user=e?.user??ar()}else if(t&&!t.user&&!t.user){let e=await G(this.storage,this.storageKey+`-user`);e&&e?.user?(t.user=e.user,await K(this.storage,this.storageKey+`-user`),await W(this.storage,this.storageKey,t)):t.user=ar()}if(this._debug(e,`session from storage`,t),!this._isValidSession(t)){this._debug(e,`session is not valid`),t!==null&&await this._removeSession();return}let n=(t.expires_at??1/0)*1e3-Date.now()<ln;if(this._debug(e,`session has${n?``:` not`} expired with margin of ${ln}s`),n){if(this.autoRefreshToken&&t.refresh_token){let{error:n}=await this._callRefreshToken(t.refresh_token);n&&(console.error(n),wn(n)||(this._debug(e,`refresh failed with a non-retryable error, removing the session`,n),await this._removeSession()))}}else if(t.user&&t.user.__isUserNotAvailableProxy===!0)try{let{data:n,error:r}=await this._getUser(t.access_token);!r&&n?.user?(t.user=n.user,await this._saveSession(t),await this._notifyAllSubscribers(`SIGNED_IN`,t)):this._debug(e,`could not get user data, skipping SIGNED_IN notification`)}catch(t){console.error(`Error getting user data:`,t),this._debug(e,`error getting user data, skipping SIGNED_IN notification`,t)}else await this._notifyAllSubscribers(`SIGNED_IN`,t)}catch(t){this._debug(e,`error`,t),console.error(t);return}finally{this._debug(e,`end`)}}async _callRefreshToken(e){var t,n;if(!e)throw new R;if(this.refreshingDeferred)return this.refreshingDeferred.promise;let r=`#_callRefreshToken(${e.substring(0,5)}...)`;this._debug(r,`begin`);try{this.refreshingDeferred=new Wn;let{data:t,error:n}=await this._refreshAccessToken(e);if(n)throw n;if(!t.session)throw new R;await this._saveSession(t.session),await this._notifyAllSubscribers(`TOKEN_REFRESHED`,t.session);let r={data:t.session,error:null};return this.refreshingDeferred.resolve(r),r}catch(e){if(this._debug(r,`error`,e),F(e)){let n={data:null,error:e};return wn(e)||await this._removeSession(),(t=this.refreshingDeferred)==null||t.resolve(n),n}throw(n=this.refreshingDeferred)==null||n.reject(e),e}finally{this.refreshingDeferred=null,this._debug(r,`end`)}}async _notifyAllSubscribers(e,t,n=!0){let r=`#_notifyAllSubscribers(${e})`;this._debug(r,`begin`,t,`broadcast = ${n}`);try{this.broadcastChannel&&n&&this.broadcastChannel.postMessage({event:e,session:t});let r=[],i=Array.from(this.stateChangeEmitters.values()).map(async n=>{try{await n.callback(e,t)}catch(e){r.push(e)}});if(await Promise.all(i),r.length>0){for(let e=0;e<r.length;e+=1)console.error(r[e]);throw r[0]}}finally{this._debug(r,`end`)}}async _saveSession(e){this._debug(`#_saveSession()`,e),this.suppressGetSessionWarning=!0,await K(this.storage,`${this.storageKey}-code-verifier`);let t=Object.assign({},e),n=t.user&&t.user.__isUserNotAvailableProxy===!0;if(this.userStorage){!n&&t.user&&await W(this.userStorage,this.storageKey+`-user`,{user:t.user});let e=Object.assign({},t);delete e.user;let r=sr(e);await W(this.storage,this.storageKey,r)}else{let e=sr(t);await W(this.storage,this.storageKey,e)}}async _removeSession(){this._debug(`#_removeSession()`),this.suppressGetSessionWarning=!1,await K(this.storage,this.storageKey),await K(this.storage,this.storageKey+`-code-verifier`),await K(this.storage,this.storageKey+`-user`),this.userStorage&&await K(this.userStorage,this.storageKey+`-user`),await this._notifyAllSubscribers(`SIGNED_OUT`,null)}_removeVisibilityChangedCallback(){this._debug(`#_removeVisibilityChangedCallback()`);let e=this.visibilityChangedCallback;this.visibilityChangedCallback=null;try{e&&H()&&window!=null&&window.removeEventListener&&window.removeEventListener(`visibilitychange`,e)}catch(e){console.error(`removing visibilitychange callback failed`,e)}}async _startAutoRefresh(){await this._stopAutoRefresh(),this._debug(`#_startAutoRefresh()`);let e=setInterval(()=>this._autoRefreshTokenTick(),N);this.autoRefreshTicker=e,e&&typeof e==`object`&&typeof e.unref==`function`?e.unref():typeof Deno<`u`&&typeof Deno.unrefTimer==`function`&&Deno.unrefTimer(e);let t=setTimeout(async()=>{await this.initializePromise,await this._autoRefreshTokenTick()},0);this.autoRefreshTickTimeout=t,t&&typeof t==`object`&&typeof t.unref==`function`?t.unref():typeof Deno<`u`&&typeof Deno.unrefTimer==`function`&&Deno.unrefTimer(t)}async _stopAutoRefresh(){this._debug(`#_stopAutoRefresh()`);let e=this.autoRefreshTicker;this.autoRefreshTicker=null,e&&clearInterval(e);let t=this.autoRefreshTickTimeout;this.autoRefreshTickTimeout=null,t&&clearTimeout(t)}async startAutoRefresh(){this._removeVisibilityChangedCallback(),await this._startAutoRefresh()}async stopAutoRefresh(){this._removeVisibilityChangedCallback(),await this._stopAutoRefresh()}async _autoRefreshTokenTick(){this._debug(`#_autoRefreshTokenTick()`,`begin`);try{await this._acquireLock(0,async()=>{try{let e=Date.now();try{return await this._useSession(async t=>{let{data:{session:n}}=t;if(!n||!n.refresh_token||!n.expires_at){this._debug(`#_autoRefreshTokenTick()`,`no session`);return}let r=Math.floor((n.expires_at*1e3-e)/N);this._debug(`#_autoRefreshTokenTick()`,`access token expires in ${r} ticks, a tick lasts ${N}ms, refresh threshold is 3 ticks`),r<=3&&await this._callRefreshToken(n.refresh_token)})}catch(e){console.error(`Auto refresh tick failed with error. This is likely a transient error.`,e)}}finally{this._debug(`#_autoRefreshTokenTick()`,`end`)}})}catch(e){if(e.isAcquireTimeout||e instanceof br)this._debug(`auto refresh token tick lock not available`);else throw e}}async _handleVisibilityChange(){if(this._debug(`#_handleVisibilityChange()`),!H()||!(window!=null&&window.addEventListener))return this.autoRefreshToken&&this.startAutoRefresh(),!1;try{this.visibilityChangedCallback=async()=>{try{await this._onVisibilityChanged(!1)}catch(e){this._debug(`#visibilityChangedCallback`,`error`,e)}},window==null||window.addEventListener(`visibilitychange`,this.visibilityChangedCallback),await this._onVisibilityChanged(!0)}catch(e){console.error(`_handleVisibilityChange`,e)}}async _onVisibilityChanged(e){let t=`#_onVisibilityChanged(${e})`;this._debug(t,`visibilityState`,document.visibilityState),document.visibilityState===`visible`?(this.autoRefreshToken&&this._startAutoRefresh(),e||(await this.initializePromise,await this._acquireLock(this.lockAcquireTimeout,async()=>{if(document.visibilityState!==`visible`){this._debug(t,`acquired the lock to recover the session, but the browser visibilityState is no longer visible, aborting`);return}await this._recoverAndRefresh()}))):document.visibilityState===`hidden`&&this.autoRefreshToken&&this._stopAutoRefresh()}async _getUrlForProvider(e,t,n){let r=[`provider=${encodeURIComponent(t)}`];if(n?.redirectTo&&r.push(`redirect_to=${encodeURIComponent(n.redirectTo)}`),n?.scopes&&r.push(`scopes=${encodeURIComponent(n.scopes)}`),this.flowType===`pkce`){let[e,t]=await Qn(this.storage,this.storageKey),n=new URLSearchParams({code_challenge:`${encodeURIComponent(e)}`,code_challenge_method:`${encodeURIComponent(t)}`});r.push(n.toString())}if(n?.queryParams){let e=new URLSearchParams(n.queryParams);r.push(e.toString())}return n?.skipBrowserRedirect&&r.push(`skip_http_redirect=${n.skipBrowserRedirect}`),`${e}?${r.join(`&`)}`}async _unenroll(e){try{return await this._useSession(async t=>{let{data:n,error:r}=t;return r?this._returnResult({data:null,error:r}):await J(this.fetch,`DELETE`,`${this.url}/factors/${e.factorId}`,{headers:this.headers,jwt:n?.session?.access_token})})}catch(e){if(F(e))return this._returnResult({data:null,error:e});throw e}}async _enroll(e){try{return await this._useSession(async t=>{let{data:n,error:r}=t;if(r)return this._returnResult({data:null,error:r});let i=Object.assign({friendly_name:e.friendlyName,factor_type:e.factorType},e.factorType===`phone`?{phone:e.phone}:e.factorType===`totp`?{issuer:e.issuer}:{}),{data:a,error:o}=await J(this.fetch,`POST`,`${this.url}/factors`,{body:i,headers:this.headers,jwt:n?.session?.access_token});return o?this._returnResult({data:null,error:o}):(e.factorType===`totp`&&a.type===`totp`&&a?.totp?.qr_code&&(a.totp.qr_code=`data:image/svg+xml;utf-8,${a.totp.qr_code}`),this._returnResult({data:a,error:null}))})}catch(e){if(F(e))return this._returnResult({data:null,error:e});throw e}}async _verify(e){return this._acquireLock(this.lockAcquireTimeout,async()=>{try{return await this._useSession(async t=>{let{data:n,error:r}=t;if(r)return this._returnResult({data:null,error:r});let i=Object.assign({challenge_id:e.challengeId},`webauthn`in e?{webauthn:Object.assign(Object.assign({},e.webauthn),{credential_response:e.webauthn.type===`create`?Lr(e.webauthn.credential_response):Rr(e.webauthn.credential_response)})}:{code:e.code}),{data:a,error:o}=await J(this.fetch,`POST`,`${this.url}/factors/${e.factorId}/verify`,{body:i,headers:this.headers,jwt:n?.session?.access_token});return o?this._returnResult({data:null,error:o}):(await this._saveSession(Object.assign({expires_at:Math.round(Date.now()/1e3)+a.expires_in},a)),await this._notifyAllSubscribers(`MFA_CHALLENGE_VERIFIED`,a),this._returnResult({data:a,error:o}))})}catch(e){if(F(e))return this._returnResult({data:null,error:e});throw e}})}async _challenge(e){return this._acquireLock(this.lockAcquireTimeout,async()=>{try{return await this._useSession(async t=>{let{data:n,error:r}=t;if(r)return this._returnResult({data:null,error:r});let i=await J(this.fetch,`POST`,`${this.url}/factors/${e.factorId}/challenge`,{body:e,headers:this.headers,jwt:n?.session?.access_token});if(i.error)return i;let{data:a}=i;if(a.type!==`webauthn`)return{data:a,error:null};switch(a.webauthn.type){case`create`:return{data:Object.assign(Object.assign({},a),{webauthn:Object.assign(Object.assign({},a.webauthn),{credential_options:Object.assign(Object.assign({},a.webauthn.credential_options),{publicKey:Fr(a.webauthn.credential_options.publicKey)})})}),error:null};case`request`:return{data:Object.assign(Object.assign({},a),{webauthn:Object.assign(Object.assign({},a.webauthn),{credential_options:Object.assign(Object.assign({},a.webauthn.credential_options),{publicKey:Ir(a.webauthn.credential_options.publicKey)})})}),error:null}}})}catch(e){if(F(e))return this._returnResult({data:null,error:e});throw e}})}async _challengeAndVerify(e){let{data:t,error:n}=await this._challenge({factorId:e.factorId});return n?this._returnResult({data:null,error:n}):await this._verify({factorId:e.factorId,challengeId:t.id,code:e.code})}async _listFactors(){let{data:{user:e},error:t}=await this.getUser();if(t)return{data:null,error:t};let n={all:[],phone:[],totp:[],webauthn:[]};for(let t of e?.factors??[])n.all.push(t),t.status===`verified`&&n[t.factor_type].push(t);return{data:n,error:null}}async _getAuthenticatorAssuranceLevel(e){if(e)try{let{payload:t}=Gn(e),n=null;t.aal&&(n=t.aal);let r=n,{data:{user:i},error:a}=await this.getUser(e);if(a)return this._returnResult({data:null,error:a});((i?.factors)?.filter(e=>e.status===`verified`)??[]).length>0&&(r=`aal2`);let o=t.amr||[];return{data:{currentLevel:n,nextLevel:r,currentAuthenticationMethods:o},error:null}}catch(e){if(F(e))return this._returnResult({data:null,error:e});throw e}let{data:{session:t},error:n}=await this.getSession();if(n)return this._returnResult({data:null,error:n});if(!t)return{data:{currentLevel:null,nextLevel:null,currentAuthenticationMethods:[]},error:null};let{payload:r}=Gn(t.access_token),i=null;r.aal&&(i=r.aal);let a=i;(t.user.factors?.filter(e=>e.status===`verified`)??[]).length>0&&(a=`aal2`);let o=r.amr||[];return{data:{currentLevel:i,nextLevel:a,currentAuthenticationMethods:o},error:null}}async _getAuthorizationDetails(e){try{return await this._useSession(async t=>{let{data:{session:n},error:r}=t;return r?this._returnResult({data:null,error:r}):n?await J(this.fetch,`GET`,`${this.url}/oauth/authorizations/${e}`,{headers:this.headers,jwt:n.access_token,xform:e=>({data:e,error:null})}):this._returnResult({data:null,error:new R})})}catch(e){if(F(e))return this._returnResult({data:null,error:e});throw e}}async _approveAuthorization(e,t){try{return await this._useSession(async n=>{let{data:{session:r},error:i}=n;if(i)return this._returnResult({data:null,error:i});if(!r)return this._returnResult({data:null,error:new R});let a=await J(this.fetch,`POST`,`${this.url}/oauth/authorizations/${e}/consent`,{headers:this.headers,jwt:r.access_token,body:{action:`approve`},xform:e=>({data:e,error:null})});return a.data&&a.data.redirect_url&&H()&&!t?.skipBrowserRedirect&&window.location.assign(a.data.redirect_url),a})}catch(e){if(F(e))return this._returnResult({data:null,error:e});throw e}}async _denyAuthorization(e,t){try{return await this._useSession(async n=>{let{data:{session:r},error:i}=n;if(i)return this._returnResult({data:null,error:i});if(!r)return this._returnResult({data:null,error:new R});let a=await J(this.fetch,`POST`,`${this.url}/oauth/authorizations/${e}/consent`,{headers:this.headers,jwt:r.access_token,body:{action:`deny`},xform:e=>({data:e,error:null})});return a.data&&a.data.redirect_url&&H()&&!t?.skipBrowserRedirect&&window.location.assign(a.data.redirect_url),a})}catch(e){if(F(e))return this._returnResult({data:null,error:e});throw e}}async _listOAuthGrants(){try{return await this._useSession(async e=>{let{data:{session:t},error:n}=e;return n?this._returnResult({data:null,error:n}):t?await J(this.fetch,`GET`,`${this.url}/user/oauth/grants`,{headers:this.headers,jwt:t.access_token,xform:e=>({data:e,error:null})}):this._returnResult({data:null,error:new R})})}catch(e){if(F(e))return this._returnResult({data:null,error:e});throw e}}async _revokeOAuthGrant(e){try{return await this._useSession(async t=>{let{data:{session:n},error:r}=t;return r?this._returnResult({data:null,error:r}):n?(await J(this.fetch,`DELETE`,`${this.url}/user/oauth/grants`,{headers:this.headers,jwt:n.access_token,query:{client_id:e.clientId},noResolveJson:!0}),{data:{},error:null}):this._returnResult({data:null,error:new R})})}catch(e){if(F(e))return this._returnResult({data:null,error:e});throw e}}async fetchJwk(e,t={keys:[]}){let n=t.keys.find(t=>t.kid===e);if(n)return n;let r=Date.now();if(n=this.jwks.keys.find(t=>t.kid===e),n&&this.jwks_cached_at+6e5>r)return n;let{data:i,error:a}=await J(this.fetch,`GET`,`${this.url}/.well-known/jwks.json`,{headers:this.headers});if(a)throw a;return!i.keys||i.keys.length===0||(this.jwks=i,this.jwks_cached_at=r,n=i.keys.find(t=>t.kid===e),!n)?null:n}async getClaims(e,t={}){try{let n=e;if(!n){let{data:e,error:t}=await this.getSession();if(t||!e.session)return this._returnResult({data:null,error:t});n=e.session.access_token}let{header:r,payload:i,signature:a,raw:{header:o,payload:s}}=Gn(n);t?.allowExpired||tr(i.exp);let c=!r.alg||r.alg.startsWith(`HS`)||!r.kid||!(`crypto`in globalThis&&`subtle`in globalThis.crypto)?null:await this.fetchJwk(r.kid,t?.keys?{keys:t.keys}:t?.jwks);if(!c){let{error:e}=await this.getUser(n);if(e)throw e;return{data:{claims:i,header:r,signature:a},error:null}}let l=nr(r.alg),u=await crypto.subtle.importKey(`jwk`,c,l,!0,[`verify`]);if(!await crypto.subtle.verify(l,u,a,Ln(`${o}.${s}`)))throw new Dn(`Invalid JWT signature`);return{data:{claims:i,header:r,signature:a},error:null}}catch(e){if(F(e))return this._returnResult({data:null,error:e});throw e}}};Zr.nextInstanceID={};var Qr=Zr,$r=vr,ei=Qr,ti=class extends ei{constructor(e){super(e)}},ni=class{constructor(e,t,n){this.supabaseUrl=e,this.supabaseKey=t;let r=sn(e);if(!t)throw Error(`supabaseKey is required.`);this.realtimeUrl=new URL(`realtime/v1`,r),this.realtimeUrl.protocol=this.realtimeUrl.protocol.replace(`http`,`ws`),this.authUrl=new URL(`auth/v1`,r),this.storageUrl=new URL(`storage/v1`,r),this.functionsUrl=new URL(`functions/v1`,r);let i=`sb-${r.hostname.split(`.`)[0]}-auth-token`,a={db:Qt,realtime:en,auth:{...$t,storageKey:i},global:Zt},o=on(n??{},a);this.storageKey=o.auth.storageKey??``,this.headers=o.global.headers??{},o.accessToken?(this.accessToken=o.accessToken,this.auth=new Proxy({},{get:(e,t)=>{throw Error(`@supabase/supabase-js: Supabase Client is configured with the accessToken option, accessing supabase.auth.${String(t)} is not possible`)}})):this.auth=this._initSupabaseAuthClient(o.auth??{},this.headers,o.global.fetch),this.fetch=rn(t,this._getAccessToken.bind(this),o.global.fetch),this.realtime=this._initRealtimeClient({headers:this.headers,accessToken:this._getAccessToken.bind(this),...o.realtime}),this.accessToken&&Promise.resolve(this.accessToken()).then(e=>this.realtime.setAuth(e)).catch(e=>console.warn(`Failed to set initial Realtime auth token:`,e)),this.rest=new le(new URL(`rest/v1`,r).href,{headers:this.headers,schema:o.db.schema,fetch:this.fetch,timeout:o.db.timeout,urlLengthLimit:o.db.urlLengthLimit}),this.storage=new Yt(this.storageUrl.href,this.headers,this.fetch,n?.storage),o.accessToken||this._listenForAuthEvents()}get functions(){return new l(this.functionsUrl.href,{headers:this.headers,customFetch:this.fetch})}from(e){return this.rest.from(e)}schema(e){return this.rest.schema(e)}rpc(e,t={},n={head:!1,get:!1,count:void 0}){return this.rest.rpc(e,t,n)}channel(e,t={config:{}}){return this.realtime.channel(e,t)}getChannels(){return this.realtime.getChannels()}removeChannel(e){return this.realtime.removeChannel(e)}removeAllChannels(){return this.realtime.removeAllChannels()}async _getAccessToken(){if(this.accessToken)return await this.accessToken();let{data:e}=await this.auth.getSession();return e.session?.access_token??this.supabaseKey}_initSupabaseAuthClient({autoRefreshToken:e,persistSession:t,detectSessionInUrl:n,storage:r,userStorage:i,storageKey:a,flowType:o,lock:s,debug:c,throwOnError:l},u,d){let f={Authorization:`Bearer ${this.supabaseKey}`,apikey:`${this.supabaseKey}`};return new ti({url:this.authUrl.href,headers:{...f,...u},storageKey:a,autoRefreshToken:e,persistSession:t,detectSessionInUrl:n,storage:r,userStorage:i,flowType:o,lock:s,debug:c,throwOnError:l,fetch:d,hasCustomAuthorizationHeader:Object.keys(this.headers).some(e=>e.toLowerCase()===`authorization`)})}_initRealtimeClient(e){return new tt(this.realtimeUrl.href,{...e,params:{apikey:this.supabaseKey,...e?.params}})}_listenForAuthEvents(){return this.auth.onAuthStateChange((e,t)=>{this._handleTokenChanged(e,`CLIENT`,t?.access_token)})}_handleTokenChanged(e,t,n){(e===`TOKEN_REFRESHED`||e===`SIGNED_IN`)&&this.changedAccessToken!==n?(this.changedAccessToken=n,this.realtime.setAuth(n)):e===`SIGNED_OUT`&&(this.realtime.setAuth(),t==`STORAGE`&&this.auth.signOut(),this.changedAccessToken=void 0)}};let ri=(e,t,n)=>new ni(e,t,n);function ii(){if(typeof window<`u`)return!1;let e=globalThis.process;if(!e)return!1;let t=e.version;if(t==null)return!1;let n=t.match(/^v(\d+)\./);return n?parseInt(n[1],10)<=18:!1}return ii()&&console.warn(`⚠️  Node.js 18 and below are deprecated and will no longer be supported in future versions of @supabase/supabase-js. Please upgrade to Node.js 20 or later. For more information, visit: https://github.com/orgs/supabase/discussions/37217`),e.AuthAdminApi=$r,e.AuthApiError=mn,e.AuthClient=ei,e.AuthError=P,e.AuthImplicitGrantRedirectError=vn,e.AuthInvalidCredentialsError=_n,e.AuthInvalidJwtError=Dn,e.AuthInvalidTokenResponseError=z,e.AuthPKCECodeVerifierMissingError=xn,e.AuthPKCEGrantCodeExchangeError=bn,e.AuthRetryableFetchError=Cn,e.AuthSessionMissingError=R,e.AuthUnknownError=I,e.AuthWeakPasswordError=Tn,e.CustomAuthError=L,Object.defineProperty(e,`FunctionRegion`,{enumerable:!0,get:function(){return c}}),e.FunctionsError=i,e.FunctionsFetchError=a,e.FunctionsHttpError=s,e.FunctionsRelayError=o,e.GoTrueAdminApi=vr,e.GoTrueClient=Qr,e.NavigatorLockAcquireTimeoutError=xr,e.PostgrestError=p,e.REALTIME_CHANNEL_STATES=Xe,Object.defineProperty(e,`REALTIME_LISTEN_TYPES`,{enumerable:!0,get:function(){return E}}),Object.defineProperty(e,`REALTIME_POSTGRES_CHANGES_LISTEN_EVENT`,{enumerable:!0,get:function(){return Ye}}),Object.defineProperty(e,`REALTIME_PRESENCE_LISTEN_EVENTS`,{enumerable:!0,get:function(){return Ge}}),Object.defineProperty(e,`REALTIME_SUBSCRIBE_STATES`,{enumerable:!0,get:function(){return D}}),e.RealtimeChannel=Ze,e.RealtimeClient=tt,e.RealtimePresence=Ke,e.SIGN_OUT_SCOPES=_r,e.StorageApiError=_t,e.SupabaseClient=ni,e.WebSocketFactory=ue,e.createClient=ri,e.isAuthApiError=hn,e.isAuthError=F,e.isAuthImplicitGrantRedirectError=yn,e.isAuthPKCECodeVerifierMissingError=Sn,e.isAuthRetryableFetchError=wn,e.isAuthSessionMissingError=gn,e.isAuthWeakPasswordError=En,e.lockInternals=Z,e.navigatorLock=Cr,e.processLock=Tr,e})({});</script>
-<style>
-/* ADMIN PAGE */
-.admin-card {
-  background: var(--card-bg);
-  border: 1px solid #2a1a1a;
-  border-left: 3px solid var(--accent);
-  border-radius: var(--radius);
-  padding: 14px;
-  margin-bottom: 10px;
-}
-.admin-badge {
-  display: inline-flex; align-items: center; gap: 4px;
-  background: rgba(255,60,60,0.15); color: var(--accent);
-  border: 1px solid rgba(255,60,60,0.3);
-  border-radius: 20px; padding: 2px 8px; font-size: 10px;
-  font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
-}
-.ban-badge {
-  display: inline-flex; align-items: center; gap: 4px;
-  background: rgba(255,60,60,0.2); color: #ff6b6b;
-  border: 1px solid rgba(255,60,60,0.4);
-  border-radius: 20px; padding: 2px 8px; font-size: 10px; font-weight: 700;
-}
-.tab-row {
-  display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto;
-  padding-bottom: 4px;
-}
-.tab-btn {
-  padding: 7px 14px; border-radius: 20px; border: 1px solid var(--border);
-  background: var(--bg3); color: var(--muted2); font-size: 12px; font-weight: 700;
-  cursor: pointer; white-space: nowrap; font-family: Manrope, sans-serif;
-  transition: all 0.15s;
-}
-.tab-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
-/* OTP inputs */
-.otp-row { display: flex; gap: 10px; justify-content: center; margin: 16px 0; }
-.otp-input {
-  width: 48px; height: 56px; text-align: center;
-  background: var(--bg3); border: 2px solid var(--border);
-  border-radius: 12px; color: var(--text); font-size: 22px; font-weight: 700;
-  font-family: Bebas Neue, sans-serif; outline: none; transition: border-color 0.2s;
-}
-.otp-input:focus { border-color: var(--accent); }
-.otp-input.error { border-color: #ff6b6b; animation: shake 0.3s ease; }
-@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
-.otp-input.success { border-color: var(--green); }
-</style>
 <script>
 document.getElementById('loader').style.display = 'none';
 
@@ -914,21 +890,25 @@ const SKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZ
 const sb = window.supabase.createClient(SURL, SKEY);
 
 const CITIES = ['Севастополь'];
-const CANCEL_REASONS = ['Передумал', 'Нашёл курьера сам', 'Изменились планы', 'Другое'];
+const CANCEL_REASONS = ['Передумал','Нашёл курьера сам','Изменились планы','Другое'];
 const ADMIN_EMAIL = 'mccheatmine@gmail.com';
 
-let currentUser = null;
-let currentProfile = null;
-let currentChatOrderId = null;
-let chatSub = null;
-let ordersSub = null;
-let adminTab = 'orders';
+let currentUser = null, currentProfile = null;
+let currentChatOrderId = null, chatSub = null, ordersSub = null;
+let adminTab = 'dashboard';
+let adminSearch = '';
 window._orders = [];
-window._allUsers = [];
 
-// ══════════════════════════════════
-// INIT
-// ══════════════════════════════════
+// ══ PING last_seen каждые 30 сек ══
+function startPing() {
+  const ping = () => {
+    if (currentUser) sb.from('profiles').update({last_seen: new Date().toISOString()}).eq('id', currentUser.id);
+  };
+  ping();
+  setInterval(ping, 30000);
+}
+
+// ══ INIT ══
 async function init() {
   document.getElementById('configNotice').style.display = 'none';
   const { data:{ session } } = await sb.auth.getSession();
@@ -962,24 +942,17 @@ function showBanned() {
     <div style="text-align:center;max-width:300px">
       <div style="font-size:48px;margin-bottom:12px">🚫</div>
       <div style="font-family:Bebas Neue,sans-serif;font-size:24px;color:var(--accent);margin-bottom:8px">Аккаунт заблокирован</div>
-      <div style="color:var(--muted2);font-size:13px;line-height:1.6">${currentProfile?.ban_reason||'Нарушение правил сервиса'}</div>
+      <div style="color:var(--muted2);font-size:13px;line-height:1.6">${currentProfile?.ban_reason||'Нарушение правил'}</div>
       <button class="auth-btn" style="margin-top:24px;background:var(--bg3);color:var(--muted2)" onclick="sb.auth.signOut()">Выйти</button>
     </div>`;
 }
 
-// ══════════════════════════════════
-// AUTH — многошаговая
-// ══════════════════════════════════
-// authStep: 'login' | 'register' | 'otp' | 'confirm_sent'
-let authStep = 'login';
-let pendingEmail = '';
-let pendingPassword = '';
-let pendingName = '';
-let pendingCity = '';
-let otpResendTimer = 0;
+// ══ AUTH ══
+let authStep = 'login', pendingEmail = '', pendingName = '', pendingCity = '';
+let otpResendTimer = 0, resendInterval = null;
 
 function showAuthScreen(step) {
-  authStep = step || 'login';
+  authStep = step||'login';
   document.getElementById('authScreen').style.display = 'flex';
   renderAuth();
 }
@@ -1018,280 +991,225 @@ function renderAuth() {
         <div style="font-size:36px;margin-bottom:8px">📧</div>
         <div style="font-weight:700;font-size:16px;margin-bottom:6px">Введи код из письма</div>
         <div style="color:var(--muted2);font-size:12px;margin-bottom:20px">Отправили на <b style="color:var(--text)">${pendingEmail}</b></div>
-        <div class="otp-row" id="otpRow">
-          ${[0,1,2,3,4,5].map(i=>`<input class="otp-input" id="otp${i}" maxlength="1" inputmode="numeric" oninput="otpInput(${i})" onkeydown="otpKey(event,${i})">`).join('')}
-        </div>
+        <div class="otp-row">${[0,1,2,3,4,5].map(i=>`<input class="otp-input" id="otp${i}" maxlength="1" inputmode="numeric" oninput="otpInput(${i})" onkeydown="otpKey(event,${i})">`).join('')}</div>
         <div id="otpErr" style="color:#ff6b6b;font-size:12px;min-height:18px;text-align:center;margin-bottom:8px"></div>
-        <button class="auth-btn" onclick="verifyOtp()" id="otpBtn">ПОДТВЕРДИТЬ</button>
-        <div style="margin-top:14px" id="resendWrap">
+        <button class="auth-btn" onclick="verifyOtp()">ПОДТВЕРДИТЬ</button>
+        <div style="margin-top:14px">
           <span id="resendTimer" style="color:var(--muted2);font-size:12px"></span>
-          <button id="resendBtn" onclick="resendCode()" style="display:none;background:none;border:none;color:var(--accent);font-size:13px;cursor:pointer;font-family:Manrope,sans-serif">Отправить код повторно</button>
+          <button id="resendBtn" onclick="resendCode()" style="display:none;background:none;border:none;color:var(--accent);font-size:13px;cursor:pointer;font-family:Manrope,sans-serif">Отправить повторно</button>
         </div>
         <div style="cursor:pointer;color:var(--muted2);font-size:12px;margin-top:10px" onclick="authStep='register';renderAuth()">← Изменить email</div>
       </div>`;
-    setTimeout(()=>document.getElementById('otp0')?.focus(), 100);
+    setTimeout(()=>document.getElementById('otp0')?.focus(),100);
     startResendTimer();
   }
 }
 
 function otpInput(i) {
-  const el = document.getElementById('otp'+i);
-  const val = el.value.replace(/\D/g,'');
-  el.value = val;
+  const el=document.getElementById('otp'+i);
+  el.value=el.value.replace(/\D/g,'');
   el.classList.remove('error');
-  if (val && i < 5) {
-    document.getElementById('otp'+(i+1))?.focus();
-  }
-  if (i===5 && val) verifyOtp();
+  if (el.value&&i<5) document.getElementById('otp'+(i+1))?.focus();
+  if (i===5&&el.value) verifyOtp();
 }
-
-function otpKey(e, i) {
-  if (e.key==='Backspace' && !document.getElementById('otp'+i).value && i>0) {
-    document.getElementById('otp'+(i-1))?.focus();
-  }
+function otpKey(e,i) {
+  if (e.key==='Backspace'&&!document.getElementById('otp'+i).value&&i>0) document.getElementById('otp'+(i-1))?.focus();
 }
+function getOtp() { return [0,1,2,3,4,5].map(i=>document.getElementById('otp'+i)?.value||'').join(''); }
 
-function getOtpValue() {
-  return [0,1,2,3,4,5].map(i=>document.getElementById('otp'+i)?.value||'').join('');
-}
-
-let resendInterval = null;
 function startResendTimer() {
-  otpResendTimer = 60;
-  clearInterval(resendInterval);
-  const timerEl = document.getElementById('resendTimer');
-  const btnEl = document.getElementById('resendBtn');
-  if (btnEl) btnEl.style.display = 'none';
-  resendInterval = setInterval(() => {
+  otpResendTimer=60; clearInterval(resendInterval);
+  const te=document.getElementById('resendTimer'), be=document.getElementById('resendBtn');
+  if(be) be.style.display='none';
+  resendInterval=setInterval(()=>{
     otpResendTimer--;
-    if (timerEl) timerEl.textContent = `Повторный код через ${otpResendTimer}с`;
-    if (otpResendTimer <= 0) {
-      clearInterval(resendInterval);
-      if (timerEl) timerEl.textContent = '';
-      if (btnEl) btnEl.style.display = 'inline';
-    }
-  }, 1000);
+    if(te) te.textContent=`Повторный код через ${otpResendTimer}с`;
+    if(otpResendTimer<=0){ clearInterval(resendInterval); if(te) te.textContent=''; if(be) be.style.display='inline'; }
+  },1000);
 }
 
 async function resendCode() {
-  const { error } = await sb.auth.resend({ type:'signup', email: pendingEmail });
-  if (error) { toast('Ошибка: '+error.message); return; }
-  toast('📧 Код отправлен повторно!');
-  startResendTimer();
+  const { error }=await sb.auth.resend({type:'signup',email:pendingEmail});
+  if(error){toast('Ошибка: '+error.message);return;}
+  toast('📧 Код отправлен!'); startResendTimer();
 }
 
 async function doLogin() {
-  const email = document.getElementById('aEmail')?.value.trim();
-  const pass  = document.getElementById('aPass')?.value;
-  if (!email||!pass) { setAuthErr('Заполни все поля'); return; }
-  const { error } = await sb.auth.signInWithPassword({ email, password: pass });
-  if (error) {
-    if (error.message.includes('Invalid') || error.message.includes('credentials')) {
-      setAuthErr('❌ Неверный email или пароль');
-    } else {
-      setAuthErr('❌ '+error.message);
-    }
-  }
+  const email=document.getElementById('aEmail')?.value.trim();
+  const pass=document.getElementById('aPass')?.value;
+  if(!email||!pass){setAuthErr('Заполни все поля');return;}
+  const {error}=await sb.auth.signInWithPassword({email,password:pass});
+  if(error) setAuthErr('❌ Неверный email или пароль');
 }
 
 async function doRegister() {
-  const name  = document.getElementById('aName')?.value.trim();
-  const city  = document.getElementById('aCity')?.value;
-  const email = document.getElementById('aEmail')?.value.trim();
-  const pass  = document.getElementById('aPass')?.value;
-  if (!name)  { setAuthErr('Введи имя'); return; }
-  if (!city)  { setAuthErr('Выбери город'); return; }
-  if (!email) { setAuthErr('Введи email'); return; }
-  if (!pass || pass.length < 6) { setAuthErr('Пароль минимум 6 символов'); return; }
-
-  pendingEmail = email; pendingPassword = pass; pendingName = name; pendingCity = city;
-
-  const { data, error } = await sb.auth.signUp({ email, password: pass, options: { data:{ name, city } } });
-  if (error) { setAuthErr('❌ '+error.message); return; }
-
-  if (data.user) {
-    await sb.from('profiles').upsert({ id:data.user.id, name, city, created_count:0, done_count:0, earned:0, ratings:[], is_admin:false, is_banned:false });
-  }
-
-  authStep = 'otp';
-  renderAuth();
+  const name=document.getElementById('aName')?.value.trim();
+  const city=document.getElementById('aCity')?.value;
+  const email=document.getElementById('aEmail')?.value.trim();
+  const pass=document.getElementById('aPass')?.value;
+  if(!name){setAuthErr('Введи имя');return;}
+  if(!city){setAuthErr('Выбери город');return;}
+  if(!email){setAuthErr('Введи email');return;}
+  if(!pass||pass.length<6){setAuthErr('Пароль минимум 6 символов');return;}
+  pendingEmail=email; pendingName=name; pendingCity=city;
+  const {data,error}=await sb.auth.signUp({email,password:pass,options:{data:{name,city}}});
+  if(error){setAuthErr('❌ '+error.message);return;}
+  if(data.user) await sb.from('profiles').upsert({id:data.user.id,name,city,created_count:0,done_count:0,earned:0,ratings:[],is_admin:false,is_banned:false,is_courier:false});
+  authStep='otp'; renderAuth();
 }
 
 async function verifyOtp() {
-  const token = getOtpValue();
-  if (token.length < 6) { setOtpErr('Введи все 6 цифр'); return; }
-
-  const { data, error } = await sb.auth.verifyOtp({ email: pendingEmail, token, type:'signup' });
-  if (error) {
+  const token=getOtp();
+  if(token.length<6){setOtpErr('Введи все 6 цифр');return;}
+  const {error}=await sb.auth.verifyOtp({email:pendingEmail,token,type:'signup'});
+  if(error){
     setOtpErr('❌ Неверный код. Проверь письмо или запроси новый.');
-    [0,1,2,3,4,5].forEach(i=>{
-      const el=document.getElementById('otp'+i);
-      if(el) { el.classList.add('error'); el.value=''; }
-    });
-    document.getElementById('otp0')?.focus();
-    return;
+    [0,1,2,3,4,5].forEach(i=>{const el=document.getElementById('otp'+i);if(el){el.classList.add('error');el.value='';}});
+    document.getElementById('otp0')?.focus(); return;
   }
-  // Успех — onAuthStateChange подхватит
-  [0,1,2,3,4,5].forEach(i=>{ const el=document.getElementById('otp'+i); if(el) el.classList.add('success'); });
+  [0,1,2,3,4,5].forEach(i=>{const el=document.getElementById('otp'+i);if(el) el.classList.add('success');});
   toast('✅ Аккаунт подтверждён!');
 }
 
-function setAuthErr(msg) {
-  const el=document.getElementById('authErr');
-  if(el) el.textContent=msg;
-}
-function setOtpErr(msg) {
-  const el=document.getElementById('otpErr');
-  if(el) el.textContent=msg;
-}
+function setAuthErr(m){const e=document.getElementById('authErr');if(e)e.textContent=m;}
+function setOtpErr(m){const e=document.getElementById('otpErr');if(e)e.textContent=m;}
 
-// ══════════════════════════════════
-// PROFILE
-// ══════════════════════════════════
+// ══ PROFILE ══
 async function loadProfile() {
-  if (!currentUser) return;
-  const { data } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
-  if (data) { currentProfile = data; return; }
-  const name = currentUser.user_metadata?.name || currentUser.email.split('@')[0];
-  const city = currentUser.user_metadata?.city || '';
-  await sb.from('profiles').upsert({ id:currentUser.id, name, city, created_count:0, done_count:0, earned:0, ratings:[], is_admin:false, is_banned:false });
-  currentProfile = { id:currentUser.id, name, city, created_count:0, done_count:0, earned:0, ratings:[], is_admin:false, is_banned:false };
+  if(!currentUser) return;
+  const {data}=await sb.from('profiles').select('*').eq('id',currentUser.id).single();
+  if(data){currentProfile=data;return;}
+  const name=currentUser.user_metadata?.name||currentUser.email.split('@')[0];
+  const city=currentUser.user_metadata?.city||'';
+  await sb.from('profiles').upsert({id:currentUser.id,name,city,created_count:0,done_count:0,earned:0,ratings:[],is_admin:false,is_banned:false,is_courier:false});
+  currentProfile={id:currentUser.id,name,city,created_count:0,done_count:0,earned:0,ratings:[],is_admin:false,is_banned:false,is_courier:false};
 }
 
-function logout() {
-  if (ordersSub) { sb.removeChannel(ordersSub); ordersSub=null; }
+function logout(){
+  if(ordersSub){sb.removeChannel(ordersSub);ordersSub=null;}
   sb.auth.signOut();
 }
 
-// ══════════════════════════════════
-// START APP
-// ══════════════════════════════════
+// ══ START ══
 function startApp() {
-  const app = document.getElementById('app');
-  app.classList.add('visible');
-
-  // Добавляем вкладку Админ если нужно
-  const nav = document.getElementById('mainNav');
-  if (currentProfile?.is_admin && !document.getElementById('navAdmin')) {
-    const btn = document.createElement('button');
-    btn.id = 'navAdmin';
-    btn.innerHTML = '<span class="nav-icon">🛡️</span><span>Админ</span>';
-    btn.onclick = () => show('adminPage', btn);
-    nav.appendChild(btn);
-    // Добавляем страницу
-    const pg = document.createElement('div');
-    pg.id = 'adminPage'; pg.className = 'page';
-    pg.innerHTML = '<div class="page-title">🛡️ Панель админа</div><div id="adminContent"></div>';
-    document.getElementById('app').insertBefore(pg, nav);
+  document.getElementById('app').classList.add('visible');
+  startPing();
+  // Добавляем админ вкладку
+  if(currentProfile?.is_admin&&!document.getElementById('navAdmin')){
+    const nav=document.getElementById('mainNav');
+    const btn=document.createElement('button');
+    btn.id='navAdmin'; btn.innerHTML='<span class="nav-icon">🛡️</span><span>Админ</span>';
+    btn.onclick=()=>show('adminPage',btn); nav.appendChild(btn);
+    const pg=document.createElement('div'); pg.id='adminPage'; pg.className='page';
+    pg.innerHTML='<div class="page-title">🛡️ Панель</div><div id="adminContent"></div>';
+    document.getElementById('app').insertBefore(pg,nav);
   }
-
+  // Проверяем системные сообщения
+  checkSysMsgs();
   loadOrders(); subscribeOrders(); renderProfile();
 }
 
-// ══════════════════════════════════
-// ORDERS REALTIME
-// ══════════════════════════════════
-async function loadOrders() {
-  const { data } = await sb.from('orders').select('*').order('created_at',{ascending:false});
-  window._orders = data||[];
-  render();
+async function checkSysMsgs() {
+  if(!currentUser) return;
+  const {data}=await sb.from('system_messages').select('*').eq('to_user_id',currentUser.id).eq('is_read',false).order('created_at',{ascending:false});
+  if(!data?.length) return;
+  // Показываем последнее непрочитанное
+  const msg=data[0];
+  const banner=document.createElement('div');
+  banner.className='sysmsg-banner';
+  banner.style.cssText='position:fixed;top:16px;left:16px;right:16px;z-index:500;animation:fadeUp 0.3s ease';
+  banner.innerHTML=`<div style="font-weight:700;margin-bottom:4px">📢 Сообщение от администратора</div><div style="color:var(--muted2)">${escHtml(msg.text)}</div><button onclick="markSysMsgRead('${msg.id}',this.parentElement)" style="margin-top:8px;background:none;border:none;color:var(--accent);font-size:12px;cursor:pointer;font-family:Manrope,sans-serif">Прочитано ✓</button>`;
+  document.body.appendChild(banner);
 }
 
+async function markSysMsgRead(id,el) {
+  await sb.from('system_messages').update({is_read:true}).eq('id',id);
+  el.remove();
+}
+
+// ══ ORDERS ══
+async function loadOrders() {
+  const {data}=await sb.from('orders').select('*').order('created_at',{ascending:false});
+  window._orders=data||[]; render();
+}
 function subscribeOrders() {
-  if (ordersSub) sb.removeChannel(ordersSub);
-  ordersSub = sb.channel('orders-rt')
+  if(ordersSub) sb.removeChannel(ordersSub);
+  ordersSub=sb.channel('orders-rt')
     .on('postgres_changes',{event:'*',schema:'public',table:'orders'},()=>loadOrders())
     .subscribe();
 }
+function getOrders(){return window._orders||[];}
 
-function getOrders() { return window._orders||[]; }
-
-// ══════════════════════════════════
-// CREATE ORDER
-// ══════════════════════════════════
+// ══ CREATE ══
 async function createOrder() {
-  // Проверяем нет ли активного заказа у курьера
-  const hasActive = getOrders().some(o=>o.status==='work'&&o.worker_id===currentUser.id);
-  if (hasActive) { toast('Сначала завершите текущий заказ!'); return; }
-
-  const title   = document.getElementById('cTitle').value.trim();
-  const from    = document.getElementById('cFrom').value.trim();
-  const to      = document.getElementById('cTo').value.trim();
-  const price   = parseInt(document.getElementById('cPrice').value)||0;
-  const deadline= document.getElementById('cDeadline').value||null;
-  const comment = document.getElementById('cComment').value.trim();
-  const payment = document.getElementById('cPayment').value;
-  if (!title||!from||!to) { toast('Заполни название и маршрут!'); return; }
-  if (!payment) { toast('Выбери способ оплаты!'); return; }
-
-  const { error } = await sb.from('orders').insert({
-    title,from,to,price,deadline,comment,payment,status:'open',
-    creator_id:currentUser.id, creator_name:currentProfile.name, creator_city:currentProfile.city||'',
-    worker_id:null, worker_name:null, rating:null,
-    worker_confirmed:false, creator_confirmed:false, cancel_deadline:null, cancel_reason:null
-  });
-  if (error) { toast('Ошибка: '+error.message); return; }
+  const hasActive=getOrders().some(o=>o.status==='work'&&o.worker_id===currentUser.id);
+  if(hasActive){toast('Сначала завершите текущий заказ!');return;}
+  const title=document.getElementById('cTitle').value.trim();
+  const from=document.getElementById('cFrom').value.trim();
+  const to=document.getElementById('cTo').value.trim();
+  const price=parseInt(document.getElementById('cPrice').value)||0;
+  const deadline=document.getElementById('cDeadline').value||null;
+  const comment=document.getElementById('cComment').value.trim();
+  const payment=document.getElementById('cPayment')?.value;
+  if(!title||!from||!to){toast('Заполни название и маршрут!');return;}
+  if(!payment){toast('Выбери способ оплаты!');return;}
+  const {error}=await sb.from('orders').insert({title,from,to,price,deadline,comment,payment,status:'open',creator_id:currentUser.id,creator_name:currentProfile.name,creator_city:currentProfile.city||'',worker_id:null,worker_name:null,rating:null,worker_confirmed:false,creator_confirmed:false,cancel_deadline:null,cancel_reason:null});
+  if(error){toast('Ошибка: '+error.message);return;}
   await sb.from('profiles').update({created_count:(currentProfile.created_count||0)+1}).eq('id',currentUser.id);
   currentProfile.created_count=(currentProfile.created_count||0)+1;
   ['cTitle','cFrom','cTo','cPrice','cDeadline','cComment'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('cPayment').value='';
+  if(document.getElementById('cPayment')) document.getElementById('cPayment').value='';
+  await logAction('Создан заказ', title);
   toast('✅ Заказ опубликован!');
-  show('ordersPage', document.getElementById('navOrders'));
+  show('ordersPage',document.getElementById('navOrders'));
 }
 
-// ══════════════════════════════════
-// TAKE (только 1 заказ)
-// ══════════════════════════════════
+// ══ TAKE ══
 async function take(id) {
-  const o = getOrders().find(x=>x.id===id);
-  if (!o||o.status!=='open') return;
-  if (o.creator_id===currentUser.id) { toast('Нельзя брать свой заказ!'); return; }
-  const hasActive = getOrders().some(o=>o.status==='work'&&o.worker_id===currentUser.id);
-  if (hasActive) { toast('У вас уже есть активный заказ!'); return; }
-  const cancelDeadline = new Date(Date.now()+60000).toISOString();
+  const o=getOrders().find(x=>x.id===id);
+  if(!o||o.status!=='open') return;
+  if(o.creator_id===currentUser.id){toast('Нельзя брать свой заказ!');return;}
+  const hasActive=getOrders().some(o=>o.status==='work'&&o.worker_id===currentUser.id);
+  if(hasActive){toast('У вас уже есть активный заказ!');return;}
+  const cancelDeadline=new Date(Date.now()+60000).toISOString();
   await sb.from('orders').update({status:'work',worker_id:currentUser.id,worker_name:currentProfile.name,cancel_deadline:cancelDeadline,worker_confirmed:false,creator_confirmed:false}).eq('id',id);
-  toast('🟡 Заказ взят! Есть 60 сек для отмены.');
+  // Отмечаем курьера как занятого
+  await sb.from('profiles').update({is_courier:true,last_seen:new Date().toISOString()}).eq('id',currentUser.id);
+  toast('🟡 Заказ взят! 60 сек для отмены.');
 }
 
-// ══════════════════════════════════
-// CANCEL
-// ══════════════════════════════════
+// ══ CANCEL ══
 function showCancelModal(id) {
-  const existing=document.getElementById('cancelModal');
-  if(existing) existing.remove();
-  const modal=document.createElement('div');
-  modal.id='cancelModal';
+  const e=document.getElementById('cancelModal'); if(e) e.remove();
+  const modal=document.createElement('div'); modal.id='cancelModal';
   modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:400;display:flex;align-items:flex-end;';
-  modal.innerHTML=`
-    <div style="background:var(--bg2);width:100%;border-radius:20px 20px 0 0;padding:24px;border-top:1px solid var(--border)">
-      <div style="font-family:Bebas Neue,sans-serif;font-size:24px;letter-spacing:2px;margin-bottom:4px">Причина отмены</div>
-      <div style="color:var(--muted2);font-size:12px;margin-bottom:16px">Выбери причину почему отменяешь</div>
-      ${CANCEL_REASONS.map(r=>`<button onclick="cancelOrder('${id}','${r}')" style="display:block;width:100%;padding:13px;margin-bottom:8px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:Manrope,sans-serif;font-size:14px;cursor:pointer;text-align:left">${r}</button>`).join('')}
-      <button onclick="document.getElementById('cancelModal').remove()" style="display:block;width:100%;padding:13px;background:none;border:none;color:var(--muted2);font-family:Manrope,sans-serif;font-size:14px;cursor:pointer">Закрыть</button>
-    </div>`;
+  modal.innerHTML=`<div style="background:var(--bg2);width:100%;border-radius:20px 20px 0 0;padding:24px;border-top:1px solid var(--border)">
+    <div style="font-family:Bebas Neue,sans-serif;font-size:24px;letter-spacing:2px;margin-bottom:4px">Причина отмены</div>
+    <div style="color:var(--muted2);font-size:12px;margin-bottom:16px">Выбери причину</div>
+    ${CANCEL_REASONS.map(r=>`<button onclick="cancelOrder('${id}','${r}')" style="display:block;width:100%;padding:13px;margin-bottom:8px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:Manrope,sans-serif;font-size:14px;cursor:pointer;text-align:left">${r}</button>`).join('')}
+    <button onclick="document.getElementById('cancelModal').remove()" style="display:block;width:100%;padding:13px;background:none;border:none;color:var(--muted2);font-family:Manrope,sans-serif;font-size:14px;cursor:pointer">Закрыть</button>
+  </div>`;
   document.body.appendChild(modal);
 }
 
-async function cancelOrder(id, reason) {
+async function cancelOrder(id,reason) {
   document.getElementById('cancelModal')?.remove();
-  const o=getOrders().find(x=>x.id===id);
-  if (!o) return;
-  if (o.cancel_deadline && new Date()>new Date(o.cancel_deadline)) { toast('Время отмены истекло!'); return; }
+  const o=getOrders().find(x=>x.id===id); if(!o) return;
+  if(o.cancel_deadline&&new Date()>new Date(o.cancel_deadline)){toast('Время отмены истекло!');return;}
   await sb.from('orders').update({status:'open',worker_id:null,worker_name:null,cancel_deadline:null,cancel_reason:reason,worker_confirmed:false,creator_confirmed:false}).eq('id',id);
+  await sb.from('profiles').update({is_courier:false}).eq('id',currentUser.id);
   toast('Заказ отменён: '+reason);
 }
 
-// ══════════════════════════════════
-// CONFIRM DONE
-// ══════════════════════════════════
-async function confirmDone(id, role) {
-  const field = role==='worker'?'worker_confirmed':'creator_confirmed';
+// ══ CONFIRM DONE ══
+async function confirmDone(id,role) {
+  const field=role==='worker'?'worker_confirmed':'creator_confirmed';
   await sb.from('orders').update({[field]:true}).eq('id',id);
-  const { data } = await sb.from('orders').select('*').eq('id',id).single();
-  if (data&&data.worker_confirmed&&data.creator_confirmed) {
+  const {data}=await sb.from('orders').select('*').eq('id',id).single();
+  if(data&&data.worker_confirmed&&data.creator_confirmed){
     await sb.from('orders').update({status:'done'}).eq('id',id);
-    if (role==='worker') {
-      await sb.from('profiles').update({done_count:(currentProfile.done_count||0)+1,earned:(currentProfile.earned||0)+data.price}).eq('id',currentUser.id);
+    if(role==='worker'){
+      await sb.from('profiles').update({done_count:(currentProfile.done_count||0)+1,earned:(currentProfile.earned||0)+data.price,is_courier:false}).eq('id',currentUser.id);
       currentProfile.done_count=(currentProfile.done_count||0)+1;
       currentProfile.earned=(currentProfile.earned||0)+data.price;
     }
@@ -1301,212 +1219,447 @@ async function confirmDone(id, role) {
   }
 }
 
-// ══════════════════════════════════
-// RATE
-// ══════════════════════════════════
-async function submitRating(id, stars) {
+// ══ RATE ══
+async function submitRating(id,stars) {
   const o=getOrders().find(x=>x.id===id);
-  if (!o||!o.worker_id||o.rating!==null) return;
+  if(!o||!o.worker_id||o.rating!==null) return;
   await sb.from('orders').update({rating:stars}).eq('id',id);
-  const { data }=await sb.from('profiles').select('ratings').eq('id',o.worker_id).single();
-  if (data) await sb.from('profiles').update({ratings:[...(data.ratings||[]),stars]}).eq('id',o.worker_id);
+  const {data}=await sb.from('profiles').select('ratings').eq('id',o.worker_id).single();
+  if(data) await sb.from('profiles').update({ratings:[...(data.ratings||[]),stars]}).eq('id',o.worker_id);
   toast('⭐ Оценка отправлена!');
 }
 
-// ══════════════════════════════════
-// ADMIN PANEL
-// ══════════════════════════════════
-async function renderAdmin() {
-  if (!currentProfile?.is_admin) return;
-  const c = document.getElementById('adminContent');
-  c.innerHTML = `
-    <div class="tab-row">
-      <button class="tab-btn ${adminTab==='orders'?'active':''}" onclick="adminTab='orders';renderAdmin()">📦 Сделки</button>
-      <button class="tab-btn ${adminTab==='users'?'active':''}" onclick="adminTab='users';renderAdmin()">👤 Пользователи</button>
-    </div>
-    <div id="adminTabContent"></div>`;
-
-  if (adminTab==='orders') await renderAdminOrders();
-  else await renderAdminUsers();
-}
-
-async function renderAdminOrders() {
-  const { data:orders } = await sb.from('orders').select('*').order('created_at',{ascending:false});
-  const c = document.getElementById('adminTabContent');
-  if (!orders?.length) { c.innerHTML='<div class="empty"><div class="empty-icon">📭</div><div class="empty-text">Нет сделок</div></div>'; return; }
-  c.innerHTML='';
-  orders.forEach(o=>{
-    const div=document.createElement('div'); div.className='admin-card';
-    const statusColor = o.status==='open'?'var(--green)':o.status==='work'?'var(--yellow)':'var(--muted2)';
-    div.innerHTML=`
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px">
-        <b style="font-size:15px">${escHtml(o.title)}</b>
-        <span style="color:${statusColor};font-size:11px;font-weight:700;text-transform:uppercase;white-space:nowrap">${o.status==='open'?'Открыт':o.status==='work'?'В работе':'Завершён'}</span>
-      </div>
-      <div class="card-meta">📍 ${escHtml(o.from)} → ${escHtml(o.to)}</div>
-      <div class="card-meta">💰 ${o.price}₽ · ${o.payment==='cash'?'Нал':'Безнал'}</div>
-      <div class="card-meta">📦 Заказчик: <b>${escHtml(o.creator_name)}</b></div>
-      ${o.worker_name?`<div class="card-meta">🚴 Курьер: <b>${escHtml(o.worker_name)}</b></div>`:''}
-      ${o.rating!==null?`<div class="card-meta">⭐ Оценка: ${o.rating}/5</div>`:''}
-      ${o.cancel_reason?`<div class="card-meta">❌ Отменён: ${escHtml(o.cancel_reason)}</div>`:''}
-      <div style="margin-top:4px"><span style="font-size:10px;color:var(--muted)">${new Date(o.created_at).toLocaleString('ru')}</span></div>`;
-    const acts=document.createElement('div'); acts.className='card-actions';
-    const delBtn=document.createElement('button'); delBtn.className='btn btn-red';
-    delBtn.innerHTML='🗑 Удалить сделку';
-    delBtn.onclick=()=>adminDeleteOrder(o.id);
-    acts.appendChild(delBtn); div.appendChild(acts); c.appendChild(div);
-  });
-}
-
-async function renderAdminUsers() {
-  const { data:users } = await sb.from('profiles').select('*').order('created_count',{ascending:false});
-  const c = document.getElementById('adminTabContent');
-  if (!users?.length) { c.innerHTML='<div class="empty"><div class="empty-icon">👤</div><div class="empty-text">Нет пользователей</div></div>'; return; }
-  c.innerHTML='';
-  users.forEach(u=>{
-    if (u.id===currentUser.id) return; // себя не показываем
-    const div=document.createElement('div'); div.className='admin-card';
-    const ar=avgRating(u.ratings);
-    div.innerHTML=`
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <div style="display:flex;align-items:center;gap:8px">
-          <div class="creator-avatar" style="width:32px;height:32px;font-size:14px">${escHtml(u.name[0].toUpperCase())}</div>
-          <div>
-            <b>${escHtml(u.name)}</b>
-            ${u.is_banned?'<span class="ban-badge" style="margin-left:6px">🚫 Забанен</span>':''}
-          </div>
-        </div>
-      </div>
-      <div class="card-meta">📍 ${escHtml(u.city||'—')}</div>
-      <div class="card-meta">📦 Создано: ${u.created_count||0} · ✅ Выполнено: ${u.done_count||0} · 💰 ${u.earned||0}₽</div>
-      ${ar?`<div class="card-meta">⭐ Рейтинг: ${ar}/5</div>`:''}`;
-    const acts=document.createElement('div'); acts.className='card-actions';
-    if (!u.is_banned) {
-      const banBtn=document.createElement('button'); banBtn.className='btn btn-red';
-      banBtn.innerHTML='🚫 Забанить';
-      banBtn.onclick=()=>adminBanUser(u.id, u.name);
-      acts.appendChild(banBtn);
-    } else {
-      const unbanBtn=document.createElement('button'); unbanBtn.className='btn btn-ghost';
-      unbanBtn.innerHTML='✅ Разбанить';
-      unbanBtn.onclick=()=>adminUnban(u.id);
-      acts.appendChild(unbanBtn);
-    }
-    const ordBtn=document.createElement('button'); ordBtn.className='btn btn-ghost';
-    ordBtn.innerHTML='📦 Заказы';
-    ordBtn.onclick=()=>adminUserOrders(u.name);
-    acts.appendChild(ordBtn); div.appendChild(acts); c.appendChild(div);
-  });
-}
-
-async function adminDeleteOrder(id) {
-  if (!confirm('Удалить эту сделку?')) return;
-  await sb.from('messages').delete().eq('order_id',id);
-  await sb.from('orders').delete().eq('id',id);
-  toast('🗑 Сделка удалена');
-  renderAdmin();
-}
-
-function adminBanUser(id, name) {
-  const existing=document.getElementById('banModal');
-  if(existing) existing.remove();
-  const modal=document.createElement('div');
-  modal.id='banModal';
+// ══ REPORT ══
+function showReportModal(orderId, targetName) {
+  const e=document.getElementById('reportModal'); if(e) e.remove();
+  const reasons=['Мошенничество','Не выполнил заказ','Грубость','Другое'];
+  const modal=document.createElement('div'); modal.id='reportModal';
   modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:400;display:flex;align-items:flex-end;';
-  modal.innerHTML=`
-    <div style="background:var(--bg2);width:100%;border-radius:20px 20px 0 0;padding:24px;border-top:1px solid var(--border)">
-      <div style="font-family:Bebas Neue,sans-serif;font-size:22px;letter-spacing:2px;margin-bottom:4px;color:var(--accent)">Бан: ${escHtml(name)}</div>
-      <div style="color:var(--muted2);font-size:12px;margin-bottom:14px">Причина бана</div>
-      <input id="banReason" class="form-input" placeholder="Укажи причину..." style="margin-bottom:12px">
-      <button onclick="confirmBan('${id}')" class="btn btn-red btn-full">Забанить</button>
-      <button onclick="document.getElementById('banModal').remove()" style="display:block;width:100%;padding:13px;background:none;border:none;color:var(--muted2);font-family:Manrope,sans-serif;font-size:14px;cursor:pointer;margin-top:4px">Отмена</button>
-    </div>`;
+  modal.innerHTML=`<div style="background:var(--bg2);width:100%;border-radius:20px 20px 0 0;padding:24px;border-top:1px solid var(--border)">
+    <div style="font-family:Bebas Neue,sans-serif;font-size:22px;letter-spacing:2px;margin-bottom:4px;color:var(--accent)">⚠️ Жалоба на ${escHtml(targetName)}</div>
+    <div style="color:var(--muted2);font-size:12px;margin-bottom:16px">Выбери причину</div>
+    ${reasons.map(r=>`<button onclick="submitReport('${orderId}','${targetName}','${r}')" style="display:block;width:100%;padding:13px;margin-bottom:8px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:Manrope,sans-serif;font-size:14px;cursor:pointer;text-align:left">${r}</button>`).join('')}
+    <button onclick="document.getElementById('reportModal').remove()" style="display:block;width:100%;padding:13px;background:none;border:none;color:var(--muted2);font-family:Manrope,sans-serif;font-size:14px;cursor:pointer">Отмена</button>
+  </div>`;
   document.body.appendChild(modal);
 }
 
-async function confirmBan(id) {
-  const reason=document.getElementById('banReason')?.value.trim()||'Нарушение правил';
-  document.getElementById('banModal')?.remove();
-  await sb.from('profiles').update({is_banned:true,ban_reason:reason}).eq('id',id);
-  toast('🚫 Пользователь забанен');
-  renderAdmin();
+async function submitReport(orderId,targetName,reason) {
+  document.getElementById('reportModal')?.remove();
+  await sb.from('reports').insert({order_id:orderId,reporter_id:currentUser.id,reporter_name:currentProfile.name,target_name:targetName,reason});
+  toast('⚠️ Жалоба отправлена');
 }
 
-async function adminUnban(id) {
-  await sb.from('profiles').update({is_banned:false,ban_reason:null}).eq('id',id);
-  toast('✅ Пользователь разбанен');
-  renderAdmin();
-}
-
-async function adminUserOrders(name) {
-  const { data } = await sb.from('orders').select('*').or(`creator_name.eq.${name},worker_name.eq.${name}`).order('created_at',{ascending:false});
-  const existing=document.getElementById('userOrdersModal');
-  if(existing) existing.remove();
-  const modal=document.createElement('div');
-  modal.id='userOrdersModal';
-  modal.style.cssText='position:fixed;inset:0;background:var(--bg);z-index:500;display:flex;flex-direction:column;';
-  let html=`<div style="padding:16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;background:var(--bg2)">
-    <button onclick="document.getElementById('userOrdersModal').remove()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);width:36px;height:36px;border-radius:10px;cursor:pointer;font-size:16px">←</button>
-    <b>Заказы: ${escHtml(name)}</b></div><div style="flex:1;overflow-y:auto;padding:16px">`;
-  if (!data?.length) { html+='<div class="empty"><div class="empty-icon">📭</div><div class="empty-text">Нет заказов</div></div>'; }
-  (data||[]).forEach(o=>{
-    html+=`<div class="admin-card">
-      <b>${escHtml(o.title)}</b> — ${o.price}₽
-      <div class="card-meta">📍 ${escHtml(o.from)} → ${escHtml(o.to)}</div>
-      <div class="card-meta">Статус: ${o.status} · ${new Date(o.created_at).toLocaleString('ru')}</div>
-    </div>`;
-  });
-  html+='</div>';
-  modal.innerHTML=html;
-  document.body.appendChild(modal);
-}
-
-// ══════════════════════════════════
-// CHAT
-// ══════════════════════════════════
+// ══ CHAT ══
 async function openChat(id) {
-  const o=getOrders().find(x=>x.id===id);
-  if (!o) return;
+  const o=getOrders().find(x=>x.id===id); if(!o) return;
   currentChatOrderId=id;
   document.getElementById('chatTitle').textContent=o.title;
   document.getElementById('chatSub').textContent=o.from+' → '+o.to;
   document.getElementById('chatModal').classList.add('open');
-  const { data }=await sb.from('messages').select('*').eq('order_id',id).order('created_at',{ascending:true});
+  const {data}=await sb.from('messages').select('*').eq('order_id',id).order('created_at',{ascending:true});
   renderChat(data||[]);
-  if (chatSub) sb.removeChannel(chatSub);
+  if(chatSub) sb.removeChannel(chatSub);
   chatSub=sb.channel('chat-'+id)
     .on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:'order_id=eq.'+id},p=>{
       appendMsg(p.new,document.getElementById('chatMessages'));
       document.getElementById('chatMessages').scrollTop=99999;
     }).subscribe();
 }
-
-function closeChat() {
+function closeChat(){
   document.getElementById('chatModal').classList.remove('open');
-  if (chatSub) { sb.removeChannel(chatSub); chatSub=null; }
+  if(chatSub){sb.removeChannel(chatSub);chatSub=null;}
   currentChatOrderId=null;
 }
-
-async function sendMsg() {
+async function sendMsg(){
   const input=document.getElementById('chatInput');
-  const text=input.value.trim();
-  if (!text||!currentChatOrderId) return;
+  const text=input.value.trim(); if(!text||!currentChatOrderId) return;
   input.value='';
   const time=new Date().toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'});
   await sb.from('messages').insert({order_id:currentChatOrderId,user_id:currentUser.id,user_name:currentProfile.name,text,time_str:time});
 }
-
-function renderChat(msgs) {
+function renderChat(msgs){
   const c=document.getElementById('chatMessages');
-  if (!msgs.length) { c.innerHTML='<div class="chat-empty">💬 Напиши первым!</div>'; return; }
+  if(!msgs.length){c.innerHTML='<div class="chat-empty">💬 Напиши первым!</div>';return;}
   c.innerHTML=''; msgs.forEach(m=>appendMsg(m,c)); c.scrollTop=99999;
 }
-
-function appendMsg(m,c) {
+function appendMsg(m,c){
   const isMine=m.user_id===currentUser.id;
   const div=document.createElement('div'); div.className='msg-group '+(isMine?'mine':'theirs');
   div.innerHTML=`<div class="msg-sender">${isMine?'Ты':escHtml(m.user_name)}</div><div class="msg ${isMine?'mine':'theirs'}">${escHtml(m.text)}</div><div class="msg-time">${m.time_str||''}</div>`;
   c.appendChild(div);
+}
+
+// ══ LOG ACTION ══
+async function logAction(action,target){
+  if(!currentProfile) return;
+  await sb.from('action_logs').insert({admin_name:currentProfile.name,action,target});
+}
+
+// ══════════════════════════════════
+// ADMIN PANEL
+// ══════════════════════════════════
+async function renderAdmin() {
+  if(!currentProfile?.is_admin) return;
+  const c=document.getElementById('adminContent');
+  const tabs=[
+    {id:'dashboard',icon:'📊',label:'Обзор'},
+    {id:'couriers',icon:'🚴',label:'Курьеры'},
+    {id:'orders',icon:'📦',label:'Сделки'},
+    {id:'users',icon:'👤',label:'Юзеры'},
+    {id:'reports',icon:'⚠️',label:'Жалобы'},
+    {id:'bans',icon:'🚫',label:'Баны'},
+    {id:'logs',icon:'👁',label:'Логи'},
+    {id:'messages',icon:'📧',label:'Сообщения'},
+  ];
+  c.innerHTML=`
+    <div class="tab-row">${tabs.map(t=>`<button class="tab-btn ${adminTab===t.id?'active':''}" onclick="adminTab='${t.id}';renderAdmin()">${t.icon} ${t.label}</button>`).join('')}</div>
+    <div style="margin-bottom:12px"><input class="search-input" placeholder="🔍 Поиск..." value="${adminSearch}" oninput="adminSearch=this.value;renderAdminTab()"></div>
+    <div id="adminTabContent"></div>`;
+  await renderAdminTab();
+}
+
+async function renderAdminTab() {
+  const c=document.getElementById('adminTabContent'); if(!c) return;
+  if(adminTab==='dashboard') await renderAdminDashboard();
+  else if(adminTab==='couriers') await renderAdminCouriers();
+  else if(adminTab==='orders') await renderAdminOrders();
+  else if(adminTab==='users') await renderAdminUsers();
+  else if(adminTab==='reports') await renderAdminReports();
+  else if(adminTab==='bans') await renderAdminBans();
+  else if(adminTab==='logs') await renderAdminLogs();
+  else if(adminTab==='messages') await renderAdminMessages();
+}
+
+async function renderAdminDashboard() {
+  const {data:orders}=await sb.from('orders').select('*');
+  const {data:users}=await sb.from('profiles').select('*');
+  const {data:reports}=await sb.from('reports').select('*');
+  const o=orders||[], u=users||[], r=reports||[];
+  const totalRevenue=o.filter(x=>x.status==='done').reduce((s,x)=>s+(x.price||0),0);
+  const openCount=o.filter(x=>x.status==='open').length;
+  const workCount=o.filter(x=>x.status==='work').length;
+  const doneCount=o.filter(x=>x.status==='done').length;
+  const onlineCount=u.filter(x=>x.last_seen&&(Date.now()-new Date(x.last_seen))<120000).length;
+  const bannedCount=u.filter(x=>x.is_banned).length;
+  const pendingReports=r.length;
+  const c=document.getElementById('adminTabContent');
+  c.innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px">
+      <div class="stat-mini"><div class="n">${o.length}</div><div class="l">Всего сделок</div></div>
+      <div class="stat-mini"><div class="n" style="color:var(--green)">${openCount}</div><div class="l">Открытых</div></div>
+      <div class="stat-mini"><div class="n" style="color:var(--yellow)">${workCount}</div><div class="l">В работе</div></div>
+      <div class="stat-mini"><div class="n">${doneCount}</div><div class="l">Завершено</div></div>
+      <div class="stat-mini"><div class="n" style="color:var(--green)">${totalRevenue}₽</div><div class="l">Оборот</div></div>
+      <div class="stat-mini"><div class="n">${u.length}</div><div class="l">Пользователей</div></div>
+      <div class="stat-mini"><div class="n" style="color:var(--green)">${onlineCount}</div><div class="l">Онлайн сейчас</div></div>
+      <div class="stat-mini"><div class="n" style="color:${pendingReports?'var(--accent)':'var(--muted2)'}">${pendingReports}</div><div class="l">Жалоб</div></div>
+    </div>
+    <div style="font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Топ заказчиков по обороту</div>
+    ${(u.sort((a,b)=>(b.earned||0)-(a.earned||0)).slice(0,5).map((u,i)=>`
+      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg3);border-radius:10px;margin-bottom:6px">
+        <div style="font-family:Bebas Neue,sans-serif;font-size:20px;color:var(--muted);width:20px">${i+1}</div>
+        <div class="creator-avatar" style="width:30px;height:30px;font-size:13px">${escHtml(u.name[0].toUpperCase())}</div>
+        <div style="flex:1"><b>${escHtml(u.name)}</b><div style="font-size:11px;color:var(--muted2)">${u.done_count||0} доставок</div></div>
+        <div style="color:var(--green);font-weight:700;font-size:13px">${u.earned||0}₽</div>
+      </div>`).join(''))}`;
+}
+
+async function renderAdminCouriers() {
+  const {data:users}=await sb.from('profiles').select('*');
+  const c=document.getElementById('adminTabContent');
+  const now=Date.now();
+  const couriers=(users||[]).filter(u=>{
+    const online=u.last_seen&&(now-new Date(u.last_seen))<120000;
+    const q=adminSearch.toLowerCase();
+    return online&&(!q||u.name.toLowerCase().includes(q));
+  });
+  if(!couriers.length){c.innerHTML='<div class="empty"><div class="empty-icon">🚴</div><div class="empty-text">Никого онлайн</div></div>';return;}
+  c.innerHTML='';
+  const activeOrders=getOrders().filter(o=>o.status==='work');
+  couriers.forEach(u=>{
+    const activeOrder=activeOrders.find(o=>o.worker_id===u.id);
+    const div=document.createElement('div'); div.className='admin-card';
+    const ar=avgRating(u.ratings);
+    div.innerHTML=`
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <div class="creator-avatar" style="width:38px;height:38px;font-size:16px">${escHtml(u.name[0].toUpperCase())}</div>
+        <div style="flex:1">
+          <div style="font-weight:700">${escHtml(u.name)} <span style="${activeOrder?'color:var(--yellow)':'color:var(--green)'}">● ${activeOrder?'Занят':'Свободен'}</span></div>
+          <div style="font-size:11px;color:var(--muted2)">${escHtml(u.city||'—')} · ${ar?'⭐'+ar:''} · ${u.done_count||0} доставок</div>
+        </div>
+      </div>
+      ${activeOrder?`<div style="background:var(--bg3);border-radius:8px;padding:10px;font-size:12px">
+        <div style="color:var(--yellow);font-weight:700;margin-bottom:4px">🚴 Везёт сейчас:</div>
+        <div><b>${escHtml(activeOrder.title)}</b></div>
+        <div style="color:var(--muted2)">${escHtml(activeOrder.from)} → ${escHtml(activeOrder.to)}</div>
+        <div style="color:var(--green)">${activeOrder.price}₽ · ${activeOrder.payment==='cash'?'Нал':'Безнал'}</div>
+      </div>`:'<div style="color:var(--muted2);font-size:12px">Ожидает заказов</div>'}`;
+    const acts=document.createElement('div'); acts.className='card-actions';
+    const msgBtn=document.createElement('button'); msgBtn.className='btn btn-ghost'; msgBtn.innerHTML='📧 Написать';
+    msgBtn.onclick=()=>showSendMsgModal(u.id,u.name); acts.appendChild(msgBtn);
+    if(!u.is_banned){
+      const banBtn=document.createElement('button'); banBtn.className='btn btn-red'; banBtn.innerHTML='🚫 Бан';
+      banBtn.onclick=()=>adminBanUser(u.id,u.name); acts.appendChild(banBtn);
+    }
+    div.appendChild(acts); c.appendChild(div);
+  });
+}
+
+async function renderAdminOrders() {
+  const {data:orders}=await sb.from('orders').select('*').order('created_at',{ascending:false});
+  const c=document.getElementById('adminTabContent');
+  const q=adminSearch.toLowerCase();
+  const filtered=(orders||[]).filter(o=>!q||o.title?.toLowerCase().includes(q)||o.creator_name?.toLowerCase().includes(q)||o.worker_name?.toLowerCase().includes(q));
+  if(!filtered.length){c.innerHTML='<div class="empty"><div class="empty-icon">📭</div><div class="empty-text">Нет сделок</div></div>';return;}
+  c.innerHTML='';
+  filtered.forEach(o=>{
+    const div=document.createElement('div'); div.className='admin-card';
+    const sc=o.status==='open'?'var(--green)':o.status==='work'?'var(--yellow)':'var(--muted2)';
+    div.innerHTML=`
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px">
+        <b>${escHtml(o.title)}</b>
+        <span style="color:${sc};font-size:11px;font-weight:700;text-transform:uppercase;white-space:nowrap">${o.status==='open'?'Открыт':o.status==='work'?'В работе':'Завершён'}</span>
+      </div>
+      <div class="card-meta">📍 ${escHtml(o.from)} → ${escHtml(o.to)}</div>
+      <div class="card-meta">💰 ${o.price}₽ · ${o.payment==='cash'?'Нал':'Безнал'}</div>
+      <div class="card-meta">📦 ${escHtml(o.creator_name)}${o.worker_name?' · 🚴 '+escHtml(o.worker_name):''}</div>
+      ${o.rating!=null?`<div class="card-meta">⭐ ${o.rating}/5</div>`:''}
+      ${o.cancel_reason?`<div class="card-meta">❌ Отменён: ${escHtml(o.cancel_reason)}</div>`:''}
+      <div style="font-size:10px;color:var(--muted);margin-top:4px">${new Date(o.created_at).toLocaleString('ru')}</div>`;
+    const acts=document.createElement('div'); acts.className='card-actions';
+    // Читать чат
+    const chatBtn=document.createElement('button'); chatBtn.className='btn btn-ghost'; chatBtn.innerHTML='💬 Чат';
+    chatBtn.onclick=()=>adminReadChat(o.id,o.title); acts.appendChild(chatBtn);
+    // Вернуть в открытые
+    if(o.status==='work'){
+      const retBtn=document.createElement('button'); retBtn.className='btn btn-ghost'; retBtn.innerHTML='🔄 Вернуть';
+      retBtn.onclick=()=>adminReturnOrder(o.id); acts.appendChild(retBtn);
+    }
+    const delBtn=document.createElement('button'); delBtn.className='btn btn-red'; delBtn.innerHTML='🗑 Удалить';
+    delBtn.onclick=()=>adminDeleteOrder(o.id); acts.appendChild(delBtn);
+    div.appendChild(acts); c.appendChild(div);
+  });
+}
+
+async function renderAdminUsers() {
+  const {data:users}=await sb.from('profiles').select('*').order('created_count',{ascending:false});
+  const c=document.getElementById('adminTabContent');
+  const q=adminSearch.toLowerCase();
+  const filtered=(users||[]).filter(u=>u.id!==currentUser.id&&(!q||u.name.toLowerCase().includes(q)));
+  if(!filtered.length){c.innerHTML='<div class="empty"><div class="empty-icon">👤</div><div class="empty-text">Нет пользователей</div></div>';return;}
+  c.innerHTML='';
+  const now=Date.now();
+  filtered.forEach(u=>{
+    const div=document.createElement('div'); div.className='admin-card';
+    const ar=avgRating(u.ratings);
+    const online=u.last_seen&&(now-new Date(u.last_seen))<120000;
+    div.innerHTML=`
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <div class="creator-avatar" style="width:34px;height:34px;font-size:14px">${escHtml(u.name[0].toUpperCase())}</div>
+        <div style="flex:1">
+          <b>${escHtml(u.name)}</b> ${u.is_banned?'<span class="ban-badge">🚫 Бан</span>':''}
+          <div style="font-size:11px;color:var(--muted2)">${escHtml(u.city||'—')} · <span style="color:${online?'var(--green)':'var(--muted)'}">${online?'● Онлайн':'Офлайн'}</span></div>
+        </div>
+      </div>
+      <div class="card-meta">📦 ${u.created_count||0} создано · ✅ ${u.done_count||0} выполнено · 💰 ${u.earned||0}₽</div>
+      ${ar?`<div class="card-meta">⭐ ${ar}/5</div>`:''}`;
+    const acts=document.createElement('div'); acts.className='card-actions';
+    const msgBtn=document.createElement('button'); msgBtn.className='btn btn-ghost'; msgBtn.innerHTML='📧 Написать';
+    msgBtn.onclick=()=>showSendMsgModal(u.id,u.name); acts.appendChild(msgBtn);
+    const ordBtn=document.createElement('button'); ordBtn.className='btn btn-ghost'; ordBtn.innerHTML='📦 Заказы';
+    ordBtn.onclick=()=>adminUserOrders(u.name); acts.appendChild(ordBtn);
+    if(!u.is_banned){
+      const banBtn=document.createElement('button'); banBtn.className='btn btn-red'; banBtn.innerHTML='🚫 Бан';
+      banBtn.onclick=()=>adminBanUser(u.id,u.name); acts.appendChild(banBtn);
+    } else {
+      const unBtn=document.createElement('button'); unBtn.className='btn btn-ghost'; unBtn.innerHTML='✅ Разбан';
+      unBtn.onclick=()=>adminUnban(u.id,u.name); acts.appendChild(unBtn);
+    }
+    div.appendChild(acts); c.appendChild(div);
+  });
+}
+
+async function renderAdminReports() {
+  const {data}=await sb.from('reports').select('*').order('created_at',{ascending:false});
+  const c=document.getElementById('adminTabContent');
+  const q=adminSearch.toLowerCase();
+  const filtered=(data||[]).filter(r=>!q||r.target_name?.toLowerCase().includes(q)||r.reporter_name?.toLowerCase().includes(q));
+  if(!filtered.length){c.innerHTML='<div class="empty"><div class="empty-icon">⚠️</div><div class="empty-text">Жалоб нет</div></div>';return;}
+  c.innerHTML='';
+  filtered.forEach(r=>{
+    const div=document.createElement('div'); div.className='admin-card';
+    div.innerHTML=`
+      <div style="color:var(--accent);font-weight:700;margin-bottom:6px">⚠️ ${escHtml(r.reason)}</div>
+      <div class="card-meta">На кого: <b>${escHtml(r.target_name)}</b></div>
+      <div class="card-meta">От кого: ${escHtml(r.reporter_name)}</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:4px">${new Date(r.created_at).toLocaleString('ru')}</div>`;
+    const acts=document.createElement('div'); acts.className='card-actions';
+    const delBtn=document.createElement('button'); delBtn.className='btn btn-ghost'; delBtn.innerHTML='🗑 Закрыть';
+    delBtn.onclick=async()=>{await sb.from('reports').delete().eq('id',r.id);renderAdmin();};
+    acts.appendChild(delBtn); div.appendChild(acts); c.appendChild(div);
+  });
+}
+
+async function renderAdminBans() {
+  const {data}=await sb.from('ban_history').select('*').order('created_at',{ascending:false});
+  const c=document.getElementById('adminTabContent');
+  if(!data?.length){c.innerHTML='<div class="empty"><div class="empty-icon">🚫</div><div class="empty-text">История банов пуста</div></div>';return;}
+  c.innerHTML='';
+  data.forEach(b=>{
+    const div=document.createElement('div'); div.className='admin-card';
+    div.innerHTML=`
+      <div style="display:flex;justify-content:space-between">
+        <b>${escHtml(b.user_name)}</b>
+        <span style="color:${b.action==='ban'?'var(--accent)':'var(--green)'};font-size:11px;font-weight:700">${b.action==='ban'?'🚫 БАН':'✅ РАЗБАН'}</span>
+      </div>
+      <div class="card-meta">Причина: ${escHtml(b.reason||'—')}</div>
+      <div class="card-meta">Админ: ${escHtml(b.admin_name)}</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:4px">${new Date(b.created_at).toLocaleString('ru')}</div>`;
+    c.appendChild(div);
+  });
+}
+
+async function renderAdminLogs() {
+  const {data}=await sb.from('action_logs').select('*').order('created_at',{ascending:false}).limit(50);
+  const c=document.getElementById('adminTabContent');
+  if(!data?.length){c.innerHTML='<div class="empty"><div class="empty-icon">👁</div><div class="empty-text">Лог пуст</div></div>';return;}
+  c.innerHTML='';
+  data.forEach(l=>{
+    const div=document.createElement('div');
+    div.style.cssText='padding:10px;border-bottom:1px solid var(--border);font-size:12px;display:flex;gap:8px;align-items:flex-start';
+    div.innerHTML=`<div style="color:var(--muted);white-space:nowrap">${new Date(l.created_at).toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'})}</div><div><span style="color:var(--accent)">${escHtml(l.admin_name)}</span> · ${escHtml(l.action)}: <b>${escHtml(l.target||'')}</b></div>`;
+    c.appendChild(div);
+  });
+}
+
+async function renderAdminMessages() {
+  const c=document.getElementById('adminTabContent');
+  c.innerHTML=`
+    <div style="font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Отправить системное сообщение</div>
+    <input class="form-input" id="msgToName" placeholder="Имя пользователя" style="margin-bottom:8px">
+    <input class="form-input" id="msgText" placeholder="Текст сообщения..." style="margin-bottom:10px">
+    <button class="btn btn-red btn-full" onclick="sendSysMsgByName()">Отправить</button>
+    <div style="margin-top:20px;font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Отправленные сообщения</div>
+    <div id="sentMsgs"></div>`;
+  const {data}=await sb.from('system_messages').select('*').order('created_at',{ascending:false}).limit(20);
+  const sm=document.getElementById('sentMsgs');
+  if(!data?.length){sm.innerHTML='<div style="color:var(--muted);font-size:13px">Нет сообщений</div>';return;}
+  data.forEach(m=>{
+    const div=document.createElement('div'); div.className='card';
+    div.innerHTML=`<div style="font-size:12px;color:var(--muted2)">→ пользователю</div><div style="margin:4px 0">${escHtml(m.text)}</div><div style="font-size:10px;color:var(--muted)">${new Date(m.created_at).toLocaleString('ru')} · ${m.is_read?'✅ прочитано':'⏳ не прочитано'}</div>`;
+    sm.appendChild(div);
+  });
+}
+
+async function sendSysMsgByName() {
+  const name=document.getElementById('msgToName')?.value.trim();
+  const text=document.getElementById('msgText')?.value.trim();
+  if(!name||!text){toast('Заполни имя и текст');return;}
+  const {data}=await sb.from('profiles').select('id').eq('name',name).single();
+  if(!data){toast('Пользователь не найден');return;}
+  await sb.from('system_messages').insert({to_user_id:data.id,from_admin:currentProfile.name,text,is_read:false});
+  await logAction('Сообщение отправлено',name);
+  toast('📧 Сообщение отправлено!');
+  renderAdmin();
+}
+
+function showSendMsgModal(userId,userName) {
+  const e=document.getElementById('sendMsgModal'); if(e) e.remove();
+  const modal=document.createElement('div'); modal.id='sendMsgModal';
+  modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:400;display:flex;align-items:flex-end;';
+  modal.innerHTML=`<div style="background:var(--bg2);width:100%;border-radius:20px 20px 0 0;padding:24px;border-top:1px solid var(--border)">
+    <div style="font-family:Bebas Neue,sans-serif;font-size:22px;letter-spacing:2px;margin-bottom:14px">📧 Написать: ${escHtml(userName)}</div>
+    <input class="form-input" id="modalMsgText" placeholder="Сообщение..." style="margin-bottom:12px">
+    <button onclick="sendSysMsgDirect('${userId}','${userName}')" class="btn btn-red btn-full">Отправить</button>
+    <button onclick="document.getElementById('sendMsgModal').remove()" style="display:block;width:100%;padding:12px;background:none;border:none;color:var(--muted2);font-family:Manrope,sans-serif;font-size:14px;cursor:pointer;margin-top:4px">Отмена</button>
+  </div>`;
+  document.body.appendChild(modal);
+}
+
+async function sendSysMsgDirect(userId,userName) {
+  const text=document.getElementById('modalMsgText')?.value.trim();
+  if(!text){toast('Введи сообщение');return;}
+  document.getElementById('sendMsgModal')?.remove();
+  await sb.from('system_messages').insert({to_user_id:userId,from_admin:currentProfile.name,text,is_read:false});
+  await logAction('Сообщение отправлено',userName);
+  toast('📧 Отправлено!');
+}
+
+async function adminDeleteOrder(id) {
+  if(!confirm('Удалить сделку?')) return;
+  await sb.from('messages').delete().eq('order_id',id);
+  await sb.from('orders').delete().eq('id',id);
+  await logAction('Удалена сделка',id);
+  toast('🗑 Удалено'); renderAdmin();
+}
+
+async function adminReturnOrder(id) {
+  await sb.from('orders').update({status:'open',worker_id:null,worker_name:null,worker_confirmed:false,creator_confirmed:false,cancel_deadline:null}).eq('id',id);
+  await logAction('Возврат заказа',id);
+  toast('🔄 Заказ возвращён в открытые'); renderAdmin();
+}
+
+async function adminReadChat(orderId,title) {
+  const {data}=await sb.from('messages').select('*').eq('order_id',orderId).order('created_at',{ascending:true});
+  const e=document.getElementById('adminChatModal'); if(e) e.remove();
+  const modal=document.createElement('div'); modal.id='adminChatModal';
+  modal.style.cssText='position:fixed;inset:0;background:var(--bg);z-index:500;display:flex;flex-direction:column;';
+  let html=`<div style="padding:16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;background:var(--bg2)">
+    <button onclick="document.getElementById('adminChatModal').remove()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);width:36px;height:36px;border-radius:10px;cursor:pointer;font-size:16px">←</button>
+    <b>💬 Чат: ${escHtml(title)}</b></div><div style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:6px">`;
+  if(!data?.length) html+='<div class="chat-empty">Нет сообщений</div>';
+  (data||[]).forEach(m=>{
+    html+=`<div style="background:var(--bg3);border-radius:10px;padding:8px 12px;max-width:80%">
+      <div style="font-size:10px;color:var(--muted2);margin-bottom:2px">${escHtml(m.user_name)} · ${m.time_str||''}</div>
+      <div>${escHtml(m.text)}</div></div>`;
+  });
+  html+='</div>';
+  modal.innerHTML=html; document.body.appendChild(modal);
+}
+
+function adminBanUser(id,name) {
+  const e=document.getElementById('banModal'); if(e) e.remove();
+  const modal=document.createElement('div'); modal.id='banModal';
+  modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:400;display:flex;align-items:flex-end;';
+  modal.innerHTML=`<div style="background:var(--bg2);width:100%;border-radius:20px 20px 0 0;padding:24px;border-top:1px solid var(--border)">
+    <div style="font-family:Bebas Neue,sans-serif;font-size:22px;letter-spacing:2px;margin-bottom:4px;color:var(--accent)">🚫 Бан: ${escHtml(name)}</div>
+    <input id="banReason" class="form-input" placeholder="Причина..." style="margin:12px 0">
+    <button onclick="confirmBan('${id}','${name}')" class="btn btn-red btn-full">Забанить</button>
+    <button onclick="document.getElementById('banModal').remove()" style="display:block;width:100%;padding:12px;background:none;border:none;color:var(--muted2);font-family:Manrope,sans-serif;font-size:14px;cursor:pointer;margin-top:4px">Отмена</button>
+  </div>`;
+  document.body.appendChild(modal);
+}
+
+async function confirmBan(id,name) {
+  const reason=document.getElementById('banReason')?.value.trim()||'Нарушение правил';
+  document.getElementById('banModal')?.remove();
+  await sb.from('profiles').update({is_banned:true,ban_reason:reason}).eq('id',id);
+  await sb.from('ban_history').insert({admin_name:currentProfile.name,user_name:name,user_id:id,reason,action:'ban'});
+  await logAction('Бан',name);
+  toast('🚫 Забанен'); renderAdmin();
+}
+
+async function adminUnban(id,name) {
+  await sb.from('profiles').update({is_banned:false,ban_reason:null}).eq('id',id);
+  await sb.from('ban_history').insert({admin_name:currentProfile.name,user_name:name,user_id:id,reason:'Разбан',action:'unban'});
+  await logAction('Разбан',name);
+  toast('✅ Разбанен'); renderAdmin();
+}
+
+async function adminUserOrders(name) {
+  const {data}=await sb.from('orders').select('*').or(`creator_name.eq.${name},worker_name.eq.${name}`).order('created_at',{ascending:false});
+  const e=document.getElementById('userOrdersModal'); if(e) e.remove();
+  const modal=document.createElement('div'); modal.id='userOrdersModal';
+  modal.style.cssText='position:fixed;inset:0;background:var(--bg);z-index:500;display:flex;flex-direction:column;';
+  let html=`<div style="padding:16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;background:var(--bg2)">
+    <button onclick="document.getElementById('userOrdersModal').remove()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);width:36px;height:36px;border-radius:10px;cursor:pointer;font-size:16px">←</button>
+    <b>📦 Заказы: ${escHtml(name)}</b></div><div style="flex:1;overflow-y:auto;padding:16px">`;
+  if(!data?.length) html+='<div class="empty"><div class="empty-icon">📭</div><div class="empty-text">Нет заказов</div></div>';
+  (data||[]).forEach(o=>{
+    html+=`<div class="admin-card"><b>${escHtml(o.title)}</b> — ${o.price}₽<div class="card-meta">📍 ${escHtml(o.from)} → ${escHtml(o.to)}</div><div class="card-meta">${o.status} · ${new Date(o.created_at).toLocaleString('ru')}</div></div>`;
+  });
+  html+='</div>'; modal.innerHTML=html; document.body.appendChild(modal);
 }
 
 // ══════════════════════════════════
@@ -1523,7 +1676,7 @@ function show(pageId,btn) {
 }
 
 function ensurePaymentField() {
-  if (!document.getElementById('cPayment')) {
+  if(!document.getElementById('cPayment')){
     const pg=document.getElementById('createPage');
     const d=document.createElement('div'); d.className='form-group';
     d.innerHTML=`<label class="form-label">Способ оплаты</label>
@@ -1536,43 +1689,23 @@ function ensurePaymentField() {
   }
 }
 
-function render() { renderOrders(); renderWork(); renderDone(); updateBadges(); }
+function render(){renderOrders();renderWork();renderDone();updateBadges();}
 
-function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function fmtDeadline(dl){if(!dl)return null;const d=new Date(dl);if(isNaN(d))return null;const diff=d-new Date();return{str:d.toLocaleString('ru',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}),urgent:diff<3600000&&diff>0};}
+function fmtCancelTimer(dl){if(!dl)return null;const diff=new Date(dl)-new Date();return diff<=0?null:Math.ceil(diff/1000)+'с';}
+function avgRating(r){if(!r||!r.length)return null;return(r.reduce((a,b)=>a+b,0)/r.length).toFixed(1);}
+function starsStr(r){const n=Math.round(r);return'⭐'.repeat(n)+'☆'.repeat(5-n);}
+function creatorTag(name,city){return`<span class="creator-tag"><span class="creator-avatar">${escHtml(name[0].toUpperCase())}</span>${escHtml(name)}${city?' · '+escHtml(city):''}</span>`;}
+function paymentBadge(p){if(!p)return'';return`<span style="display:inline-flex;align-items:center;gap:4px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:3px 8px;font-size:11px;color:var(--muted2)">${p==='cash'?'💵 Нал':'💳 Безнал'}</span>`;}
 
-function fmtDeadline(dl) {
-  if (!dl) return null;
-  const d=new Date(dl); if(isNaN(d)) return null;
-  const diff=d-new Date();
-  return { str:d.toLocaleString('ru',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}),urgent:diff<3600000&&diff>0 };
-}
-
-function fmtCancelTimer(deadline) {
-  if (!deadline) return null;
-  const diff=new Date(deadline)-new Date();
-  if (diff<=0) return null;
-  return Math.ceil(diff/1000)+'с';
-}
-
-function avgRating(r) { if(!r||!r.length) return null; return (r.reduce((a,b)=>a+b,0)/r.length).toFixed(1); }
-function starsStr(r) { const n=Math.round(r); return '⭐'.repeat(n)+'☆'.repeat(5-n); }
-
-function creatorTag(name,city) {
-  return `<span class="creator-tag"><span class="creator-avatar">${escHtml(name[0].toUpperCase())}</span>${escHtml(name)}${city?' · '+escHtml(city):''}</span>`;
-}
-
-function paymentBadge(p) {
-  if (!p) return '';
-  return `<span style="display:inline-flex;align-items:center;gap:4px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:3px 8px;font-size:11px;color:var(--muted2)">${p==='cash'?'💵 Наличные':'💳 Безналичные'}</span>`;
-}
-
-function renderOrders() {
+function renderOrders(){
   const c=document.getElementById('ordersList');
   const open=getOrders().filter(o=>o.status==='open');
-  if (!open.length) { c.innerHTML='<div class="empty"><div class="empty-icon">📭</div><div class="empty-text">Нет открытых заказов</div></div>'; return; }
+  if(!open.length){c.innerHTML='<div class="empty"><div class="empty-icon">📭</div><div class="empty-text">Нет открытых заказов</div></div>';return;}
   c.innerHTML='';
   open.forEach((o,i)=>{
-    const div=document.createElement('div'); div.className='card'; div.style.animationDelay=(i*0.05)+'s';
+    const div=document.createElement('div');div.className='card';div.style.animationDelay=(i*0.05)+'s';
     const dl=fmtDeadline(o.deadline);
     div.innerHTML=
       `<div class="card-title"><span>${escHtml(o.title)}</span><span class="card-price">${o.price?o.price+'₽':'Договорная'}</span></div>`+
@@ -1580,121 +1713,125 @@ function renderOrders() {
       (dl?`<div class="card-meta ${dl.urgent?'deadline-urgent':'deadline-ok'}">⏰ ${dl.str}${dl.urgent?' · Срочно!':''}</div>`:'')+
       (o.comment?`<div class="card-meta">💬 ${escHtml(o.comment)}</div>`:'')+
       `<div style="margin-top:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">${creatorTag(o.creator_name,o.creator_city||'')} ${paymentBadge(o.payment)}</div>`;
-    const acts=document.createElement('div'); acts.className='card-actions';
-    if (o.creator_id!==currentUser.id) {
-      const b=document.createElement('button'); b.className='btn btn-red'; b.innerHTML='🚴 Взять';
-      b.onclick=()=>take(o.id); acts.appendChild(b);
+    const acts=document.createElement('div');acts.className='card-actions';
+    if(o.creator_id!==currentUser.id){
+      const b=document.createElement('button');b.className='btn btn-red';b.innerHTML='🚴 Взять';
+      b.onclick=()=>take(o.id);acts.appendChild(b);
     }
-    const cb=document.createElement('button'); cb.className='btn btn-ghost'; cb.innerHTML='💬 Чат';
-    cb.onclick=()=>openChat(o.id); acts.appendChild(cb);
-    div.appendChild(acts); c.appendChild(div);
+    const cb=document.createElement('button');cb.className='btn btn-ghost';cb.innerHTML='💬 Чат';
+    cb.onclick=()=>openChat(o.id);acts.appendChild(cb);
+    // Жалоба
+    if(o.creator_id!==currentUser.id){
+      const rb=document.createElement('button');rb.className='btn btn-ghost';rb.innerHTML='⚠️';
+      rb.onclick=()=>showReportModal(o.id,o.creator_name);acts.appendChild(rb);
+    }
+    div.appendChild(acts);c.appendChild(div);
   });
 }
 
-function renderWork() {
+function renderWork(){
   const c=document.getElementById('workList');
   const work=getOrders().filter(o=>o.status==='work');
-  if (!work.length) { c.innerHTML='<div class="empty"><div class="empty-icon">🚴</div><div class="empty-text">Нет заказов в работе</div></div>'; return; }
+  if(!work.length){c.innerHTML='<div class="empty"><div class="empty-icon">🚴</div><div class="empty-text">Нет заказов в работе</div></div>';return;}
   c.innerHTML='';
   work.forEach((o,i)=>{
-    const div=document.createElement('div'); div.className='card'; div.style.animationDelay=(i*0.05)+'s';
+    const div=document.createElement('div');div.className='card';div.style.animationDelay=(i*0.05)+'s';
     const dl=fmtDeadline(o.deadline);
-    const cancelTimer=fmtCancelTimer(o.cancel_deadline);
-    const isWorker=o.worker_id===currentUser.id;
-    const isCreator=o.creator_id===currentUser.id;
-    const myConfirmed=isWorker?o.worker_confirmed:o.creator_confirmed;
+    const ct=fmtCancelTimer(o.cancel_deadline);
+    const isW=o.worker_id===currentUser.id,isC=o.creator_id===currentUser.id;
+    const myConf=isW?o.worker_confirmed:o.creator_confirmed;
     div.innerHTML=
       `<div class="card-title"><span>${escHtml(o.title)}</span><span class="card-price">${o.price?o.price+'₽':'—'}</span></div>`+
       `<div class="card-meta">📍 ${escHtml(o.from)} → ${escHtml(o.to)}</div>`+
       (dl?`<div class="card-meta ${dl.urgent?'deadline-urgent':'deadline-ok'}">⏰ ${dl.str}</div>`:'')+
-      `<div class="card-meta">🚴 ${escHtml(o.worker_name||'—')}</div>`+
-      `<div class="card-meta">📦 ${escHtml(o.creator_name)}</div>`+
+      `<div class="card-meta">🚴 ${escHtml(o.worker_name||'—')} · 📦 ${escHtml(o.creator_name)}</div>`+
       paymentBadge(o.payment)+
       `<div style="margin-top:10px;padding:8px;background:var(--bg3);border-radius:8px;font-size:12px;line-height:2">
-        <span style="color:${o.worker_confirmed?'var(--green)':'var(--muted2)'}">🚴 Курьер: ${o.worker_confirmed?'✅ подтвердил':'ожидает'}</span><br>
-        <span style="color:${o.creator_confirmed?'var(--green)':'var(--muted2)'}">📦 Заказчик: ${o.creator_confirmed?'✅ подтвердил':'ожидает'}</span>
+        <span style="color:${o.worker_confirmed?'var(--green)':'var(--muted2)'}">🚴 Курьер: ${o.worker_confirmed?'✅':'⏳'}</span> &nbsp;
+        <span style="color:${o.creator_confirmed?'var(--green)':'var(--muted2)'}">📦 Заказчик: ${o.creator_confirmed?'✅':'⏳'}</span>
       </div>`;
-    const acts=document.createElement('div'); acts.className='card-actions';
-    if ((isWorker||isCreator)&&!myConfirmed) {
-      const b=document.createElement('button'); b.className='btn btn-green'; b.innerHTML='✅ Подтвердить';
-      b.onclick=()=>confirmDone(o.id,isWorker?'worker':'creator'); acts.appendChild(b);
+    const acts=document.createElement('div');acts.className='card-actions';
+    if((isW||isC)&&!myConf){
+      const b=document.createElement('button');b.className='btn btn-green';b.innerHTML='✅ Подтвердить';
+      b.onclick=()=>confirmDone(o.id,isW?'worker':'creator');acts.appendChild(b);
     }
-    if (isWorker&&cancelTimer) {
-      const cb2=document.createElement('button'); cb2.className='btn btn-ghost';
-      cb2.innerHTML=`⏱ Отменить (${cancelTimer})`;
-      cb2.onclick=()=>showCancelModal(o.id); acts.appendChild(cb2);
+    if(isW&&ct){
+      const cb2=document.createElement('button');cb2.className='btn btn-ghost';cb2.innerHTML=`⏱ Отменить (${ct})`;
+      cb2.onclick=()=>showCancelModal(o.id);acts.appendChild(cb2);
     }
-    const cb=document.createElement('button'); cb.className='btn btn-ghost'; cb.innerHTML='💬 Чат';
-    cb.onclick=()=>openChat(o.id); acts.appendChild(cb);
-    div.appendChild(acts); c.appendChild(div);
+    const cb=document.createElement('button');cb.className='btn btn-ghost';cb.innerHTML='💬 Чат';
+    cb.onclick=()=>openChat(o.id);acts.appendChild(cb);
+    // Жалоба на курьера для заказчика
+    if(isC&&o.worker_name){
+      const rb=document.createElement('button');rb.className='btn btn-ghost';rb.innerHTML='⚠️';
+      rb.onclick=()=>showReportModal(o.id,o.worker_name);acts.appendChild(rb);
+    }
+    div.appendChild(acts);c.appendChild(div);
   });
   clearTimeout(window._workTimer);
   window._workTimer=setTimeout(renderWork,1000);
 }
 
-function renderDone() {
+function renderDone(){
   const c=document.getElementById('doneList');
   const done=getOrders().filter(o=>o.status==='done');
-  if (!done.length) { c.innerHTML='<div class="empty"><div class="empty-icon">✅</div><div class="empty-text">Нет выполненных заказов</div></div>'; return; }
+  if(!done.length){c.innerHTML='<div class="empty"><div class="empty-icon">✅</div><div class="empty-text">Нет выполненных заказов</div></div>';return;}
   c.innerHTML='';
   done.forEach((o,i)=>{
-    const div=document.createElement('div'); div.className='card'; div.style.animationDelay=(i*0.05)+'s';
+    const div=document.createElement('div');div.className='card';div.style.animationDelay=(i*0.05)+'s';
     div.innerHTML=
       `<div class="card-title"><span>${escHtml(o.title)}</span><span class="card-price" style="color:var(--muted2)">${o.price?o.price+'₽':'—'}</span></div>`+
       `<div class="card-meta">📍 ${escHtml(o.from)} → ${escHtml(o.to)}</div>`+
-      `<div class="card-meta">🚴 ${escHtml(o.worker_name||'—')}</div>`+
-      paymentBadge(o.payment);
-    if (o.creator_id===currentUser.id&&o.worker_id&&o.rating===null) {
-      const rd=document.createElement('div'); rd.innerHTML='<div style="font-size:12px;color:var(--muted2);margin-top:10px">Оцени курьера:</div>';
-      const sw=document.createElement('div'); sw.className='stars-wrap';
+      `<div class="card-meta">🚴 ${escHtml(o.worker_name||'—')}</div>`+paymentBadge(o.payment);
+    if(o.creator_id===currentUser.id&&o.worker_id&&o.rating===null){
+      const rd=document.createElement('div');rd.innerHTML='<div style="font-size:12px;color:var(--muted2);margin-top:10px">Оцени курьера:</div>';
+      const sw=document.createElement('div');sw.className='stars-wrap';
       for(let s=1;s<=5;s++){
-        const btn=document.createElement('button'); btn.className='star-btn'; btn.textContent='★';
+        const btn=document.createElement('button');btn.className='star-btn';btn.textContent='★';
         btn.onmouseover=()=>sw.querySelectorAll('.star-btn').forEach((b,j)=>b.classList.toggle('lit',j<s));
         btn.onmouseout=()=>sw.querySelectorAll('.star-btn').forEach(b=>b.classList.remove('lit'));
-        btn.onclick=()=>submitRating(o.id,s); sw.appendChild(btn);
+        btn.onclick=()=>submitRating(o.id,s);sw.appendChild(btn);
       }
-      rd.appendChild(sw); div.appendChild(rd);
-    } else if (o.rating!==null) {
+      rd.appendChild(sw);div.appendChild(rd);
+    } else if(o.rating!==null){
       div.innerHTML+=`<div style="color:var(--yellow);margin-top:8px;font-size:13px">${starsStr(o.rating)} ${o.rating}/5</div>`;
     }
     c.appendChild(div);
   });
 }
 
-async function renderProfile() {
-  if (!currentUser||!currentProfile) return;
+async function renderProfile(){
+  if(!currentUser||!currentProfile) return;
   document.getElementById('profileAvatar').textContent=currentProfile.name[0].toUpperCase();
   document.getElementById('profileName').textContent=currentProfile.name;
   const ar=avgRating(currentProfile.ratings);
   document.getElementById('profileRating').textContent=ar?'⭐ '+ar+' / 5':'Нет оценок';
+  if(currentProfile.is_admin) document.getElementById('profileRating').innerHTML+=' <span class="admin-badge">🛡️ Админ</span>';
   document.getElementById('statCreated').textContent=currentProfile.created_count||0;
   document.getElementById('statDone').textContent=currentProfile.done_count||0;
   document.getElementById('statEarned').textContent=currentProfile.earned||0;
-  if (currentProfile.is_admin) {
-    document.getElementById('profileRating').innerHTML += ' <span class="admin-badge">🛡️ Админ</span>';
-  }
   const myDone=getOrders().filter(o=>o.status==='done'&&o.worker_id===currentUser.id);
   const c=document.getElementById('historyList');
-  if (!myDone.length) { c.innerHTML='<div style="color:var(--muted);font-size:13px">Нет выполненных доставок</div>'; return; }
+  if(!myDone.length){c.innerHTML='<div style="color:var(--muted);font-size:13px">Нет выполненных доставок</div>';return;}
   c.innerHTML='';
   myDone.forEach(o=>{
-    const div=document.createElement('div'); div.className='card';
+    const div=document.createElement('div');div.className='card';
     div.innerHTML=`<b>${escHtml(o.title)}</b> <span style="color:var(--green);font-weight:700">+${o.price}₽</span><div class="card-meta" style="margin-top:4px">${escHtml(o.from)} → ${escHtml(o.to)}</div>`;
     c.appendChild(div);
   });
 }
 
-function updateBadges() {
+function updateBadges(){
   const oc=getOrders().filter(o=>o.status==='open').length;
   const wc=getOrders().filter(o=>o.status==='work').length;
   const b1=document.getElementById('b1'),b2=document.getElementById('b2');
-  b1.style.display=oc?'block':'none'; b1.textContent=oc;
-  b2.style.display=wc?'block':'none'; b2.textContent=wc;
+  b1.style.display=oc?'block':'none';b1.textContent=oc;
+  b2.style.display=wc?'block':'none';b2.textContent=wc;
 }
 
-function toast(msg) {
+function toast(msg){
   const t=document.getElementById('toast');
-  t.textContent=msg; t.classList.add('show');
+  t.textContent=msg;t.classList.add('show');
   clearTimeout(window._tt);
   window._tt=setTimeout(()=>t.classList.remove('show'),2800);
 }
