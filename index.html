@@ -867,16 +867,40 @@ nav button.active-tab { color: var(--accent); }
 #dmModal.open{display:flex}
 .conv-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s}
 .conv-item:active{background:var(--bg3)}
-.conv-av{width:44px;height:44px;border-radius:50%;background:var(--accent);color:white;font-family:'Bebas Neue',sans-serif;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.conv-av{width:44px;height:44px;border-radius:50%;background:var(--accent);color:white;font-family:'Bebas Neue',sans-serif;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative}
 /* ONLINE PILL */
 .online-pill{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;border:none;font-family:Manrope,sans-serif}
 .online-pill.on{background:rgba(0,230,118,.15);color:var(--green);border:1px solid rgba(0,230,118,.3)}
 .online-pill.off{background:var(--bg3);color:var(--muted2);border:1px solid var(--border)}
+/* NOTIF DOT */
 .ndot{position:absolute;top:4px;right:4px;width:8px;height:8px;background:var(--accent);border-radius:50%;border:2px solid var(--bg)}
-/* MODERATION BADGE */
+/* BADGES */
+.badge-chip{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700;margin:2px}
+.badge-fast{background:rgba(255,214,0,.15);color:var(--yellow);border:1px solid rgba(255,214,0,.3)}
+.badge-reliable{background:rgba(0,230,118,.12);color:var(--green);border:1px solid rgba(0,230,118,.25)}
+.badge-hundred{background:rgba(255,60,60,.12);color:var(--accent);border:1px solid rgba(255,60,60,.25)}
+.badge-verified{background:rgba(100,180,255,.12);color:#64b4ff;border:1px solid rgba(100,180,255,.25)}
+/* READ TICKS */
+.tick-sent{color:var(--muted2);font-size:11px;margin-left:4px}
+.tick-read{color:var(--accent);font-size:11px;margin-left:4px}
+/* MOD BADGE */
 .mod-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(255,214,0,.15);color:var(--yellow);border:1px solid rgba(255,214,0,.3);border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700}
+/* THEME */
+body.light{--bg:#f5f5f5;--bg2:#fff;--bg3:#ebebeb;--border:#ddd;--card-bg:#fff;--text:#111;--muted:#bbb;--muted2:#777}
 nav button{font-size:9px;padding:6px 2px}
 .nav-icon{font-size:17px}
+/* PWA INSTALL BANNER */
+#pwaBanner{display:none;position:fixed;bottom:calc(var(--nav-h)+10px);left:12px;right:12px;background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:12px 14px;z-index:150;align-items:center;gap:12px;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+#pwaBanner.show{display:flex}
+/* PROFILE PUBLIC */
+#profileModal{display:none;position:fixed;inset:0;background:var(--bg);z-index:320;overflow-y:auto;padding:0 0 80px}
+#profileModal.open{display:block}
+/* LEVEL */
+.level-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.level-0{background:var(--bg3);color:var(--muted2);border:1px solid var(--border)}
+.level-1{background:rgba(100,180,255,.12);color:#64b4ff;border:1px solid rgba(100,180,255,.25)}
+.level-2{background:rgba(255,214,0,.15);color:var(--yellow);border:1px solid rgba(255,214,0,.3)}
+.level-3{background:rgba(255,60,60,.12);color:var(--accent);border:1px solid rgba(255,60,60,.25)}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
@@ -891,11 +915,12 @@ nav button{font-size:9px;padding:6px 2px}
   <div class="bmenu-item" onclick="closeBurger();openSettings()"><span>⚙️</span>Настройки</div>
   <div class="bmenu-item" onclick="closeBurger();openHelp()"><span>🆘</span>Помощь</div>
   <div class="bmenu-item" onclick="closeBurger();openPrivacy()"><span>🔒</span>Конфиденциальность</div>
+  <div class="bmenu-item" onclick="closeBurger();toggleTheme()"><span id="themeIcon">☀️</span><span id="themeLabel">Светлая тема</span></div>
   <div style="flex:1"></div>
   <div class="bmenu-item" onclick="logout()" style="color:var(--accent)"><span>🚪</span>Выйти</div>
 </div>
 
-<!-- MESSENGER (Telegram-style) -->
+<!-- MESSENGER -->
 <div id="messengerModal">
   <div style="padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;background:var(--bg2)">
     <button onclick="closeMessenger()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);width:36px;height:36px;border-radius:10px;cursor:pointer;font-size:16px;flex-shrink:0">←</button>
@@ -911,14 +936,35 @@ nav button{font-size:9px;padding:6px 2px}
 <div id="dmModal">
   <div style="padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;background:var(--bg2)">
     <button onclick="closeDM()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);width:36px;height:36px;border-radius:10px;cursor:pointer;font-size:16px;flex-shrink:0">←</button>
-    <div id="dmAvatar" style="width:36px;height:36px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:16px;flex-shrink:0"></div>
-    <div style="flex:1;min-width:0"><div id="dmName" style="font-weight:700;font-size:15px"></div><div id="dmSub" style="font-size:11px;color:var(--muted2)"></div></div>
+    <div id="dmAvatar" style="width:36px;height:36px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:16px;flex-shrink:0;cursor:pointer" onclick="openPublicProfile(window._dmUserId)"></div>
+    <div style="flex:1;min-width:0;cursor:pointer" onclick="openPublicProfile(window._dmUserId)">
+      <div id="dmName" style="font-weight:700;font-size:15px"></div>
+      <div id="dmSub" style="font-size:11px;color:var(--muted2)"></div>
+    </div>
+    <button id="dmFavBtn" onclick="toggleFavorite()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted2)">☆</button>
   </div>
   <div id="dmMessages" style="flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:6px"></div>
   <div style="padding:10px;border-top:1px solid var(--border);background:var(--bg2);display:flex;gap:8px">
     <input id="dmInput" placeholder="Сообщение..." style="flex:1;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:24px;color:var(--text);font-family:Manrope,sans-serif;font-size:14px;outline:none" onkeydown="if(event.key==='Enter')sendDM()">
     <button onclick="sendDM()" style="width:42px;height:42px;background:var(--accent);border:none;border-radius:50%;color:white;cursor:pointer;font-size:17px;display:flex;align-items:center;justify-content:center;flex-shrink:0">➤</button>
   </div>
+</div>
+
+<!-- PUBLIC PROFILE MODAL -->
+<div id="profileModal">
+  <div style="padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;background:var(--bg2);position:sticky;top:0;z-index:10">
+    <button onclick="closePublicProfile()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);width:36px;height:36px;border-radius:10px;cursor:pointer;font-size:16px;flex-shrink:0">←</button>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px">Профиль</div>
+  </div>
+  <div id="profileModalContent" style="padding:20px"></div>
+</div>
+
+<!-- PWA INSTALL BANNER -->
+<div id="pwaBanner">
+  <div style="font-size:24px">📱</div>
+  <div style="flex:1"><div style="font-weight:700;font-size:13px">Добавь на экран</div><div style="font-size:11px;color:var(--muted2)">Работает как приложение</div></div>
+  <button onclick="installPWA()" style="background:var(--accent);border:none;color:white;padding:7px 12px;border-radius:8px;font-family:Manrope,sans-serif;font-size:12px;font-weight:700;cursor:pointer">Установить</button>
+  <button onclick="document.getElementById('pwaBanner').classList.remove('show')" style="background:none;border:none;color:var(--muted2);cursor:pointer;font-size:16px">✕</button>
 </div>
 <script>
 const SURL='https://ubptjwombabokvcjfecv.supabase.co';
@@ -932,8 +978,9 @@ const CANCEL_REASONS=['Передумал','Нашёл курьера сам','�
 let currentUser=null,currentProfile=null;
 let currentChatOrderId=null,chatSub=null,ordersSub=null,notifSub=null,dmSub=null;
 let adminTab='dashboard';
-let allUsers=[],currentDMUser=null;
-window._orders=[];
+let allUsers=[],currentDMUser=null,favorites=new Set();
+let deferredInstall=null;
+window._orders=[];window._dmUserId=null;
 
 // ══ HELPERS ══
 const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -946,8 +993,18 @@ function pbadge(p){if(!p)return'';return`<span style="display:inline-flex;align-
 function isBanned(p){return p?.is_banned&&(!p.ban_until||new Date(p.ban_until)>new Date());}
 function isBanCreate(p){return p?.ban_create_until&&new Date(p.ban_create_until)>new Date();}
 function isBanTake(p){return p?.ban_take_until&&new Date(p.ban_take_until)>new Date();}
-function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),2800);}
+function toast(msg,dur){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),dur||2800);}
 function getOrders(){return window._orders||[];}
+function getLevel(done){if(done>=100)return{n:3,label:'🏆 Про',cls:'level-3'};if(done>=30)return{n:2,label:'⭐ Опытный',cls:'level-2'};if(done>=5)return{n:1,label:'🔵 Курьер',cls:'level-1'};return{n:0,label:'🔘 Новичок',cls:'level-0'};}
+function getBadgesHTML(b){if(!b)return'';const chips=[];if(b.fast)chips.push('<span class="badge-chip badge-fast">⚡ Быстрый</span>');if(b.reliable)chips.push('<span class="badge-chip badge-reliable">🛡️ Надёжный</span>');if(b.hundred)chips.push('<span class="badge-chip badge-hundred">💯 100 доставок</span>');if(b.verified)chips.push('<span class="badge-chip badge-verified">✅ Верифицирован</span>');return chips.join('');}
+
+// ══ THEME ══
+function applyTheme(t){document.body.classList.toggle('light',t==='light');const icon=document.getElementById('themeIcon'),lbl=document.getElementById('themeLabel');if(icon)icon.textContent=t==='light'?'🌙':'☀️';if(lbl)lbl.textContent=t==='light'?'Тёмная тема':'Светлая тема';}
+function toggleTheme(){const t=document.body.classList.contains('light')?'dark':'light';applyTheme(t);localStorage.setItem('theme',t);if(currentUser)sb.from('profiles').update({theme:t}).eq('id',currentUser.id);}
+
+// ══ PWA ══
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;document.getElementById('pwaBanner').classList.add('show');});
+function installPWA(){if(deferredInstall){deferredInstall.prompt();deferredInstall.userChoice.then(()=>{document.getElementById('pwaBanner').classList.remove('show');deferredInstall=null;});}}
 
 // ══ BURGER ══
 function openBurger(){document.getElementById('burgerMenu').classList.add('open');document.getElementById('burgerOvl').classList.add('open');}
@@ -958,9 +1015,7 @@ function showDrawer(title,html,onShow){
   const e=document.getElementById('drawerModal');if(e)e.remove();
   const modal=document.createElement('div');modal.id='drawerModal';modal.className='drawer';
   modal.innerHTML=`<div class="drawer-box"><div class="drawer-title">${title}</div>${html}<button onclick="closeDrawer()" style="display:block;width:100%;padding:12px;background:none;border:none;color:var(--muted2);font-family:Manrope,sans-serif;font-size:14px;cursor:pointer;margin-top:8px">Закрыть</button></div>`;
-  modal.onclick=e=>{if(e.target===modal)closeDrawer();};
-  document.body.appendChild(modal);
-  if(onShow)onShow();
+  modal.onclick=e=>{if(e.target===modal)closeDrawer();};document.body.appendChild(modal);if(onShow)onShow();
 }
 function closeDrawer(){document.getElementById('drawerModal')?.remove();}
 
@@ -970,10 +1025,29 @@ function openSettings(){
     <div style="margin-bottom:10px"><div style="font-size:11px;color:var(--muted2);margin-bottom:3px">ID аккаунта</div><div style="font-family:monospace;font-size:10px;background:var(--bg3);padding:8px;border-radius:8px;word-break:break-all">${currentUser?.id||'—'}</div></div>
     <div style="margin-bottom:10px"><div style="font-size:11px;color:var(--muted2);margin-bottom:3px">Имя</div><div style="font-size:14px;font-weight:600">${esc(currentProfile?.name||'—')}</div></div>
     <div style="margin-bottom:10px"><div style="font-size:11px;color:var(--muted2);margin-bottom:3px">Email</div><div style="font-size:14px">${esc(currentUser?.email||'—')}</div></div>
-    <div style="margin-bottom:14px"><div style="font-size:11px;color:var(--muted2);margin-bottom:3px">Город</div><div style="font-size:14px">${esc(currentProfile?.city||'—')}</div></div>
+    <div style="margin-bottom:10px"><div style="font-size:11px;color:var(--muted2);margin-bottom:3px">Город</div><div style="font-size:14px">${esc(currentProfile?.city||'—')}</div></div>
+    <div style="margin-bottom:14px"><div style="font-size:11px;color:var(--muted2);margin-bottom:3px">Реферальный код</div>
+      <div style="display:flex;align-items:center;gap:8px"><div style="font-family:monospace;font-size:14px;background:var(--bg3);padding:8px 12px;border-radius:8px;flex:1">${currentProfile?.referral_code||'—'}</div>
+      <button onclick="copyRef()" style="background:var(--accent);border:none;color:white;padding:8px 12px;border-radius:8px;font-family:Manrope,sans-serif;font-size:12px;cursor:pointer">Копировать</button></div>
+      <div style="font-size:11px;color:var(--muted2);margin-top:4px">Приглашено: ${currentProfile?.referral_count||0} человек</div>
+    </div>
+    <button class="btn btn-ghost btn-full" onclick="openLoginLogs();closeDrawer()" style="margin-bottom:8px">🕐 Лог входов</button>
     <button class="btn btn-ghost btn-full" onclick="changePassword();closeDrawer()" style="margin-bottom:8px">🔑 Сменить пароль</button>
     <button class="btn btn-red btn-full" onclick="logout();closeDrawer()">🚪 Выйти</button>
   `);
+}
+
+function copyRef(){
+  const ref=currentProfile?.referral_code;if(!ref)return;
+  navigator.clipboard.writeText(`Присоединяйся к SWIFT! Используй мой код: ${ref}\nhttps://creator796.github.io/Swift-devilery`).then(()=>toast('📋 Скопировано!')).catch(()=>toast('Код: '+ref));
+}
+
+async function openLoginLogs(){
+  const{data}=await sb.from('login_logs').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false}).limit(10);
+  showDrawer('🕐 Лог входов',
+    `<div style="font-size:12px;color:var(--muted2);margin-bottom:12px">Последние входы в аккаунт:</div>`+
+    (data?.length?data.map(l=>`<div style="padding:10px;background:var(--bg3);border-radius:8px;margin-bottom:8px;font-size:12px"><div style="font-weight:600">${new Date(l.created_at).toLocaleString('ru')}</div><div style="color:var(--muted2);margin-top:2px">${esc(l.agent||'Неизвестный браузер')}</div></div>`).join(''):'<div style="color:var(--muted);font-size:13px">Нет данных</div>')
+  );
 }
 
 function openHelp(){
@@ -996,34 +1070,35 @@ async function loadMyTicketsH(){
   const c=document.getElementById('myTicketsH');if(!c)return;
   if(!data?.length){c.innerHTML='<div style="color:var(--muted);font-size:13px">Нет обращений</div>';return;}
   c.innerHTML='';
-  data.forEach(t=>{
-    const div=document.createElement('div');div.style.cssText='background:var(--bg3);border-radius:10px;padding:10px;margin-bottom:8px';
-    div.innerHTML=`<div style="display:flex;justify-content:space-between;margin-bottom:4px"><b style="font-size:13px">${esc(t.subject)}</b><span style="font-size:10px;color:${t.status==='open'?'var(--accent)':'var(--green)'}">${t.status==='open'?'⏳':'✅'}</span></div><div style="color:var(--muted2);font-size:12px">${esc(t.message)}</div>${t.admin_reply?`<div style="margin-top:6px;padding:6px;background:var(--bg2);border-radius:6px;font-size:11px;color:var(--green)">Ответ: ${esc(t.admin_reply)}</div>`:''}`;
-    c.appendChild(div);
-  });
+  data.forEach(t=>{const div=document.createElement('div');div.style.cssText='background:var(--bg3);border-radius:10px;padding:10px;margin-bottom:8px';div.innerHTML=`<div style="display:flex;justify-content:space-between;margin-bottom:4px"><b style="font-size:13px">${esc(t.subject)}</b><span style="font-size:10px;color:${t.status==='open'?'var(--accent)':'var(--green)'}">${t.status==='open'?'⏳':'✅'}</span></div><div style="color:var(--muted2);font-size:12px">${esc(t.message)}</div>${t.admin_reply?`<div style="margin-top:6px;padding:6px;background:var(--bg2);border-radius:6px;font-size:11px;color:var(--green)">Ответ: ${esc(t.admin_reply)}</div>`:''} `;c.appendChild(div);});
 }
 
 async function submitHelp(){
   const type=document.getElementById('hType')?.value,subject=document.getElementById('hSubj')?.value.trim(),message=document.getElementById('hMsg')?.value.trim();
   if(!subject){toast('❌ Введи тему');return;}if(!message){toast('❌ Введи сообщение');return;}
   await sb.from('support_tickets').insert({user_id:currentUser.id,user_name:currentProfile.name,type,subject,message});
-  toast('✅ Отправлено!');closeDrawer();
+  toast('✅ Обращение отправлено!',4000);closeDrawer();
 }
 
-function openPrivacy(){
-  showDrawer('🔒 Конфиденциальность',`<div style="font-size:13px;color:var(--muted2);line-height:1.8"><p style="margin-bottom:10px"><b style="color:var(--text)">Что храним:</b> имя, email, город, история заказов и оценки.</p><p style="margin-bottom:10px"><b style="color:var(--text)">Для чего:</b> работа сервиса доставки.</p><p style="margin-bottom:10px"><b style="color:var(--text)">Третьим лицам:</b> не передаём.</p><p style="margin-bottom:10px"><b style="color:var(--text)">Удаление:</b> напиши в поддержку.</p><p style="color:var(--muted)">SWIFT · Севастополь · 2025</p></div>`);
-}
+function openPrivacy(){showDrawer('🔒 Конфиденциальность',`<div style="font-size:13px;color:var(--muted2);line-height:1.8"><p style="margin-bottom:10px"><b style="color:var(--text)">Что храним:</b> имя, email, город, история заказов и оценки.</p><p style="margin-bottom:10px"><b style="color:var(--text)">Для чего:</b> работа сервиса доставки.</p><p style="margin-bottom:10px"><b style="color:var(--text)">Третьим лицам:</b> не передаём.</p><p style="color:var(--muted)">SWIFT · Севастополь · 2025</p></div>`);}
 
 // ══ INIT ══
 async function init(){
+  const saved=localStorage.getItem('theme')||'dark';applyTheme(saved);
   document.getElementById('configNotice').style.display='none';
   const{data:{session}}=await sb.auth.getSession();
-  if(session){currentUser=session.user;await loadProfile();if(isBanned(currentProfile)){showBanned();return;}startApp();}
+  if(session){currentUser=session.user;await loadProfile();if(isBanned(currentProfile)){showBanned();return;}await logLogin();startApp();}
   else showAuth('login');
   sb.auth.onAuthStateChange(async(event,session)=>{
-    if(event==='SIGNED_IN'&&session){currentUser=session.user;await loadProfile();document.getElementById('authScreen').style.display='none';if(isBanned(currentProfile)){showBanned();return;}startApp();}
+    if(event==='SIGNED_IN'&&session){currentUser=session.user;await loadProfile();document.getElementById('authScreen').style.display='none';if(isBanned(currentProfile)){showBanned();return;}await logLogin();startApp();}
     else if(event==='SIGNED_OUT'){currentUser=null;currentProfile=null;window._orders=[];document.getElementById('app').classList.remove('visible');document.getElementById('burgerBtn').style.display='none';showAuth('login');}
   });
+}
+
+async function logLogin(){
+  if(!currentUser)return;
+  const agent=navigator.userAgent.substring(0,100);
+  await sb.from('login_logs').insert({user_id:currentUser.id,agent}).catch(()=>{});
 }
 
 function showBanned(){
@@ -1040,10 +1115,14 @@ function showBanned(){
       <button class="auth-btn" style="margin-top:8px;background:var(--bg3);color:var(--muted2)" onclick="sb.auth.signOut()">Выйти</button>
     </div>`;
 }
+
 async function sendBanAppeal(){
   const msg=document.getElementById('banAppeal')?.value.trim();if(!msg){toast('Напиши причину');return;}
+  // Проверяем нет ли уже открытого обращения
+  const{data}=await sb.from('support_tickets').select('id').eq('user_id',currentUser.id).eq('type','unban').eq('status','open');
+  if(data?.length){toast('⚠️ Обращение уже отправлено. Ожидай ответа.',4000);return;}
   await sb.from('support_tickets').insert({user_id:currentUser.id,user_name:currentProfile.name,type:'unban',subject:'Запрос на снятие бана',message:msg});
-  toast('✅ Обращение отправлено!');
+  toast('✅ Обращение отправлено! Ожидай ответа администрации.',5000);
 }
 
 // ══ AUTH ══
@@ -1062,7 +1141,7 @@ function renderAuth(){
       <div id="authErr" style="color:#ff6b6b;font-size:12px;min-height:18px;text-align:center;margin-bottom:4px"></div>
       <button class="auth-btn" onclick="doLogin()">ВОЙТИ</button>
       <div style="cursor:pointer;color:var(--accent);font-size:13px;margin-top:12px" onclick="authStep='register';renderAuth()">Нет аккаунта? Зарегистрироваться</div>
-      <div style="display:flex;gap:16px;margin-top:10px;justify-content:center">
+      <div style="display:flex;gap:16px;margin-top:10px;justify-content:center;flex-wrap:wrap">
         <div style="cursor:pointer;color:var(--muted2);font-size:12px" onclick="showForgotPass()">🔑 Забыл пароль</div>
         <div style="cursor:pointer;color:var(--muted2);font-size:12px" onclick="showUnbanRequest()">🔓 Снять бан</div>
         <div style="cursor:pointer;color:var(--muted2);font-size:12px" onclick="showLoginHelp()">🆘 Помощь</div>
@@ -1073,6 +1152,7 @@ function renderAuth(){
       <div class="auth-field"><select id="aCity" style="width:100%;padding:16px 18px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:Manrope,sans-serif;font-size:15px;outline:none;-webkit-appearance:none"><option value="" disabled selected>Выбери город</option>${CITIES.map(c=>`<option>${c}</option>`).join('')}</select></div>
       <div class="auth-field"><input id="aEmail" placeholder="Email" type="email" autocomplete="email"></div>
       <div class="auth-field"><input id="aPass" placeholder="Пароль (мин. 6 символов)" type="password" autocomplete="new-password" onkeydown="if(event.key==='Enter')doRegister()"></div>
+      <div class="auth-field"><input id="aRef" placeholder="Реферальный код (необязательно)" autocomplete="off"></div>
       <div id="authErr" style="color:#ff6b6b;font-size:12px;min-height:18px;text-align:center;margin-bottom:4px"></div>
       <button class="auth-btn" onclick="doRegister()">ЗАРЕГИСТРИРОВАТЬСЯ</button>
       <div style="cursor:pointer;color:var(--accent);font-size:13px;margin-top:12px" onclick="authStep='login';renderAuth()">Уже есть аккаунт? Войти</div>`;
@@ -1092,51 +1172,29 @@ function renderAuth(){
   }
 }
 
-function showForgotPass(){
-  showDrawer('🔑 Восстановление пароля',`
-    <div style="color:var(--muted2);font-size:13px;margin-bottom:14px">Введи email — пришлём ссылку для сброса пароля.</div>
-    <input id="forgotEmail" class="form-input" placeholder="Email" type="email" style="margin-bottom:12px">
-    <button class="btn btn-red btn-full" onclick="sendForgot()">Отправить ссылку</button>
-  `);
-}
-async function sendForgot(){
-  const email=document.getElementById('forgotEmail')?.value.trim();if(!email){toast('Введи email');return;}
-  const{error}=await sb.auth.resetPasswordForEmail(email);
-  if(error){toast('❌ '+error.message);return;}
-  toast('📧 Ссылка отправлена!');closeDrawer();
-}
+function showForgotPass(){showDrawer('🔑 Восстановление пароля',`<div style="color:var(--muted2);font-size:13px;margin-bottom:14px">Введи email — пришлём ссылку.</div><input id="forgotEmail" class="form-input" placeholder="Email" type="email" style="margin-bottom:12px"><button class="btn btn-red btn-full" onclick="sendForgot()">Отправить ссылку</button>`);}
+async function sendForgot(){const email=document.getElementById('forgotEmail')?.value.trim();if(!email){toast('Введи email');return;}const{error}=await sb.auth.resetPasswordForEmail(email);if(error){toast('❌ '+error.message);return;}toast('📧 Ссылка отправлена!',4000);closeDrawer();}
 
-function showUnbanRequest(){
+async function showUnbanRequest(){
   showDrawer('🔓 Запрос на снятие бана',`
-    <div style="color:var(--muted2);font-size:13px;margin-bottom:14px">Объясни ситуацию — администраторы рассмотрят запрос.</div>
+    <div style="color:var(--muted2);font-size:13px;margin-bottom:14px">Объясни ситуацию — рассмотрим запрос.</div>
     <input id="unbanEmail" class="form-input" placeholder="Твой Email" type="email" style="margin-bottom:8px">
     <input id="unbanMsg" class="form-input" placeholder="Почему должны снять бан..." style="margin-bottom:12px">
-    <button class="btn btn-red btn-full" onclick="sendUnbanRequest()">Отправить запрос</button>
+    <button class="btn btn-red btn-full" onclick="sendUnbanReq()">Отправить запрос</button>
   `);
 }
-async function sendUnbanRequest(){
+async function sendUnbanReq(){
   const email=document.getElementById('unbanEmail')?.value.trim(),msg=document.getElementById('unbanMsg')?.value.trim();
   if(!email||!msg){toast('Заполни все поля');return;}
-  // Ищем пользователя по email
-  const{data}=await sb.from('profiles').select('id,name').limit(100);
-  await sb.from('support_tickets').insert({user_id:'00000000-0000-0000-0000-000000000000',user_name:email,type:'unban',subject:'Запрос на снятие бана (с экрана входа)',message:msg});
-  toast('✅ Запрос отправлен! Ответим на email.');closeDrawer();
+  // Проверяем дубликат по email в subject
+  const{data}=await sb.from('support_tickets').select('id').eq('user_name',email).eq('type','unban').eq('status','open');
+  if(data?.length){toast('⚠️ Запрос уже отправлен. Ожидай ответа.',4000);closeDrawer();return;}
+  await sb.from('support_tickets').insert({user_id:'00000000-0000-0000-0000-000000000000',user_name:email,type:'unban',subject:'Снятие бана (с экрана входа)',message:msg});
+  toast('✅ Запрос отправлен! Ответим на email.',5000);closeDrawer();
 }
 
-function showLoginHelp(){
-  showDrawer('🆘 Проблема со входом',`
-    <div style="color:var(--muted2);font-size:13px;margin-bottom:14px">Опиши проблему — поможем разобраться.</div>
-    <input id="helpEmail" class="form-input" placeholder="Твой Email" type="email" style="margin-bottom:8px">
-    <input id="helpMsg" class="form-input" placeholder="Опиши проблему..." style="margin-bottom:12px">
-    <button class="btn btn-red btn-full" onclick="sendLoginHelp()">Отправить</button>
-  `);
-}
-async function sendLoginHelp(){
-  const email=document.getElementById('helpEmail')?.value.trim(),msg=document.getElementById('helpMsg')?.value.trim();
-  if(!email||!msg){toast('Заполни все поля');return;}
-  await sb.from('support_tickets').insert({user_id:'00000000-0000-0000-0000-000000000000',user_name:email,type:'password_reset',subject:'Проблема со входом',message:msg});
-  toast('✅ Обращение отправлено!');closeDrawer();
-}
+function showLoginHelp(){showDrawer('🆘 Проблема со входом',`<div style="color:var(--muted2);font-size:13px;margin-bottom:14px">Опиши проблему.</div><input id="helpEmail" class="form-input" placeholder="Твой Email" type="email" style="margin-bottom:8px"><input id="helpMsg" class="form-input" placeholder="Опиши проблему..." style="margin-bottom:12px"><button class="btn btn-red btn-full" onclick="sendLoginHelp()">Отправить</button>`);}
+async function sendLoginHelp(){const email=document.getElementById('helpEmail')?.value.trim(),msg=document.getElementById('helpMsg')?.value.trim();if(!email||!msg){toast('Заполни все поля');return;}await sb.from('support_tickets').insert({user_id:'00000000-0000-0000-0000-000000000000',user_name:email,type:'password_reset',subject:'Проблема со входом',message:msg});toast('✅ Отправлено!',4000);closeDrawer();}
 
 function otpIn(i){const el=document.getElementById('otp'+i);el.value=el.value.replace(/\D/g,'');el.classList.remove('error');if(el.value&&i<5)document.getElementById('otp'+(i+1))?.focus();if(i===5&&el.value)verifyOtp();}
 function otpKey(e,i){if(e.key==='Backspace'&&!document.getElementById('otp'+i).value&&i>0)document.getElementById('otp'+(i-1))?.focus();}
@@ -1151,13 +1209,22 @@ async function doLogin(){
   const{error}=await sb.auth.signInWithPassword({email,password:pass});
   if(error)setAuthErr('❌ Неверный email или пароль');
 }
+
 async function doRegister(){
   const name=document.getElementById('aName')?.value.trim(),city=document.getElementById('aCity')?.value,email=document.getElementById('aEmail')?.value.trim(),pass=document.getElementById('aPass')?.value;
+  const refCode=document.getElementById('aRef')?.value.trim();
   if(!name){setAuthErr('Введи имя');return;}if(!city){setAuthErr('Выбери город');return;}if(!email){setAuthErr('Введи email');return;}if(!pass||pass.length<6){setAuthErr('Пароль минимум 6 символов');return;}
-  pendingEmail=email;
+  // Проверяем реферальный код
+  let referrerId=null;
+  if(refCode){const{data:refData}=await sb.from('profiles').select('id').eq('referral_code',refCode).single();if(refData)referrerId=refData.id;else{setAuthErr('❌ Неверный реферальный код');return;}}
+  pendingEmail=email;window._pendingRef=referrerId;
   const{data,error}=await sb.auth.signUp({email,password:pass,options:{data:{name,city}}});
   if(error){setAuthErr('❌ '+error.message);return;}
-  if(data.user)await sb.from('profiles').upsert({id:data.user.id,name,city,created_count:0,done_count:0,earned:0,ratings:[],is_admin:false,is_banned:false,is_online:false,account_id:data.user.id});
+  if(data.user){
+    const newCode=Math.random().toString(36).substring(2,10);
+    await sb.from('profiles').upsert({id:data.user.id,name,city,created_count:0,done_count:0,earned:0,ratings:[],is_admin:false,is_banned:false,is_online:false,account_id:data.user.id,referral_code:newCode,referred_by:referrerId,referral_count:0});
+    if(referrerId)await sb.from('profiles').update({referral_count:sb.rpc('increment',{x:1})}).eq('id',referrerId).catch(()=>{});
+  }
   authStep='otp';renderAuth();
 }
 async function verifyOtp(){
@@ -1171,20 +1238,94 @@ async function verifyOtp(){
 async function loadProfile(){
   if(!currentUser)return;
   const{data}=await sb.from('profiles').select('*').eq('id',currentUser.id).single();
-  if(data){currentProfile=data;return;}
+  if(data){currentProfile=data;applyTheme(data.theme||'dark');return;}
   const name=currentUser.user_metadata?.name||currentUser.email.split('@')[0],city=currentUser.user_metadata?.city||'';
-  await sb.from('profiles').upsert({id:currentUser.id,name,city,created_count:0,done_count:0,earned:0,ratings:[],is_admin:false,is_banned:false,is_online:false,account_id:currentUser.id});
-  currentProfile={id:currentUser.id,name,city,created_count:0,done_count:0,earned:0,ratings:[],is_admin:false,is_banned:false,is_online:false};
+  const newCode=Math.random().toString(36).substring(2,10);
+  await sb.from('profiles').upsert({id:currentUser.id,name,city,created_count:0,done_count:0,earned:0,ratings:[],is_admin:false,is_banned:false,is_online:false,account_id:currentUser.id,referral_code:newCode,referral_count:0});
+  currentProfile={id:currentUser.id,name,city,created_count:0,done_count:0,earned:0,ratings:[],is_admin:false,is_banned:false,is_online:false,referral_code:newCode,referral_count:0};
 }
 function logout(){if(ordersSub)sb.removeChannel(ordersSub);if(notifSub)sb.removeChannel(notifSub);if(dmSub)sb.removeChannel(dmSub);sb.auth.signOut();}
 
+// ══ FAVORITES ══
+async function loadFavorites(){
+  const{data}=await sb.from('favorites').select('courier_id').eq('user_id',currentUser.id);
+  favorites=new Set((data||[]).map(f=>f.courier_id));
+}
+async function toggleFavorite(){
+  if(!currentDMUser)return;
+  const cid=currentDMUser.id;
+  const btn=document.getElementById('dmFavBtn');
+  if(favorites.has(cid)){
+    await sb.from('favorites').delete().eq('user_id',currentUser.id).eq('courier_id',cid);
+    favorites.delete(cid);if(btn){btn.textContent='☆';btn.style.color='var(--muted2)';}toast('Убран из избранных');
+  } else {
+    await sb.from('favorites').insert({user_id:currentUser.id,courier_id:cid});
+    favorites.add(cid);if(btn){btn.textContent='★';btn.style.color='var(--yellow)';}toast('⭐ Добавлен в избранные');
+  }
+}
+
+// ══ PUBLIC PROFILE ══
+async function openPublicProfile(userId){
+  if(!userId)return;
+  document.getElementById('profileModal').classList.add('open');
+  const c=document.getElementById('profileModalContent');
+  c.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted2)">Загрузка...</div>';
+  const[{data:u},{data:b},{data:orders}]=await Promise.all([
+    sb.from('profiles').select('*').eq('id',userId).single(),
+    sb.from('badges').select('*').eq('user_id',userId).single(),
+    sb.from('orders').select('id,status,price,title,from,to').eq('worker_id',userId).eq('status','done').limit(5)
+  ]);
+  if(!u){c.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted2)">Пользователь не найден</div>';return;}
+  const ar=avgR(u.ratings),lvl=getLevel(u.done_count||0);
+  const isFav=favorites.has(userId);
+  c.innerHTML=`
+    <div style="text-align:center;margin-bottom:20px">
+      <div class="profile-avatar" style="margin:0 auto 12px">${esc(u.name[0].toUpperCase())}</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px">${esc(u.name)}</div>
+      <div style="color:var(--muted2);font-size:13px;margin-top:2px">${esc(u.city||'—')}</div>
+      <div style="margin-top:8px"><span class="level-badge ${lvl.cls}">${lvl.label}</span></div>
+      <div style="margin-top:6px">${getBadgesHTML(b)}</div>
+      ${ar?`<div style="color:var(--yellow);font-size:16px;margin-top:8px">⭐ ${ar} / 5</div>`:''}
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:20px">
+      <div class="stat-card"><div class="stat-num">${u.done_count||0}</div><div class="stat-lbl">Доставок</div></div>
+      <div class="stat-card"><div class="stat-num">${u.created_count||0}</div><div class="stat-lbl">Заказов</div></div>
+      <div class="stat-card"><div class="stat-num">${u.earned||0}</div><div class="stat-lbl">₽</div></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:20px">
+      <button onclick="openDMById('${userId}')" class="btn btn-red" style="flex:1;justify-content:center">💬 Написать</button>
+      <button onclick="toggleFavById('${userId}','${esc(u.name)}')" class="btn btn-ghost" style="flex:1;justify-content:center" id="favBtnProfile">${isFav?'★ В избранных':'☆ В избранные'}</button>
+    </div>
+    ${orders?.length?`<div class="section-title" style="margin-bottom:10px">Последние доставки</div>${orders.map(o=>`<div class="card" style="padding:10px"><b>${esc(o.title)}</b><div class="card-meta" style="margin-top:3px">${esc(o.from||'')} → ${esc(o.to||'')}</div><div style="color:var(--green);font-size:12px;margin-top:2px">+${o.price}₽</div></div>`).join('')}`:''}
+  `;
+}
+function closePublicProfile(){document.getElementById('profileModal').classList.remove('open');}
+
+async function openDMById(userId){
+  closePublicProfile();
+  const u=allUsers.find(x=>x.id===userId);
+  if(u)openDM(u);
+  else{const{data}=await sb.from('profiles').select('*').eq('id',userId).single();if(data)openDM(data);}
+}
+
+async function toggleFavById(userId,name){
+  const btn=document.getElementById('favBtnProfile');
+  if(favorites.has(userId)){
+    await sb.from('favorites').delete().eq('user_id',currentUser.id).eq('courier_id',userId);
+    favorites.delete(userId);if(btn)btn.textContent='☆ В избранные';toast('Убран из избранных');
+  } else {
+    await sb.from('favorites').insert({user_id:currentUser.id,courier_id:userId});
+    favorites.add(userId);if(btn)btn.textContent='★ В избранных';toast('⭐ Добавлен в избранные');
+  }
+}
+
 // ══ START ══
-function startApp(){
+async function startApp(){
   document.getElementById('burgerBtn').style.display='flex';
   document.getElementById('app').classList.add('visible');
+  await loadFavorites();
   const nav=document.getElementById('mainNav'),app=document.getElementById('app');
   nav.innerHTML='';
-
   const navItems=[
     {icon:'📦',label:'Заказы',page:'ordersPage'},
     {icon:'🟡',label:'Статус',page:'myOrdersPage'},
@@ -1195,29 +1336,24 @@ function startApp(){
   if(currentProfile?.is_admin)navItems.push({icon:'🛡️',label:'Админ',page:'adminPage'});
 
   navItems.forEach((item,i)=>{
-    const btn=document.createElement('button');
-    btn.id='navBtn'+i;btn.style.position='relative';
+    const btn=document.createElement('button');btn.id='navBtn'+i;btn.style.position='relative';
     btn.innerHTML=`<span class="nav-icon">${item.icon}</span><span>${item.label}</span>`;
     if(item.special==='chat')btn.innerHTML+=`<span id="chatDot" style="display:none" class="ndot"></span>`;
     btn.onclick=()=>{
       if(item.special==='chat'){openMessenger();return;}
       navItems.forEach((_,j)=>document.getElementById('navBtn'+j)?.classList.remove('active-tab'));
-      btn.classList.add('active-tab');
-      showPage(item.page);
+      btn.classList.add('active-tab');showPage(item.page);
     };
     nav.appendChild(btn);
   });
 
-  // Create pages
-  function ensurePage(id,title,contentId){
-    if(!document.getElementById(id)){const pg=document.createElement('div');pg.id=id;pg.className='page';pg.innerHTML=`<div class="page-title">${title}</div><div id="${contentId||id+'Content'}"></div>`;app.insertBefore(pg,nav);}
-  }
+  function ensurePage(id,title,cid){if(!document.getElementById(id)){const pg=document.createElement('div');pg.id=id;pg.className='page';pg.innerHTML=`<div class="page-title">${title}</div><div id="${cid||id+'Content'}"></div>`;app.insertBefore(pg,nav);}}
   ensurePage('myOrdersPage','🟡 Мои заказы','myOrdersContent');
   if(currentProfile?.is_admin)ensurePage('adminPage','🛡️ Панель','adminContent');
 
   document.getElementById('navBtn0').classList.add('active-tab');
   showPage('ordersPage');
-  loadOrders();loadAllUsers();subscribeRealtime();subscribeNotifs();
+  loadOrders();loadAllUsers();subscribeRealtime();subscribeNotifs();updateBadgesAuto();
 }
 
 function showPage(pageId){
@@ -1229,23 +1365,37 @@ function showPage(pageId){
   if(pageId==='adminPage')renderAdmin();
 }
 
+// ══ BADGES AUTO-UPDATE ══
+async function updateBadgesAuto(){
+  if(!currentUser)return;
+  const done=currentProfile?.done_count||0;
+  const update={};
+  if(done>=100)update.hundred=true;
+  if(done>=10)update.reliable=true;
+  if(Object.keys(update).length){
+    const{data}=await sb.from('badges').select('*').eq('user_id',currentUser.id).single();
+    if(data)await sb.from('badges').update(update).eq('user_id',currentUser.id);
+    else await sb.from('badges').insert({user_id:currentUser.id,...update});
+  }
+}
+
 // ══ REALTIME ══
 async function loadOrders(){
   const{data}=await sb.from('orders').select('*').order('created_at',{ascending:false});
-  window._orders=data||[];renderOrders();renderMyOrders();updateBadges();
+  window._orders=data||[];renderOrders();renderMyOrders();updateBadgeNums();
 }
 function subscribeRealtime(){
   if(ordersSub)sb.removeChannel(ordersSub);
-  ordersSub=sb.channel('rt-main')
-    .on('postgres_changes',{event:'*',schema:'public',table:'orders'},()=>loadOrders())
-    .subscribe();
+  ordersSub=sb.channel('rt-main').on('postgres_changes',{event:'*',schema:'public',table:'orders'},()=>loadOrders()).subscribe();
 }
 function subscribeNotifs(){
   if(notifSub)sb.removeChannel(notifSub);
   notifSub=sb.channel('rt-notifs')
-    .on('postgres_changes',{event:'INSERT',schema:'public',table:'notifications',filter:`user_id=eq.${currentUser.id}`},p=>{showNotifBanner(p.new);const dot=document.getElementById('chatDot');if(dot)dot.style.display='block';})
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'notifications',filter:`user_id=eq.${currentUser.id}`},p=>{showNotifBanner(p.new);showChatDot();})
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'direct_messages',filter:`to_id=eq.${currentUser.id}`},p=>{showNotifBanner({title:`💬 ${p.new.from_name}`,body:p.new.text});showChatDot();if(currentDMUser&&p.new.from_id===currentDMUser.id){appendDMMsg(p.new,document.getElementById('dmMessages'));document.getElementById('dmMessages').scrollTop=99999;}})
     .subscribe();
 }
+function showChatDot(){const dot=document.getElementById('chatDot');if(dot)dot.style.display='block';}
 function showNotifBanner(n){
   const b=document.createElement('div');
   b.style.cssText='position:fixed;top:14px;left:14px;right:60px;z-index:600;background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:12px;animation:fadeUp .3s ease;box-shadow:0 4px 20px rgba(0,0,0,.5);cursor:pointer';
@@ -1256,16 +1406,12 @@ async function sendNotif(userId,title,body,type,orderId){
   if(!userId||userId===currentUser.id)return;
   await sb.from('notifications').insert({user_id:userId,title,body,type:type||'info',is_read:false,order_id:orderId||null});
 }
+async function loadAllUsers(){const{data}=await sb.from('profiles').select('id,name,city,is_online,done_count,ratings').neq('id',currentUser.id);allUsers=data||[];}
 
-// ══ MESSENGER (Telegram-style) ══
-async function loadAllUsers(){
-  const{data}=await sb.from('profiles').select('id,name,city,is_online,done_count,ratings').neq('id',currentUser.id);
-  allUsers=data||[];
-}
-
+// ══ MESSENGER ══
 async function openMessenger(){
   document.getElementById('messengerModal').classList.add('open');
-  document.getElementById('chatDot').style.display='none';
+  const dot=document.getElementById('chatDot');if(dot)dot.style.display='none';
   await sb.from('notifications').update({is_read:true}).eq('user_id',currentUser.id).eq('is_read',false);
   if(!allUsers.length)await loadAllUsers();
   renderUsersList(allUsers);
@@ -1274,88 +1420,69 @@ function closeMessenger(){document.getElementById('messengerModal').classList.re
 
 function filterUsers(){
   const q=document.getElementById('msgSearch')?.value.toLowerCase()||'';
-  if(!q){renderUsersList(allUsers);return;}
-  renderUsersList(allUsers.filter(u=>u.name?.toLowerCase().includes(q)||u.city?.toLowerCase().includes(q)));
+  renderUsersList(q?allUsers.filter(u=>u.name?.toLowerCase().includes(q)||u.city?.toLowerCase().includes(q)):allUsers);
 }
 
 function renderUsersList(users){
-  const c=document.getElementById('usersList');
-  // Системный чат сверху
-  c.innerHTML='';
-  // 🛡️ Системный чат
-  const sysDiv=document.createElement('div');sysDiv.className='conv-item';
-  sysDiv.innerHTML=`<div class="conv-av" style="background:linear-gradient(135deg,var(--accent),var(--accent2));font-size:16px">🛡️</div><div style="flex:1;min-width:0"><div style="font-weight:700;font-size:14px">Администрация</div><div style="font-size:12px;color:var(--muted2)">Системные сообщения</div></div>`;
-  sysDiv.onclick=()=>openSysChat();c.appendChild(sysDiv);
-
-  if(!users.length){
-    const empty=document.createElement('div');empty.className='empty';empty.innerHTML='<div class="empty-icon">👤</div><div class="empty-text">Нет пользователей</div>';c.appendChild(empty);return;
-  }
-  users.forEach(u=>{
-    const ar=avgR(u.ratings);
+  const c=document.getElementById('usersList');c.innerHTML='';
+  // Sys chat
+  const sys=document.createElement('div');sys.className='conv-item';
+  sys.innerHTML=`<div class="conv-av" style="background:linear-gradient(135deg,var(--accent),#ff6b35);font-size:16px">🛡️</div><div style="flex:1;min-width:0"><div style="font-weight:700;font-size:14px">Администрация</div><div style="font-size:12px;color:var(--muted2)">Системные сообщения</div></div>`;
+  sys.onclick=()=>openSysChat();c.appendChild(sys);
+  // Favorites first
+  const favUsers=users.filter(u=>favorites.has(u.id));
+  const otherUsers=users.filter(u=>!favorites.has(u.id));
+  if(favUsers.length){const lbl=document.createElement('div');lbl.style.cssText='padding:8px 16px;font-size:10px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:1px;background:var(--bg2)';lbl.textContent='⭐ Избранные';c.appendChild(lbl);}
+  [...favUsers,...(favUsers.length&&otherUsers.length?[{_sep:true}]:[] ),...otherUsers].forEach(u=>{
+    if(u._sep){const lbl=document.createElement('div');lbl.style.cssText='padding:8px 16px;font-size:10px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:1px;background:var(--bg2)';lbl.textContent='Все пользователи';c.appendChild(lbl);return;}
+    const ar=avgR(u.ratings);const lvl=getLevel(u.done_count||0);
     const div=document.createElement('div');div.className='conv-item';
     div.innerHTML=`
-      <div class="conv-av" style="${u.is_online?'background:linear-gradient(135deg,var(--green),#00a854)':''}">${esc(u.name[0].toUpperCase())}</div>
+      <div class="conv-av" style="${u.is_online?'background:linear-gradient(135deg,var(--green),#00a854)':''}">
+        ${esc(u.name[0].toUpperCase())}
+        ${favorites.has(u.id)?'<div style="position:absolute;bottom:-2px;right:-2px;font-size:10px">⭐</div>':''}
+      </div>
       <div style="flex:1;min-width:0">
-        <div style="font-weight:700;font-size:14px;display:flex;align-items:center;gap:6px">${esc(u.name)} ${u.is_online?'<span style="font-size:10px;color:var(--green);font-weight:700">● онлайн</span>':''}</div>
-        <div style="font-size:12px;color:var(--muted2)">${esc(u.city||'—')}${ar?' · ⭐'+ar:''} · ${u.done_count||0} доставок</div>
+        <div style="font-weight:700;font-size:14px;display:flex;align-items:center;gap:6px">${esc(u.name)}${u.is_online?'<span style="font-size:10px;color:var(--green);font-weight:700">●</span>':''}</div>
+        <div style="font-size:11px;color:var(--muted2)">${esc(u.city||'—')} · <span class="level-badge ${lvl.cls}" style="padding:1px 5px;font-size:9px">${lvl.label}</span>${ar?' · ⭐'+ar:''}</div>
       </div>`;
     div.onclick=()=>openDM(u);c.appendChild(div);
   });
+  if(!users.length){const e=document.createElement('div');e.className='empty';e.innerHTML='<div class="empty-icon">👤</div><div class="empty-text">Нет пользователей</div>';c.appendChild(e);}
 }
 
 async function openSysChat(){
   const{data:msgs}=await sb.from('system_messages').select('*').eq('to_user_id',currentUser.id).order('created_at',{ascending:true});
   document.getElementById('dmModal').classList.add('open');
-  document.getElementById('dmAvatar').textContent='🛡️';
-  document.getElementById('dmAvatar').style.background='linear-gradient(135deg,var(--accent),var(--accent2))';
-  document.getElementById('dmName').textContent='Администрация';
-  document.getElementById('dmSub').textContent='Системные сообщения';
-  const c=document.getElementById('dmMessages');
-  c.innerHTML='';
-  if(!msgs?.length){c.innerHTML='<div class="chat-empty">Нет сообщений от администрации</div>';return;}
-  msgs.forEach(m=>{
-    const div=document.createElement('div');div.className='msg-group theirs';
-    div.innerHTML=`<div class="msg-sender">🛡️ ${esc(m.from_admin||'Администрация')}</div><div class="msg theirs">${esc(m.text)}</div><div class="msg-time">${new Date(m.created_at).toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'})}</div>`;
-    c.appendChild(div);
-  });
-  c.scrollTop=99999;
-  document.getElementById('dmInput').style.display='none';
-  document.querySelector('#dmModal .chat-send')?.style && (document.querySelector('#dmModal button[onclick="sendDM()"]').style.display='none');
+  document.getElementById('dmAvatar').textContent='🛡️';document.getElementById('dmAvatar').style.background='linear-gradient(135deg,var(--accent),#ff6b35)';
+  document.getElementById('dmName').textContent='Администрация';document.getElementById('dmSub').textContent='Системные сообщения';
+  document.getElementById('dmFavBtn').style.display='none';
+  window._dmUserId=null;currentDMUser=null;
+  const c=document.getElementById('dmMessages');c.innerHTML='';
+  if(!msgs?.length){c.innerHTML='<div class="chat-empty">Нет сообщений</div>';return;}
+  msgs.forEach(m=>{const div=document.createElement('div');div.className='msg-group theirs';div.innerHTML=`<div class="msg-sender">🛡️ ${esc(m.from_admin||'Администрация')}</div><div class="msg theirs">${esc(m.text)}</div><div class="msg-time">${new Date(m.created_at).toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'})}</div>`;c.appendChild(div);});
+  c.scrollTop=99999;document.getElementById('dmInput').style.display='none';
 }
 
 async function openDM(user){
-  currentDMUser=user;
+  currentDMUser=user;window._dmUserId=user.id;
   document.getElementById('dmModal').classList.add('open');
   document.getElementById('dmAvatar').textContent=user.name[0].toUpperCase();
   document.getElementById('dmAvatar').style.background='var(--accent)';
   document.getElementById('dmName').textContent=user.name;
   document.getElementById('dmSub').textContent=(user.city||'')+(user.is_online?' · 🟢 онлайн':' · офлайн');
   document.getElementById('dmInput').style.display='';
-  // Load messages
+  const favBtn=document.getElementById('dmFavBtn');
+  favBtn.style.display='';favBtn.textContent=favorites.has(user.id)?'★':'☆';favBtn.style.color=favorites.has(user.id)?'var(--yellow)':'var(--muted2)';
   const{data}=await sb.from('direct_messages').select('*')
     .or(`and(from_id.eq.${currentUser.id},to_id.eq.${user.id}),and(from_id.eq.${user.id},to_id.eq.${currentUser.id})`)
     .order('created_at',{ascending:true});
   renderDMMessages(data||[]);
-  // Subscribe
-  if(dmSub)sb.removeChannel(dmSub);
-  dmSub=sb.channel('dm-'+[currentUser.id,user.id].sort().join('-'))
-    .on('postgres_changes',{event:'INSERT',schema:'public',table:'direct_messages'},p=>{
-      const m=p.new;
-      if((m.from_id===currentUser.id&&m.to_id===user.id)||(m.from_id===user.id&&m.to_id===currentUser.id)){
-        appendDMMsg(m,document.getElementById('dmMessages'));
-        document.getElementById('dmMessages').scrollTop=99999;
-      }
-    }).subscribe();
   // Mark read
   await sb.from('direct_messages').update({is_read:true}).eq('to_id',currentUser.id).eq('from_id',user.id).eq('is_read',false);
+  if(dmSub)sb.removeChannel(dmSub);
 }
-
-function closeDM(){
-  document.getElementById('dmModal').classList.remove('open');
-  if(dmSub){sb.removeChannel(dmSub);dmSub=null;}
-  currentDMUser=null;
-  document.getElementById('dmInput').style.display='';
-}
+function closeDM(){document.getElementById('dmModal').classList.remove('open');currentDMUser=null;window._dmUserId=null;document.getElementById('dmInput').style.display='';}
 
 function renderDMMessages(msgs){
   const c=document.getElementById('dmMessages');
@@ -1365,14 +1492,17 @@ function renderDMMessages(msgs){
 function appendDMMsg(m,c){
   const isMine=m.from_id===currentUser.id;
   const div=document.createElement('div');div.className='msg-group '+(isMine?'mine':'theirs');
-  div.innerHTML=`<div class="msg ${isMine?'mine':'theirs'}">${esc(m.text)}</div><div class="msg-time">${m.time_str||''}</div>`;
+  const tick=isMine?`<span class="${m.is_read?'tick-read':'tick-sent'}">${m.is_read?'✓✓':'✓'}</span>`:'';
+  div.innerHTML=`<div class="msg ${isMine?'mine':'theirs'}">${esc(m.text)}${tick}</div><div class="msg-time">${m.time_str||''}</div>`;
   c.appendChild(div);
 }
 async function sendDM(){
   if(!currentDMUser)return;
   const input=document.getElementById('dmInput'),text=input.value.trim();if(!text)return;input.value='';
   const time=new Date().toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'});
-  await sb.from('direct_messages').insert({from_id:currentUser.id,to_id:currentDMUser.id,from_name:currentProfile.name,text,time_str:time,is_read:false});
+  const{data}=await sb.from('direct_messages').insert({from_id:currentUser.id,to_id:currentDMUser.id,from_name:currentProfile.name,text,time_str:time,is_read:false}).select().single();
+  if(data)appendDMMsg(data,document.getElementById('dmMessages'));
+  document.getElementById('dmMessages').scrollTop=99999;
   await sendNotif(currentDMUser.id,`💬 ${currentProfile.name}`,text,'chat');
 }
 
@@ -1399,18 +1529,24 @@ function renderChat(msgs){const c=document.getElementById('chatMessages');if(!ms
 function appendMsg(m,c){const isMine=m.user_id===currentUser.id;const div=document.createElement('div');div.className='msg-group '+(isMine?'mine':'theirs');div.innerHTML=`<div class="msg-sender">${isMine?'Ты':esc(m.user_name)}</div><div class="msg ${isMine?'mine':'theirs'}">${esc(m.text)}</div><div class="msg-time">${m.time_str||''}</div>`;c.appendChild(div);}
 
 // ══ COURIERS ══
-async function renderCouriers(containerId){
-  const c=document.getElementById(containerId||'couriersList');if(!c)return;
+async function renderCouriers(cid){
+  const c=document.getElementById(cid||'couriersList');if(!c)return;
   const{data}=await sb.from('profiles').select('id,name,city,is_online,done_count,ratings').eq('is_online',true);
   if(!data?.length){c.innerHTML='<div style="color:var(--muted);font-size:13px">Нет курьеров на службе</div>';return;}
   c.innerHTML='';
   const activeOrders=getOrders().filter(o=>o.status==='work');
-  data.forEach(u=>{
-    const ao=activeOrders.find(o=>o.worker_id===u.id),ar=avgR(u.ratings);
-    const div=document.createElement('div');div.style.cssText='display:flex;align-items:center;gap:12px;padding:10px;background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px';
-    div.innerHTML=`<div class="creator-avatar" style="width:38px;height:38px;font-size:16px;flex-shrink:0">${esc(u.name[0].toUpperCase())}</div><div style="flex:1;min-width:0"><div style="font-weight:700;font-size:14px">${esc(u.name)}</div><div style="font-size:11px;color:var(--muted2)">${esc(u.city||'—')}${ar?' · ⭐'+ar:''}</div><div style="margin-top:2px">${ao?`<span style="color:var(--yellow);font-size:11px;font-weight:700">🟡 Занят — ${esc(ao.title)}</span>`:'<span style="color:var(--green);font-size:11px;font-weight:700">🟢 Свободен</span>'}</div></div>`;
-    c.appendChild(div);
-  });
+  for(const u of data){
+    const ao=activeOrders.find(o=>o.worker_id===u.id),ar=avgR(u.ratings),lvl=getLevel(u.done_count||0);
+    const{data:b}=await sb.from('badges').select('*').eq('user_id',u.id).single().catch(()=>({data:null}));
+    const div=document.createElement('div');div.style.cssText='display:flex;align-items:center;gap:12px;padding:10px;background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;cursor:pointer';
+    div.innerHTML=`<div class="creator-avatar" style="width:38px;height:38px;font-size:16px;flex-shrink:0">${esc(u.name[0].toUpperCase())}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:700;font-size:14px;display:flex;align-items:center;gap:6px">${esc(u.name)}${favorites.has(u.id)?'<span style="color:var(--yellow);font-size:12px">⭐</span>':''}</div>
+        <div style="font-size:11px;color:var(--muted2)">${esc(u.city||'—')} · <span class="level-badge ${lvl.cls}" style="padding:1px 5px;font-size:9px">${lvl.label}</span>${ar?' · ⭐'+ar:''}</div>
+        <div style="margin-top:3px;font-size:11px;display:flex;flex-wrap:wrap;gap:2px">${getBadgesHTML(b)}${ao?`<span style="color:var(--yellow);font-weight:700">🟡 Занят</span>`:'<span style="color:var(--green);font-weight:700">🟢 Свободен</span>'}</div>
+      </div>`;
+    div.onclick=()=>openPublicProfile(u.id);c.appendChild(div);
+  }
 }
 async function toggleOnline(){
   const newState=!currentProfile.is_online;
@@ -1421,6 +1557,9 @@ async function toggleOnline(){
 // ══ CREATE ══
 async function createOrder(){
   if(isBanCreate(currentProfile)){toast('❌ Создание заблокировано');return;}
+  // Кулдаун — нельзя создать если есть активный заказ как заказчик
+  const hasActive=getOrders().some(o=>o.creator_id===currentUser.id&&(o.status==='open'||o.status==='work'));
+  if(hasActive){toast('❌ У тебя уже есть активный заказ. Дождись завершения.');return;}
   const what=document.getElementById('cWhat')?.value.trim(),shop=document.getElementById('cShop')?.value.trim(),where=document.getElementById('cWhere')?.value.trim();
   const price=parseInt(document.getElementById('cPrice')?.value)||0,deadline=document.getElementById('cDeadline')?.value||null,comment=document.getElementById('cComment')?.value.trim(),payment=document.getElementById('cPayment')?.value;
   if(!what){toast('❌ Напиши что купить');return;}if(!shop){toast('❌ Укажи магазин');return;}if(!where){toast('❌ Укажи куда доставить');return;}if(!payment){toast('❌ Выбери способ оплаты');return;}
@@ -1429,7 +1568,6 @@ async function createOrder(){
   await sb.from('profiles').update({created_count:(currentProfile.created_count||0)+1}).eq('id',currentUser.id);currentProfile.created_count=(currentProfile.created_count||0)+1;
   ['cWhat','cShop','cWhere','cPrice','cDeadline','cComment'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});if(document.getElementById('cPayment'))document.getElementById('cPayment').value='';
   toast('✅ Заказ отправлен на проверку!');showPage('myOrdersPage');
-  // Уведомление всем админам
   const{data:admins}=await sb.from('profiles').select('id').eq('is_admin',true);
   for(const a of admins||[])await sendNotif(a.id,'📦 Новый заказ на модерацию',`${currentProfile.name}: ${what}`,'order');
 }
@@ -1448,9 +1586,7 @@ async function take(id){
 
 // ══ CANCEL ══
 function showCancelModal(id){
-  showDrawer('Причина отмены',
-    CANCEL_REASONS.map(r=>`<button onclick="cancelOrder('${id}','${r}');closeDrawer()" style="display:block;width:100%;padding:13px;margin-bottom:8px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:Manrope,sans-serif;font-size:14px;cursor:pointer;text-align:left">${r}</button>`).join('')
-  );
+  showDrawer('Причина отмены',CANCEL_REASONS.map(r=>`<button onclick="cancelOrder('${id}','${r}');closeDrawer()" style="display:block;width:100%;padding:13px;margin-bottom:8px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:Manrope,sans-serif;font-size:14px;cursor:pointer;text-align:left">${r}</button>`).join(''));
 }
 async function cancelOrder(id,reason){
   const o=getOrders().find(x=>x.id===id);if(!o)return;
@@ -1468,7 +1604,7 @@ async function confirmDone(id,role){
     await sb.from('orders').update({status:'done'}).eq('id',id);
     if(role==='worker'){await sb.from('profiles').update({done_count:(currentProfile.done_count||0)+1,earned:(currentProfile.earned||0)+data.price}).eq('id',currentUser.id);currentProfile.done_count=(currentProfile.done_count||0)+1;currentProfile.earned=(currentProfile.earned||0)+data.price;await sendNotif(data.creator_id,'✅ Заказ завершён',data.title,'order',id);}
     else if(data.worker_id)await sendNotif(data.worker_id,'✅ Заказ завершён',data.title,'order',id);
-    toast('🎉 Заказ завершён!');
+    toast('🎉 Заказ завершён!');await updateBadgesAuto();
   } else toast(role==='worker'?'✅ Ждём заказчика...':'✅ Ждём курьера...');
 }
 
@@ -1478,6 +1614,8 @@ async function submitRating(id,star){
   await sb.from('orders').update({rating:star}).eq('id',id);
   const{data}=await sb.from('profiles').select('ratings').eq('id',o.worker_id).single();
   if(data)await sb.from('profiles').update({ratings:[...(data.ratings||[]),star]}).eq('id',o.worker_id);
+  // Значок "Быстрый" если средняя оценка ≥ 4.5
+  const newRatings=[...(data?.ratings||[]),star];if(newRatings.length>=5&&newRatings.reduce((a,b)=>a+b,0)/newRatings.length>=4.5)await sb.from('badges').upsert({user_id:o.worker_id,fast:true});
   await sendNotif(o.worker_id,'⭐ Новая оценка',`${star}/5`,'info',id);
   toast('⭐ Отправлено!');
 }
@@ -1489,10 +1627,9 @@ function showReportModal(orderId){
   if(o.creator_id!==currentUser.id)targets.push({id:o.creator_id,name:o.creator_name,role:'заказчик'});
   if(o.worker_id&&o.worker_id!==currentUser.id)targets.push({id:o.worker_id,name:o.worker_name,role:'курьер'});
   if(!targets.length){toast('Не на кого жаловаться');return;}
-  const reasons=['Мошенничество','Не выполнил условия','Грубость/хамство','Другое'];
+  const reasons=['Мошенничество','Не выполнил условия','Грубость','Другое'];
   showDrawer('⚠️ Жалоба',
-    (targets.length>1?`<div style="margin-bottom:10px;font-size:13px;color:var(--muted2)">На кого жалоба?</div><select id="reportTarget" class="form-input" style="margin-bottom:12px">${targets.map(t=>`<option value="${t.id}">${t.name} (${t.role})</option>`).join('')}</select>`:`<input type="hidden" id="reportTarget" value="${targets[0].id}">`)+
-    `<div style="margin-bottom:10px;font-size:13px;color:var(--muted2)">Причина:</div>`+
+    (targets.length>1?`<div style="margin-bottom:10px;font-size:13px;color:var(--muted2)">На кого?</div><select id="reportTarget" class="form-input" style="margin-bottom:12px">${targets.map(t=>`<option value="${t.id}">${t.name} (${t.role})</option>`).join('')}</select>`:`<input type="hidden" id="reportTarget" value="${targets[0].id}">`)+
     reasons.map(r=>`<button onclick="submitReport('${orderId}',document.getElementById('reportTarget').value,'${r}');closeDrawer()" style="display:block;width:100%;padding:12px;margin-bottom:8px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:Manrope,sans-serif;font-size:14px;cursor:pointer;text-align:left">${r}</button>`).join('')
   );
 }
@@ -1501,7 +1638,7 @@ async function submitReport(orderId,targetId,reason){
   const targetName=targetId===o?.creator_id?o.creator_name:o?.worker_name||'—';
   await sb.from('reports').insert({order_id:orderId,reporter_id:currentUser.id,reporter_name:currentProfile.name,target_name:targetName,reason}).catch(()=>{});
   const{data:admins}=await sb.from('profiles').select('id').eq('is_admin',true);
-  for(const a of admins||[])await sendNotif(a.id,'⚠️ Новая жалоба',`${currentProfile.name} → ${targetName}: ${reason}`,'info');
+  for(const a of admins||[])await sendNotif(a.id,'⚠️ Жалоба',`${currentProfile.name} → ${targetName}: ${reason}`,'info');
   toast('⚠️ Жалоба отправлена');
 }
 
@@ -1509,7 +1646,7 @@ async function submitReport(orderId,targetId,reason){
 function ensureCreateForm(){
   const pg=document.getElementById('createPage');if(document.getElementById('cWhat'))return;
   pg.innerHTML=`<div class="page-title">➕ Создать</div>
-    <div style="background:rgba(255,214,0,.08);border:1px solid rgba(255,214,0,.2);border-radius:10px;padding:10px;margin-bottom:14px;font-size:12px;color:var(--yellow)">⏳ Новые заказы проходят проверку перед публикацией</div>
+    <div style="background:rgba(255,214,0,.08);border:1px solid rgba(255,214,0,.2);border-radius:10px;padding:10px;margin-bottom:14px;font-size:12px;color:var(--yellow)">⏳ Заказы проходят проверку перед публикацией</div>
     <div class="form-group"><label class="form-label">Что купить / доставить</label><input class="form-input" id="cWhat" placeholder="Бургер, лекарства, посылка..."></div>
     <div class="form-group"><label class="form-label">Магазин / откуда забрать</label><input class="form-input" id="cShop" placeholder="McDonald's, Пятёрочка..."></div>
     <div class="form-group"><label class="form-label">Куда доставить</label><input class="form-input" id="cWhere" placeholder="Школа №3, ул. Ленина 5..."></div>
@@ -1550,27 +1687,17 @@ function renderMyOrders(){
   c.innerHTML='';
   my.forEach(o=>{
     const div=document.createElement('div');div.className='card';
-    const isW=o.worker_id===currentUser.id,isC=o.creator_id===currentUser.id;
-    const myConf=isW?o.worker_confirmed:o.creator_confirmed;
+    const isW=o.worker_id===currentUser.id,isC=o.creator_id===currentUser.id,myConf=isW?o.worker_confirmed:o.creator_confirmed;
     const dl=fmtDl(o.deadline),ct=fmtTimer(o.cancel_deadline);
-    const statusColor=o.status==='open'?'var(--green)':o.status==='work'?'var(--yellow)':'var(--muted2)';
-    const statusLabel=o.status==='open'?'Открыт':o.status==='work'?'В работе':'Завершён';
+    const sc=o.status==='open'?'var(--green)':o.status==='work'?'var(--yellow)':'var(--muted2)';
+    const sl=o.status==='open'?'Открыт':o.status==='work'?'В работе':'Завершён';
     div.innerHTML=
       `<div class="card-title"><span>${esc(o.title)}</span><span class="card-price">${o.price?o.price+'₽':'—'}</span></div>`+
-      `<div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap">
-        <span style="font-size:11px;font-weight:700;color:${statusColor}">● ${statusLabel}</span>
-        <span style="font-size:11px;color:var(--muted2)">${isC?'📦 Ты заказчик':'🚴 Ты курьер'}</span>
-        ${o.is_approved===false&&o.status==='open'?'<span class="mod-badge">⏳ На модерации</span>':''}
-      </div>`+
+      `<div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap"><span style="font-size:11px;font-weight:700;color:${sc}">● ${sl}</span><span style="font-size:11px;color:var(--muted2)">${isC?'📦 Ты заказчик':'🚴 Ты курьер'}</span>${o.is_approved===false&&o.status==='open'?'<span class="mod-badge">⏳ На модерации</span>':''}</div>`+
       `<div class="card-meta">🛒 ${esc(o.from||'')} → 📍 ${esc(o.to||'')}</div>`+
       (dl?`<div class="card-meta ${dl.urgent?'deadline-urgent':'deadline-ok'}">⏰ ${dl.str}</div>`:'')+
       (o.worker_name?`<div class="card-meta">🚴 ${esc(o.worker_name)}</div>`:'')+pbadge(o.payment);
-    if(o.status==='work'){
-      div.innerHTML+=`<div style="margin-top:10px;padding:8px;background:var(--bg3);border-radius:8px;font-size:12px;line-height:2">
-        <span style="color:${o.worker_confirmed?'var(--green)':'var(--muted2)'}">🚴 ${o.worker_confirmed?'✅ подтвердил':'⏳ ожидает'}</span><br>
-        <span style="color:${o.creator_confirmed?'var(--green)':'var(--muted2)'}">📦 ${o.creator_confirmed?'✅ подтвердил':'⏳ ожидает'}</span>
-      </div>`;
-    }
+    if(o.status==='work')div.innerHTML+=`<div style="margin-top:10px;padding:8px;background:var(--bg3);border-radius:8px;font-size:12px;line-height:2"><span style="color:${o.worker_confirmed?'var(--green)':'var(--muted2)'}">🚴 ${o.worker_confirmed?'✅':'⏳'}</span> &nbsp; <span style="color:${o.creator_confirmed?'var(--green)':'var(--muted2)'}">📦 ${o.creator_confirmed?'✅':'⏳'}</span></div>`;
     if(o.status==='done'&&isC&&o.worker_id&&o.rating===null){
       const rd=document.createElement('div');rd.innerHTML='<div style="font-size:12px;color:var(--muted2);margin-top:10px">Оцени курьера:</div>';
       const sw=document.createElement('div');sw.className='stars-wrap';
@@ -1581,7 +1708,7 @@ function renderMyOrders(){
     if(o.status==='work'&&(isW||isC)&&!myConf){const b=document.createElement('button');b.className='btn btn-green';b.innerHTML='✅ Подтвердить';b.onclick=()=>confirmDone(o.id,isW?'worker':'creator');acts.appendChild(b);}
     if(o.status==='work'&&isW&&ct){const cb2=document.createElement('button');cb2.className='btn btn-ghost';cb2.innerHTML=`⏱ Отменить (${ct})`;cb2.onclick=()=>showCancelModal(o.id);acts.appendChild(cb2);}
     const cb=document.createElement('button');cb.className='btn btn-ghost';cb.innerHTML='💬 Чат';cb.onclick=()=>openChat(o.id);acts.appendChild(cb);
-    if(o.status==='work'){{const rb=document.createElement('button');rb.className='btn btn-ghost';rb.innerHTML='⚠️';rb.onclick=()=>showReportModal(o.id);acts.appendChild(rb);}}
+    if(o.status==='work'){const rb=document.createElement('button');rb.className='btn btn-ghost';rb.innerHTML='⚠️';rb.onclick=()=>showReportModal(o.id);acts.appendChild(rb);}
     div.appendChild(acts);c.appendChild(div);
   });
   clearTimeout(window._mt);window._mt=setTimeout(renderMyOrders,1000);
@@ -1589,11 +1716,14 @@ function renderMyOrders(){
 
 async function renderProfile(){
   if(!currentUser||!currentProfile)return;
-  const pg=document.getElementById('profilePage'),ar=avgR(currentProfile.ratings);
+  const pg=document.getElementById('profilePage'),ar=avgR(currentProfile.ratings),lvl=getLevel(currentProfile.done_count||0);
+  const{data:b}=await sb.from('badges').select('*').eq('user_id',currentUser.id).single().catch(()=>({data:null}));
   pg.innerHTML=`
     <div class="profile-hero">
       <div class="profile-avatar">${esc(currentProfile.name[0].toUpperCase())}</div>
       <div class="profile-username">${esc(currentProfile.name)}</div>
+      <div style="margin-top:4px;margin-bottom:6px"><span class="level-badge ${lvl.cls}">${lvl.label}</span></div>
+      <div style="margin-bottom:6px">${getBadgesHTML(b)}</div>
       <div class="profile-rating">${ar?'⭐ '+ar+' / 5':'Нет оценок'}${currentProfile.is_admin?' <span style="background:rgba(255,60,60,.15);color:var(--accent);border:1px solid rgba(255,60,60,.3);border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700;margin-left:6px">🛡️ АДМИН</span>':''}</div>
       <div style="margin-top:12px;text-align:center">
         <button class="online-pill ${currentProfile.is_online?'on':'off'}" onclick="toggleOnline()">${currentProfile.is_online?'🟢 На службе':'⚫ Не на службе'}</button>
@@ -1614,42 +1744,35 @@ async function renderProfile(){
   myDone.forEach(o=>{const div=document.createElement('div');div.className='card';div.innerHTML=`<b>${esc(o.title)}</b> <span style="color:var(--green);font-weight:700">+${o.price}₽</span><div class="card-meta" style="margin-top:4px">${esc(o.from||'')} → ${esc(o.to||'')}</div>`;hl.appendChild(div);});
 }
 
-function updateBadges(){
+function updateBadgeNums(){
   const oc=getOrders().filter(o=>o.status==='open'&&o.is_approved===true).length;
   const myCount=getOrders().filter(o=>(o.creator_id===currentUser?.id||o.worker_id===currentUser?.id)&&o.status!=='done').length;
   const b1=document.getElementById('b1'),b2=document.getElementById('b2');
-  b1.style.display=oc?'block':'none';b1.textContent=oc;
-  b2.style.display=myCount?'block':'none';b2.textContent=myCount;
+  b1.style.display=oc?'block':'none';b1.textContent=oc;b2.style.display=myCount?'block':'none';b2.textContent=myCount;
 }
 
-// ══════════════════════════════════
-// ADMIN — быстрый, без лишних запросов
-// ══════════════════════════════════
+// ══ ADMIN ══
 async function renderAdmin(){
   if(!currentProfile?.is_admin)return;
   const c=document.getElementById('adminContent');
-  const tabs=[{id:'dashboard',l:'📊 Обзор'},{id:'moderation',l:'⏳ Модерация'},{id:'orders',l:'📦 Сделки'},{id:'users',l:'👤 Юзеры'},{id:'tickets',l:'🆘 Тикеты'},{id:'reports',l:'⚠️ Жалобы'},{id:'bans',l:'🚫 Баны'},{id:'logs',l:'👁 Логи'}];
-  c.innerHTML=`<div class="tab-row">${tabs.map(t=>`<button class="tab-btn ${adminTab===t.id?'active':''}" onclick="adminTab='${t.id}';renderAdmin()">${t.l}</button>`).join('')}</div><div id="adminTab"></div>`;
+  const tabs=[{id:'dashboard',l:'📊'},{id:'moderation',l:'⏳'},{id:'orders',l:'📦'},{id:'users',l:'👤'},{id:'tickets',l:'🆘'},{id:'reports',l:'⚠️'},{id:'bans',l:'🚫'},{id:'logs',l:'👁'}];
+  const labels={dashboard:'Обзор',moderation:'Модер.',orders:'Сделки',users:'Юзеры',tickets:'Тикеты',reports:'Жалобы',bans:'Баны',logs:'Логи'};
+  c.innerHTML=`<div class="tab-row">${tabs.map(t=>`<button class="tab-btn ${adminTab===t.id?'active':''}" onclick="adminTab='${t.id}';renderAdmin()">${t.l} ${labels[t.id]}</button>`).join('')}</div><div id="adminTab"></div>`;
   const ct=document.getElementById('adminTab');
   const fns={dashboard:aDB,moderation:aMod,orders:aOrders,users:aUsers,tickets:aTickets,reports:aReports,bans:aBans,logs:aLogs};
   if(fns[adminTab])await fns[adminTab](ct);
 }
 
 async function aDB(ct){
-  const[{data:o},{data:u},{data:t},{data:r}]=await Promise.all([
-    sb.from('orders').select('id,status,price,is_approved'),
-    sb.from('profiles').select('id,is_online,is_banned'),
-    sb.from('support_tickets').select('id').eq('status','open'),
-    sb.from('reports').select('id')
-  ]);
+  const[{data:o},{data:u},{data:t}]=await Promise.all([sb.from('orders').select('id,status,price,is_approved'),sb.from('profiles').select('id,is_online,is_banned'),sb.from('support_tickets').select('id').eq('status','open')]);
   const orders=o||[],users=u||[],revenue=orders.filter(x=>x.status==='done').reduce((s,x)=>s+(x.price||0),0);
   const pending=orders.filter(x=>x.is_approved===false&&x.status==='open').length;
   ct.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-    <div class="stat-mini"><div class="n">${orders.length}</div><div class="l">Всего сделок</div></div>
+    <div class="stat-mini"><div class="n">${orders.length}</div><div class="l">Сделок</div></div>
     <div class="stat-mini"><div class="n" style="color:var(--green)">${orders.filter(x=>x.status==='open'&&x.is_approved).length}</div><div class="l">Открытых</div></div>
     <div class="stat-mini"><div class="n" style="color:var(--yellow)">${orders.filter(x=>x.status==='work').length}</div><div class="l">В работе</div></div>
     <div class="stat-mini"><div class="n" style="color:var(--green)">${revenue}₽</div><div class="l">Оборот</div></div>
-    <div class="stat-mini"><div class="n">${users.length}</div><div class="l">Пользователей</div></div>
+    <div class="stat-mini"><div class="n">${users.length}</div><div class="l">Юзеров</div></div>
     <div class="stat-mini"><div class="n" style="color:var(--green)">${users.filter(x=>x.is_online).length}</div><div class="l">На службе</div></div>
     <div class="stat-mini"><div class="n" style="color:${pending?'var(--yellow)':'var(--muted2)'}">${pending}</div><div class="l">На модерации</div></div>
     <div class="stat-mini"><div class="n" style="color:${t?.length?'var(--accent)':'var(--muted2)'}">${t?.length||0}</div><div class="l">Тикетов</div></div>
@@ -1659,22 +1782,27 @@ async function aDB(ct){
 async function aMod(ct){
   const{data}=await sb.from('orders').select('*').eq('is_approved',false).eq('status','open').order('created_at',{ascending:true});
   if(!data?.length){ct.innerHTML='<div class="empty"><div class="empty-icon">✅</div><div class="empty-text">Нет заказов на модерации</div></div>';return;}
-  ct.innerHTML=`<div style="color:var(--muted2);font-size:12px;margin-bottom:12px">Заказы ждут одобрения перед публикацией:</div>`;
+  ct.innerHTML='';
   data.forEach(o=>{
     const div=document.createElement('div');div.className='acard';
     div.innerHTML=`<div style="display:flex;justify-content:space-between;margin-bottom:6px"><b>${esc(o.title)}</b><span class="mod-badge">⏳ Ожидает</span></div>
       <div class="card-meta">🛒 ${esc(o.from||'')} → ${esc(o.to||'')}</div>
       <div class="card-meta">💰 ${o.price}₽ · ${o.payment==='cash'?'Нал':'Безнал'}</div>
-      <div class="card-meta">📦 ${esc(o.creator_name)} · ${esc(o.creator_city||'')}</div>
-      ${o.comment?`<div class="card-meta">💬 ${esc(o.comment)}</div>`:''}
-      <div style="font-size:10px;color:var(--muted);margin-top:4px">${new Date(o.created_at).toLocaleString('ru')}</div>`;
+      <div class="card-meta">📦 ${esc(o.creator_name)}</div>
+      ${o.comment?`<div class="card-meta">💬 ${esc(o.comment)}</div>`:''}`;
     const acts=document.createElement('div');acts.className='card-actions';
-    const appr=document.createElement('button');appr.className='btn btn-green';appr.innerHTML='✅ Одобрить';
-    appr.onclick=async()=>{await sb.from('orders').update({is_approved:true}).eq('id',o.id);await sendNotif(o.creator_id,'✅ Заказ одобрен',`"${o.title}" опубликован`,'order');await sb.from('action_logs').insert({admin_name:currentProfile.name,action:'Одобрение заказа',target:o.title});toast('✅ Одобрен!');renderAdmin();};acts.appendChild(appr);
-    const rej=document.createElement('button');rej.className='btn btn-red';rej.innerHTML='❌ Отклонить';
-    rej.onclick=async()=>{const reason=prompt('Причина отклонения:');if(!reason)return;await sb.from('orders').delete().eq('id',o.id);await sendNotif(o.creator_id,'❌ Заказ отклонён',`"${o.title}": ${reason}`,'order');await sb.from('action_logs').insert({admin_name:currentProfile.name,action:'Отклонение заказа',target:o.title});toast('❌ Отклонён');renderAdmin();};acts.appendChild(rej);
+    const ap=document.createElement('button');ap.className='btn btn-green';ap.innerHTML='✅ Одобрить';
+    ap.onclick=async()=>{await sb.from('orders').update({is_approved:true}).eq('id',o.id);await sendNotif(o.creator_id,'✅ Заказ одобрен',`"${o.title}" опубликован`,'order');toast('✅ Одобрен!');renderAdmin();};acts.appendChild(ap);
+    const rj=document.createElement('button');rj.className='btn btn-red';rj.innerHTML='❌ Отклонить';
+    rj.onclick=()=>{showDrawer('❌ Причина отклонения',`<input id="rejReason" class="form-input" placeholder="Причина..." style="margin-bottom:12px"><button onclick="rejectOrder('${o.id}','${o.creator_id}','${esc(o.title)}');closeDrawer()" class="btn btn-red btn-full">Отклонить</button>`);};acts.appendChild(rj);
     div.appendChild(acts);ct.appendChild(div);
   });
+}
+async function rejectOrder(id,creatorId,title){
+  const reason=document.getElementById('rejReason')?.value.trim()||'Не соответствует правилам';
+  await sb.from('orders').delete().eq('id',id);
+  await sendNotif(creatorId,'❌ Заказ отклонён',`"${title}": ${reason}`,'order');
+  toast('❌ Отклонён');renderAdmin();
 }
 
 async function aOrders(ct){
@@ -1684,8 +1812,7 @@ async function aOrders(ct){
   data.forEach(o=>{
     const div=document.createElement('div');div.className='acard';
     const sc=o.status==='open'?'var(--green)':o.status==='work'?'var(--yellow)':'var(--muted2)';
-    div.innerHTML=`<div style="display:flex;justify-content:space-between;margin-bottom:6px"><b>${esc(o.title)}</b><span style="color:${sc};font-size:11px;font-weight:700">${o.status==='open'?'Открыт':o.status==='work'?'В работе':'Завершён'}</span></div>
-      <div class="card-meta">🛒 ${esc(o.from||'')} → ${esc(o.to||'')}</div>
+    div.innerHTML=`<div style="display:flex;justify-content:space-between;margin-bottom:4px"><b>${esc(o.title)}</b><span style="color:${sc};font-size:11px;font-weight:700">${o.status==='open'?'Открыт':o.status==='work'?'В работе':'Завершён'}</span></div>
       <div class="card-meta">💰 ${o.price}₽ · 📦 ${esc(o.creator_name)}${o.worker_name?' · 🚴 '+esc(o.worker_name):''}</div>
       <div style="font-size:10px;color:var(--muted);margin-top:4px">${new Date(o.created_at).toLocaleString('ru')}</div>`;
     const acts=document.createElement('div');acts.className='card-actions';
@@ -1701,37 +1828,40 @@ async function aUsers(ct){
   if(!data?.length){ct.innerHTML='<div class="empty"><div class="empty-icon">👤</div><div class="empty-text">Нет</div></div>';return;}
   ct.innerHTML='';
   data.filter(u=>u.id!==currentUser.id).forEach(u=>{
-    const div=document.createElement('div');div.className='acard';const ar=avgR(u.ratings);
+    const div=document.createElement('div');div.className='acard';const ar=avgR(u.ratings),lvl=getLevel(u.done_count||0);
     div.innerHTML=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-      <div class="creator-avatar" style="width:32px;height:32px;font-size:13px">${esc(u.name[0].toUpperCase())}</div>
-      <div><b>${esc(u.name)}</b>${u.is_banned?' <span class="ban-badge">🚫</span>':''}<div style="font-size:11px;color:var(--muted2)">${esc(u.city||'—')}${ar?' · ⭐'+ar:''} · ${u.done_count||0} доставок</div></div>
-    </div>`;
+      <div class="creator-avatar" style="width:32px;height:32px;font-size:13px;cursor:pointer" onclick="openPublicProfile('${u.id}')">${esc(u.name[0].toUpperCase())}</div>
+      <div><b>${esc(u.name)}</b>${u.is_banned?' <span class="ban-badge">🚫</span>':''} <span class="level-badge ${lvl.cls}" style="font-size:9px;padding:1px 5px">${lvl.label}</span><div style="font-size:11px;color:var(--muted2)">${esc(u.city||'—')}${ar?' · ⭐'+ar:''}</div></div>
+    </div>
+    <div class="card-meta">✅ ${u.done_count||0} · 💰 ${u.earned||0}₽</div>`;
     const acts=document.createElement('div');acts.className='card-actions';
     const mb=document.createElement('button');mb.className='btn btn-ghost';mb.innerHTML='📧';mb.onclick=()=>aSendMsg(u.id,u.name);acts.appendChild(mb);
-    if(!u.is_banned){const bb=document.createElement('button');bb.className='btn btn-red';bb.innerHTML='🚫 Бан';bb.onclick=()=>aShowBan(u.id,u.name);acts.appendChild(bb);}
+    const vb=document.createElement('button');vb.className='btn btn-ghost';vb.innerHTML='✅ Верифиц.';vb.onclick=()=>aVerify(u.id,u.name);acts.appendChild(vb);
+    if(!u.is_banned){const bb=document.createElement('button');bb.className='btn btn-red';bb.innerHTML='🚫';bb.onclick=()=>aShowBan(u.id,u.name);acts.appendChild(bb);}
     else{const ub=document.createElement('button');ub.className='btn btn-ghost';ub.innerHTML='✅ Разбан';ub.onclick=()=>aUnban(u.id,u.name);acts.appendChild(ub);}
     const db=document.createElement('button');db.className='btn btn-red';db.innerHTML='🗑';db.onclick=()=>aDeleteUser(u.id,u.name);acts.appendChild(db);
     div.appendChild(acts);ct.appendChild(div);
   });
 }
 
+async function aVerify(userId,name){
+  await sb.from('badges').upsert({user_id:userId,verified:true});
+  await sendNotif(userId,'✅ Верификация','Ваш аккаунт верифицирован администрацией','system');
+  toast('✅ Верифицирован');renderAdmin();
+}
+
 async function aTickets(ct){
   const{data}=await sb.from('support_tickets').select('*').order('created_at',{ascending:false}).limit(30);
-  if(!data?.length){ct.innerHTML='<div class="empty"><div class="empty-icon">🆘</div><div class="empty-text">Нет тикетов</div></div>';return;}
+  if(!data?.length){ct.innerHTML='<div class="empty"><div class="empty-icon">🆘</div><div class="empty-text">Нет</div></div>';return;}
   ct.innerHTML='';
   const types={complaint:'⚠️',unban:'🔓',password_reset:'🔑',other:'💬'};
   data.forEach(t=>{
     const div=document.createElement('div');div.className='acard';
-    div.innerHTML=`<div style="display:flex;justify-content:space-between;margin-bottom:6px"><b>${esc(t.subject)}</b><span style="font-size:10px;color:var(--accent)">${types[t.type]||'💬'} · ${t.status==='open'?'⏳':'✅'}</span></div>
-      <div style="color:var(--muted2);font-size:12px;margin-bottom:4px">${esc(t.message)}</div>
+    div.innerHTML=`<div style="display:flex;justify-content:space-between;margin-bottom:4px"><b>${esc(t.subject)}</b><span style="font-size:10px;color:var(--accent)">${types[t.type]||'💬'} · ${t.status==='open'?'⏳':'✅'}</span></div>
+      <div style="color:var(--muted2);font-size:12px;margin-bottom:3px">${esc(t.message)}</div>
       <div style="font-size:11px">От: <b>${esc(t.user_name)}</b></div>
-      ${t.admin_reply?`<div style="margin-top:6px;padding:6px;background:var(--bg3);border-radius:6px;font-size:11px;color:var(--green)">Ответ: ${esc(t.admin_reply)}</div>`:''}`;
-    if(t.status==='open'){
-      const acts=document.createElement('div');acts.className='card-actions';
-      const rb=document.createElement('button');rb.className='btn btn-green';rb.innerHTML='✉️ Ответить';rb.onclick=()=>aReplyTicket(t.id,t.user_id,t.user_name);acts.appendChild(rb);
-      const cb=document.createElement('button');cb.className='btn btn-ghost';cb.innerHTML='✅';cb.onclick=async()=>{await sb.from('support_tickets').update({status:'closed'}).eq('id',t.id);renderAdmin();};acts.appendChild(cb);
-      div.appendChild(acts);
-    }
+      ${t.admin_reply?`<div style="margin-top:5px;padding:5px;background:var(--bg3);border-radius:6px;font-size:11px;color:var(--green)">Ответ: ${esc(t.admin_reply)}</div>`:''}`;
+    if(t.status==='open'){const acts=document.createElement('div');acts.className='card-actions';const rb=document.createElement('button');rb.className='btn btn-green';rb.innerHTML='✉️';rb.onclick=()=>aReplyTicket(t.id,t.user_id,t.user_name);acts.appendChild(rb);const cb=document.createElement('button');cb.className='btn btn-ghost';cb.innerHTML='✅';cb.onclick=async()=>{await sb.from('support_tickets').update({status:'closed'}).eq('id',t.id);renderAdmin();};acts.appendChild(cb);div.appendChild(acts);}
     ct.appendChild(div);
   });
 }
@@ -1742,10 +1872,9 @@ async function aReports(ct){
   ct.innerHTML='';
   data.forEach(r=>{
     const div=document.createElement('div');div.className='acard';
-    div.innerHTML=`<div style="color:var(--accent);font-weight:700;margin-bottom:6px">⚠️ ${esc(r.reason)}</div>
-      <div class="card-meta">На: <b>${esc(r.target_name)}</b></div>
-      <div class="card-meta">От: ${esc(r.reporter_name)}</div>
-      <div style="font-size:10px;color:var(--muted);margin-top:4px">${new Date(r.created_at).toLocaleString('ru')}</div>`;
+    div.innerHTML=`<div style="color:var(--accent);font-weight:700;margin-bottom:5px">⚠️ ${esc(r.reason)}</div>
+      <div class="card-meta">На: <b>${esc(r.target_name)}</b> · От: ${esc(r.reporter_name)}</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:3px">${new Date(r.created_at).toLocaleString('ru')}</div>`;
     const acts=document.createElement('div');acts.className='card-actions';
     const cb=document.createElement('button');cb.className='btn btn-ghost';cb.innerHTML='🗑 Закрыть';cb.onclick=async()=>{await sb.from('reports').delete().eq('id',r.id);renderAdmin();};acts.appendChild(cb);
     div.appendChild(acts);ct.appendChild(div);
@@ -1756,7 +1885,7 @@ async function aBans(ct){
   const{data}=await sb.from('ban_history').select('*').order('created_at',{ascending:false}).limit(30);
   if(!data?.length){ct.innerHTML='<div class="empty"><div class="empty-icon">🚫</div><div class="empty-text">Пусто</div></div>';return;}
   ct.innerHTML='';
-  data.forEach(b=>{const div=document.createElement('div');div.className='acard';div.innerHTML=`<div style="display:flex;justify-content:space-between"><b>${esc(b.user_name)}</b><span style="color:${b.action==='ban'?'var(--accent)':'var(--green)'};font-size:11px;font-weight:700">${b.action==='ban'?'🚫 БАН':'✅ РАЗБАН'}</span></div><div class="card-meta">${esc(b.reason||'—')}</div><div style="font-size:10px;color:var(--muted);margin-top:4px">${new Date(b.created_at).toLocaleString('ru')}</div>`;ct.appendChild(div);});
+  data.forEach(b=>{const div=document.createElement('div');div.className='acard';div.innerHTML=`<div style="display:flex;justify-content:space-between"><b>${esc(b.user_name)}</b><span style="color:${b.action==='ban'?'var(--accent)':'var(--green)'};font-size:11px;font-weight:700">${b.action==='ban'?'🚫':'✅'}</span></div><div class="card-meta">${esc(b.reason||'—')}</div><div style="font-size:10px;color:var(--muted);margin-top:3px">${new Date(b.created_at).toLocaleString('ru')}</div>`;ct.appendChild(div);});
 }
 
 async function aLogs(ct){
@@ -1779,8 +1908,7 @@ function aShowBan(id,name){
 }
 async function aConfirmBan(id,name){
   const reason=document.getElementById('banReason')?.value.trim()||'Нарушение правил',type=document.getElementById('banType')?.value;
-  closeDrawer();
-  const now=new Date(),update={ban_reason:reason};
+  closeDrawer();const now=new Date(),update={ban_reason:reason};
   if(type==='permanent'){update.is_banned=true;update.ban_until=null;}
   else if(type==='1h'){update.is_banned=true;update.ban_until=new Date(now.getTime()+3600000).toISOString();}
   else if(type==='24h'){update.is_banned=true;update.ban_until=new Date(now.getTime()+86400000).toISOString();}
@@ -1802,7 +1930,7 @@ async function aUnban(id,name){
   toast('✅ Разбанен');renderAdmin();
 }
 async function aDeleteUser(id,name){
-  if(!confirm(`Удалить ${name}? Нельзя отменить.`))return;
+  if(!confirm(`Удалить ${name}?`))return;
   await sb.from('profiles').delete().eq('id',id);
   await sb.from('action_logs').insert({admin_name:currentProfile.name,action:'Удаление аккаунта',target:name});
   toast('🗑 Удалён');renderAdmin();
@@ -1820,12 +1948,7 @@ async function aReadChat(orderId,title){
   const{data}=await sb.from('messages').select('*').eq('order_id',orderId).order('created_at',{ascending:true});
   showDrawer(`💬 ${esc(title)}`,`<div style="display:flex;flex-direction:column;gap:6px;max-height:50vh;overflow-y:auto">${(data||[]).map(m=>`<div style="background:var(--bg3);border-radius:10px;padding:8px 12px"><div style="font-size:10px;color:var(--muted2);margin-bottom:2px">${esc(m.user_name)} · ${m.time_str||''}</div><div>${esc(m.text)}</div></div>`).join('')||'<div style="color:var(--muted)">Нет сообщений</div>'}</div>`);
 }
-function aSendMsg(userId,userName){
-  showDrawer(`📧 ${esc(userName)}`,`
-    <input id="sysText" class="form-input" placeholder="Сообщение..." style="margin-bottom:12px">
-    <button onclick="aSendMsgOk('${userId}','${userName}')" class="btn btn-red btn-full">Отправить</button>
-  `);
-}
+function aSendMsg(userId,userName){showDrawer(`📧 ${esc(userName)}`,`<input id="sysText" class="form-input" placeholder="Сообщение..." style="margin-bottom:12px"><button onclick="aSendMsgOk('${userId}','${userName}')" class="btn btn-red btn-full">Отправить</button>`);}
 async function aSendMsgOk(userId,userName){
   const text=document.getElementById('sysText')?.value.trim();if(!text){toast('Введи сообщение');return;}
   await sb.from('system_messages').insert({to_user_id:userId,from_admin:currentProfile.name,text,is_read:false});
@@ -1833,12 +1956,7 @@ async function aSendMsgOk(userId,userName){
   await sb.from('action_logs').insert({admin_name:currentProfile.name,action:'Системное сообщение',target:userName});
   closeDrawer();toast('📧 Отправлено!');
 }
-function aReplyTicket(ticketId,userId,userName){
-  showDrawer(`✉️ ${esc(userName)}`,`
-    <input id="replyText" class="form-input" placeholder="Ответ..." style="margin-bottom:12px">
-    <button onclick="aReplyOk('${ticketId}','${userId}','${userName}')" class="btn btn-green btn-full">Отправить</button>
-  `);
-}
+function aReplyTicket(ticketId,userId,userName){showDrawer(`✉️ ${esc(userName)}`,`<input id="replyText" class="form-input" placeholder="Ответ..." style="margin-bottom:12px"><button onclick="aReplyOk('${ticketId}','${userId}','${userName}')" class="btn btn-green btn-full">Отправить</button>`);}
 async function aReplyOk(ticketId,userId,userName){
   const reply=document.getElementById('replyText')?.value.trim();if(!reply){toast('Введи ответ');return;}
   await sb.from('support_tickets').update({admin_reply:reply,status:'closed'}).eq('id',ticketId);
