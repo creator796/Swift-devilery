@@ -1095,10 +1095,10 @@ async function init(){
   });
 }
 
-async function logLogin(){
+async function logLogin(){try{
   if(!currentUser)return;
-  const agent=navigator.userAgent.substring(0,100);
-  await sb.from('login_logs').insert({user_id:currentUser.id,agent}).catch(()=>{});
+  const agent=navigator.userAgent.substring(0,100);await sb.from('login_logs').insert({user_id:currentUser.id,agent});}catch(e){}
+  try{await sb.from('login_logs').insert({user_id:currentUser.id,agent});}catch(e){}
 }
 
 function showBanned(){
@@ -1223,7 +1223,7 @@ async function doRegister(){
   if(data.user){
     const newCode=Math.random().toString(36).substring(2,10);
     await sb.from('profiles').upsert({id:data.user.id,name,city,created_count:0,done_count:0,earned:0,ratings:[],is_admin:false,is_banned:false,is_online:false,account_id:data.user.id,referral_code:newCode,referred_by:referrerId,referral_count:0});
-    if(referrerId)await sb.from('profiles').update({referral_count:sb.rpc('increment',{x:1})}).eq('id',referrerId).catch(()=>{});
+    if(referrerId)await sb.from('profiles').update({referral_count:sb.rpc('increment',{x:1})}).eq('id',referrerId);//ok;
   }
   authStep='otp';renderAuth();
 }
@@ -1537,7 +1537,7 @@ async function renderCouriers(cid){
   const activeOrders=getOrders().filter(o=>o.status==='work');
   for(const u of data){
     const ao=activeOrders.find(o=>o.worker_id===u.id),ar=avgR(u.ratings),lvl=getLevel(u.done_count||0);
-    const{data:b}=await sb.from('badges').select('*').eq('user_id',u.id).single().catch(()=>({data:null}));
+    const{data:b}=await sb.from('badges').select('*').eq('user_id',u.id).single();//ok;
     const div=document.createElement('div');div.style.cssText='display:flex;align-items:center;gap:12px;padding:10px;background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;cursor:pointer';
     div.innerHTML=`<div class="creator-avatar" style="width:38px;height:38px;font-size:16px;flex-shrink:0">${esc(u.name[0].toUpperCase())}</div>
       <div style="flex:1;min-width:0">
@@ -1636,7 +1636,7 @@ function showReportModal(orderId){
 async function submitReport(orderId,targetId,reason){
   const o=getOrders().find(x=>x.id===orderId);
   const targetName=targetId===o?.creator_id?o.creator_name:o?.worker_name||'—';
-  await sb.from('reports').insert({order_id:orderId,reporter_id:currentUser.id,reporter_name:currentProfile.name,target_name:targetName,reason}).catch(()=>{});
+  await sb.from('reports').insert({order_id:orderId,reporter_id:currentUser.id,reporter_name:currentProfile.name,target_name:targetName,reason});//ok;
   const{data:admins}=await sb.from('profiles').select('id').eq('is_admin',true);
   for(const a of admins||[])await sendNotif(a.id,'⚠️ Жалоба',`${currentProfile.name} → ${targetName}: ${reason}`,'info');
   toast('⚠️ Жалоба отправлена');
@@ -1717,7 +1717,7 @@ function renderMyOrders(){
 async function renderProfile(){
   if(!currentUser||!currentProfile)return;
   const pg=document.getElementById('profilePage'),ar=avgR(currentProfile.ratings),lvl=getLevel(currentProfile.done_count||0);
-  const{data:b}=await sb.from('badges').select('*').eq('user_id',currentUser.id).single().catch(()=>({data:null}));
+  const{data:b}=await sb.from('badges').select('*').eq('user_id',currentUser.id).single();//ok;
   pg.innerHTML=`
     <div class="profile-hero">
       <div class="profile-avatar">${esc(currentProfile.name[0].toUpperCase())}</div>
@@ -1867,7 +1867,7 @@ async function aTickets(ct){
 }
 
 async function aReports(ct){
-  const{data}=await sb.from('reports').select('*').order('created_at',{ascending:false}).limit(30).catch(()=>({data:[]}));
+  const{data}=await sb.from('reports').select('*').order('created_at',{ascending:false}).limit(30);
   if(!data?.length){ct.innerHTML='<div class="empty"><div class="empty-icon">⚠️</div><div class="empty-text">Нет жалоб</div></div>';return;}
   ct.innerHTML='';
   data.forEach(r=>{
@@ -1919,14 +1919,14 @@ async function aConfirmBan(id,name){
   await sb.from('profiles').update(update).eq('id',id);
   await sb.from('ban_history').insert({admin_name:currentProfile.name,user_name:name,user_id:id,reason,action:'ban'});
   await sb.from('action_logs').insert({admin_name:currentProfile.name,action:'Бан ('+type+')',target:name});
-  await sb.from('notifications').insert({user_id:id,title:'🚫 Аккаунт заблокирован',body:reason,type:'system',is_read:false}).catch(()=>{});
+  await sb.from('notifications').insert({user_id:id,title:'🚫 Аккаунт заблокирован',body:reason,type:'system',is_read:false});//ok;
   toast('🚫 Забанен');renderAdmin();
 }
 async function aUnban(id,name){
   await sb.from('profiles').update({is_banned:false,ban_until:null,ban_reason:null,ban_create_until:null,ban_take_until:null}).eq('id',id);
   await sb.from('ban_history').insert({admin_name:currentProfile.name,user_name:name,user_id:id,reason:'Разбан',action:'unban'});
   await sb.from('action_logs').insert({admin_name:currentProfile.name,action:'Разбан',target:name});
-  await sb.from('notifications').insert({user_id:id,title:'✅ Бан снят',body:'Аккаунт разблокирован',type:'system',is_read:false}).catch(()=>{});
+  await sb.from('notifications').insert({user_id:id,title:'✅ Бан снят',body:'Аккаунт разблокирован',type:'system',is_read:false});//ok;
   toast('✅ Разбанен');renderAdmin();
 }
 async function aDeleteUser(id,name){
@@ -1952,7 +1952,7 @@ function aSendMsg(userId,userName){showDrawer(`📧 ${esc(userName)}`,`<input id
 async function aSendMsgOk(userId,userName){
   const text=document.getElementById('sysText')?.value.trim();if(!text){toast('Введи сообщение');return;}
   await sb.from('system_messages').insert({to_user_id:userId,from_admin:currentProfile.name,text,is_read:false});
-  await sb.from('notifications').insert({user_id:userId,title:'📢 Сообщение от администрации',body:text,type:'system',is_read:false}).catch(()=>{});
+  await sb.from('notifications').insert({user_id:userId,title:'📢 Сообщение от администрации',body:text,type:'system',is_read:false});//ok;
   await sb.from('action_logs').insert({admin_name:currentProfile.name,action:'Системное сообщение',target:userName});
   closeDrawer();toast('📧 Отправлено!');
 }
@@ -1961,7 +1961,7 @@ async function aReplyOk(ticketId,userId,userName){
   const reply=document.getElementById('replyText')?.value.trim();if(!reply){toast('Введи ответ');return;}
   await sb.from('support_tickets').update({admin_reply:reply,status:'closed'}).eq('id',ticketId);
   await sb.from('system_messages').insert({to_user_id:userId,from_admin:currentProfile.name,text:'Ответ: '+reply,is_read:false});
-  await sb.from('notifications').insert({user_id:userId,title:'📢 Ответ на обращение',body:reply,type:'system',is_read:false}).catch(()=>{});
+  await sb.from('notifications').insert({user_id:userId,title:'📢 Ответ на обращение',body:reply,type:'system',is_read:false});//ok;
   await sb.from('action_logs').insert({admin_name:currentProfile.name,action:'Ответ на тикет',target:userName});
   closeDrawer();toast('✅ Отправлено!');renderAdmin();
 }
