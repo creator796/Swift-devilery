@@ -1353,7 +1353,7 @@ async function startApp(){
 
   document.getElementById('navBtn0').classList.add('active-tab');
   showPage('ordersPage');
-  loadOrders();loadAllUsers();subscribeRealtime();subscribeNotifs();updateBadgesAuto();
+  loadOrders();loadAllUsers();subscribeRealtime();subscribeNotifs();updateBadgesAuto();checkUnreadDMs();
 }
 
 function showPage(pageId){
@@ -1392,8 +1392,23 @@ function subscribeNotifs(){
   if(notifSub)sb.removeChannel(notifSub);
   notifSub=sb.channel('rt-notifs')
     .on('postgres_changes',{event:'INSERT',schema:'public',table:'notifications',filter:`user_id=eq.${currentUser.id}`},p=>{showNotifBanner(p.new);showChatDot();})
-    .on('postgres_changes',{event:'INSERT',schema:'public',table:'direct_messages',filter:`to_id=eq.${currentUser.id}`},p=>{showNotifBanner({title:`💬 ${p.new.from_name}`,body:p.new.text});showChatDot();if(currentDMUser&&p.new.from_id===currentDMUser.id){appendDMMsg(p.new,document.getElementById('dmMessages'));document.getElementById('dmMessages').scrollTop=99999;}})
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'direct_messages'},p=>{
+      const m=p.new;
+      if(m.to_id!==currentUser.id)return;
+      showNotifBanner({title:`💬 ${m.from_name}`,body:m.text});
+      showChatDot();
+      if(currentDMUser&&m.from_id===currentDMUser.id){
+        appendDMMsg(m,document.getElementById('dmMessages'));
+        document.getElementById('dmMessages').scrollTop=99999;
+      }
+    })
     .subscribe();
+}
+
+// Проверяем непрочитанные DM при старте
+async function checkUnreadDMs(){
+  const{data}=await sb.from('direct_messages').select('id').eq('to_id',currentUser.id).eq('is_read',false).limit(1);
+  if(data?.length)showChatDot();
 }
 function showChatDot(){const dot=document.getElementById('chatDot');if(dot)dot.style.display='block';}
 function showNotifBanner(n){
