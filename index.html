@@ -1087,10 +1087,10 @@ async function init(){
   const saved=localStorage.getItem('theme')||'dark';applyTheme(saved);
   document.getElementById('configNotice').style.display='none';
   const{data:{session}}=await sb.auth.getSession();
-  if(session){currentUser=session.user;await loadProfile();if(isBanned(currentProfile)){showBanned();return;}await logLogin();startApp();}
+  if(session){currentUser=session.user;await loadProfile();if(currentProfile?.is_deleted){showDeleted();return;}if(isBanned(currentProfile)){showBanned();return;}await logLogin();startApp();}
   else showAuth('login');
   sb.auth.onAuthStateChange(async(event,session)=>{
-    if(event==='SIGNED_IN'&&session){currentUser=session.user;await loadProfile();document.getElementById('authScreen').style.display='none';if(isBanned(currentProfile)){showBanned();return;}await logLogin();startApp();}
+    if(event==='SIGNED_IN'&&session){currentUser=session.user;await loadProfile();document.getElementById('authScreen').style.display='none';if(currentProfile?.is_deleted){showDeleted();return;}if(isBanned(currentProfile)){showBanned();return;}await logLogin();startApp();}
     else if(event==='SIGNED_OUT'){currentUser=null;currentProfile=null;window._orders=[];document.getElementById('app').classList.remove('visible');document.getElementById('burgerBtn').style.display='none';showAuth('login');}
   });
 }
@@ -1099,6 +1099,19 @@ async function logLogin(){try{
   if(!currentUser)return;
   const agent=navigator.userAgent.substring(0,100);await sb.from('login_logs').insert({user_id:currentUser.id,agent});}catch(e){}
   try{await sb.from('login_logs').insert({user_id:currentUser.id,agent});}catch(e){}
+}
+
+function showDeleted(){
+  sb.auth.signOut();
+  document.getElementById('authScreen').style.display='flex';
+  document.getElementById('authScreen').innerHTML=`
+    <div class="auth-logo">SWIFT</div>
+    <div style="text-align:center;max-width:300px">
+      <div style="font-size:44px;margin-bottom:12px">🗑️</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent);margin-bottom:8px">Аккаунт удалён</div>
+      <div style="color:var(--muted2);font-size:13px;line-height:1.6;margin-bottom:16px">Этот аккаунт был удалён администратором.</div>
+      <button class="auth-btn" style="background:var(--bg3);color:var(--muted2)" onclick="authStep='login';renderAuth()">← На главную</button>
+    </div>`;
 }
 
 function showBanned(){
@@ -1945,27 +1958,21 @@ async function aUnban(id,name){
   toast('✅ Разбанен');renderAdmin();
 }
 async function aDeleteUser(id,name){
-  if(!confirm(`Удалить аккаунт ${name}? Это действие нельзя отменить.`))return;
+  if(!confirm(`Удалить аккаунт ${name}? Войти будет невозможно.`))return;
   try {
-    // Удаляем все связанные данные
+    // Помечаем как удалённый (нельзя удалить из auth.users без service_role)
+    await sb.from('profiles').update({is_deleted:true,is_banned:true,ban_reason:'Аккаунт удалён администратором'}).eq('id',id);
+    // Чистим данные
     await sb.from('direct_messages').delete().eq('from_id',id);
     await sb.from('direct_messages').delete().eq('to_id',id);
     await sb.from('notifications').delete().eq('user_id',id);
-    await sb.from('system_messages').delete().eq('to_user_id',id);
-    await sb.from('support_tickets').delete().eq('user_id',id);
     await sb.from('favorites').delete().eq('user_id',id);
     await sb.from('favorites').delete().eq('courier_id',id);
     await sb.from('badges').delete().eq('user_id',id);
-    await sb.from('login_logs').delete().eq('user_id',id);
-    // Убираем курьера с заказов
-    await sb.from('orders').update({worker_id:null,worker_name:'[удалён]',status:'open',worker_confirmed:false}).eq('worker_id',id).eq('status','work');
-    // Удаляем профиль
-    await sb.from('profiles').delete().eq('id',id);
+    await sb.from('orders').update({worker_id:null,worker_name:'[удалён]',status:'open',worker_confirmed:false,creator_confirmed:false}).eq('worker_id',id).eq('status','work');
     await sb.from('action_logs').insert({admin_name:currentProfile.name,action:'Удаление аккаунта',target:name});
     toast('🗑 Аккаунт удалён');renderAdmin();
-  } catch(e) {
-    toast('❌ Ошибка: '+e.message);
-  }
+  } catch(e){toast('❌ Ошибка: '+e.message);}
 }
 async function aDeleteOrder(id){
   if(!confirm('Удалить?'))return;
