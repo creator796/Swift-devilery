@@ -988,6 +988,26 @@ function fmtDl(dl){if(!dl)return null;const d=new Date(dl);if(isNaN(d))return nu
 function fmtTimer(dl){if(!dl)return null;const diff=new Date(dl)-new Date();return diff<=0?null:Math.ceil(diff/1000)+'с';}
 function avgR(r){if(!r||!r.length)return null;return(r.reduce((a,b)=>a+b,0)/r.length).toFixed(1);}
 function starsStr(r){const n=Math.round(r);return'⭐'.repeat(n)+'☆'.repeat(5-n);}
+function ava(profile,size){
+  size=size||40;
+  if(profile?.avatar_url){
+    return`<img src="${esc(profile.avatar_url)}" style="width:${size}px;height:${size}px;border-radius:50%;object-fit:cover;flex-shrink:0" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><div style="display:none;width:${size}px;height:${size}px;border-radius:50%;background:var(--accent);color:white;font-family:'Bebas Neue',sans-serif;font-size:${Math.round(size*0.4)}px;align-items:center;justify-content:center;flex-shrink:0">${esc((profile.name||'?')[0].toUpperCase())}</div>`;
+  }
+  return`<div style="width:${size}px;height:${size}px;border-radius:50%;background:var(--accent);color:white;font-family:'Bebas Neue',sans-serif;font-size:${Math.round(size*0.4)}px;display:flex;align-items:center;justify-content:center;flex-shrink:0">${esc((profile.name||'?')[0].toUpperCase())}</div>`;
+}
+async function uploadAvatar(file){
+  if(!file||!currentUser)return;
+  if(file.size>2*1024*1024){toast('❌ Файл больше 2MB');return;}
+  const ext=file.name.split('.').pop();
+  const path=`${currentUser.id}.${ext}`;
+  const{error}=await sb.storage.from('avatars').upload(path,file,{upsert:true,contentType:file.type});
+  if(error){toast('❌ '+error.message);return;}
+  const{data}=sb.storage.from('avatars').getPublicUrl(path);
+  const url=data.publicUrl+'?t='+Date.now();
+  await sb.from('profiles').update({avatar_url:url}).eq('id',currentUser.id);
+  currentProfile.avatar_url=url;
+  toast('✅ Аватар обновлён!');renderProfile();
+}
 function ctag(name,city){return`<span class="creator-tag"><span class="creator-avatar">${esc(name[0].toUpperCase())}</span>${esc(name)}${city?' · '+esc(city):''}</span>`;}
 function pbadge(p){if(!p)return'';return`<span style="display:inline-flex;align-items:center;gap:4px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:3px 8px;font-size:11px;color:var(--muted2)">${p==='cash'?'💵 Нал':'💳 Безнал'}</span>`;}
 function isBanned(p){return p?.is_banned&&(!p.ban_until||new Date(p.ban_until)>new Date());}
@@ -1050,11 +1070,11 @@ async function openLoginLogs(){
   );
 }
 
-function openHelp(){
+function openHelp(){// Only shows when logged in - no "login problem" option
   showDrawer('🆘 Помощь',`
     <select id="hType" class="form-input" style="margin-bottom:8px">
       <option value="complaint">⚠️ Жалоба</option>
-      <option value="password_reset">🔑 Проблема со входом</option>
+      
       <option value="other">💬 Другое</option>
     </select>
     <input id="hSubj" class="form-input" placeholder="Тема" style="margin-bottom:8px">
@@ -1250,12 +1270,20 @@ async function verifyOtp(){
 // ══ PROFILE ══
 async function loadProfile(){
   if(!currentUser)return;
+  // Проверяем не удалён ли аккаунт по email
+  const email=currentUser.email;
+  const{data:deleted}=await sb.from('deleted_accounts').select('email').eq('email',email).maybeSingle();
+  if(deleted){showDeleted();return;}
   const{data}=await sb.from('profiles').select('*').eq('id',currentUser.id).single();
-  if(data){currentProfile=data;applyTheme(data.theme||'dark');return;}
+  if(data){
+    // Если профиль помечен is_deleted — тоже блокируем
+    if(data.is_deleted){showDeleted();return;}
+    currentProfile=data;applyTheme(data.theme||'dark');return;
+  }
   const name=currentUser.user_metadata?.name||currentUser.email.split('@')[0],city=currentUser.user_metadata?.city||'';
   const newCode=Math.random().toString(36).substring(2,10);
-  await sb.from('profiles').upsert({id:currentUser.id,name,city,created_count:0,done_count:0,earned:0,ratings:[],is_admin:false,is_banned:false,is_online:false,account_id:currentUser.id,referral_code:newCode,referral_count:0});
-  currentProfile={id:currentUser.id,name,city,created_count:0,done_count:0,earned:0,ratings:[],is_admin:false,is_banned:false,is_online:false,referral_code:newCode,referral_count:0};
+  await sb.from('profiles').upsert({id:currentUser.id,name,city,created_count:0,done_count:0,earned:0,ratings:[],is_admin:false,is_banned:false,is_online:false,account_id:currentUser.id,referral_code:newCode,referral_count:0,avatar_url:null});
+  currentProfile={id:currentUser.id,name,city,created_count:0,done_count:0,earned:0,ratings:[],is_admin:false,is_banned:false,is_online:false,referral_code:newCode,referral_count:0,avatar_url:null};
 }
 function logout(){if(ordersSub)sb.removeChannel(ordersSub);if(notifSub)sb.removeChannel(notifSub);if(dmSub)sb.removeChannel(dmSub);sb.auth.signOut();}
 
@@ -1293,7 +1321,9 @@ async function openPublicProfile(userId){
   const isFav=favorites.has(userId);
   c.innerHTML=`
     <div style="text-align:center;margin-bottom:20px">
-      <div class="profile-avatar" style="margin:0 auto 12px">${esc(u.name[0].toUpperCase())}</div>
+      ${u.avatar_url
+        ?`<img src="${esc(u.avatar_url)}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid var(--accent);margin:0 auto 12px;display:block">`
+        :`<div class="profile-avatar" style="margin:0 auto 12px">${esc(u.name[0].toUpperCase())}</div>`}
       <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px">${esc(u.name)}</div>
       <div style="color:var(--muted2);font-size:13px;margin-top:2px">${esc(u.city||'—')}</div>
       <div style="margin-top:8px"><span class="level-badge ${lvl.cls}">${lvl.label}</span></div>
@@ -1434,7 +1464,7 @@ async function sendNotif(userId,title,body,type,orderId){
   if(!userId||userId===currentUser.id)return;
   await sb.from('notifications').insert({user_id:userId,title,body,type:type||'info',is_read:false,order_id:orderId||null});
 }
-async function loadAllUsers(){const{data}=await sb.from('profiles').select('id,name,city,is_online,done_count,ratings').neq('id',currentUser.id);allUsers=data||[];}
+async function loadAllUsers(){const{data}=await sb.from('profiles').select('id,name,city,is_online,done_count,ratings,avatar_url').neq('id',currentUser.id).eq('is_deleted',false);allUsers=data||[];}
 
 // ══ MESSENGER ══
 async function openMessenger(){
@@ -1465,13 +1495,13 @@ function renderUsersList(users){
     if(u._sep){const lbl=document.createElement('div');lbl.style.cssText='padding:8px 16px;font-size:10px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:1px;background:var(--bg2)';lbl.textContent='Все пользователи';c.appendChild(lbl);return;}
     const ar=avgR(u.ratings);const lvl=getLevel(u.done_count||0);
     const div=document.createElement('div');div.className='conv-item';
+    const avatarHtml=u.avatar_url
+      ?`<img src="${esc(u.avatar_url)}" style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0;${u.is_online?'border:2px solid var(--green)':''}" onerror="this.outerHTML='<div class=conv-av>'+${JSON.stringify(u.name[0].toUpperCase())}+'</div>'">`
+      :`<div class="conv-av" style="${u.is_online?'background:linear-gradient(135deg,var(--green),#00a854)':''}">${esc(u.name[0].toUpperCase())}<div style="display:${favorites.has(u.id)?'block':'none'};position:absolute;bottom:-2px;right:-2px;font-size:10px">⭐</div></div>`;
     div.innerHTML=`
-      <div class="conv-av" style="${u.is_online?'background:linear-gradient(135deg,var(--green),#00a854)':''}">
-        ${esc(u.name[0].toUpperCase())}
-        ${favorites.has(u.id)?'<div style="position:absolute;bottom:-2px;right:-2px;font-size:10px">⭐</div>':''}
-      </div>
+      ${avatarHtml}
       <div style="flex:1;min-width:0">
-        <div style="font-weight:700;font-size:14px;display:flex;align-items:center;gap:6px">${esc(u.name)}${u.is_online?'<span style="font-size:10px;color:var(--green);font-weight:700">●</span>':''}</div>
+        <div style="font-weight:700;font-size:14px;display:flex;align-items:center;gap:6px">${esc(u.name)}${u.is_online?'<span style="font-size:10px;color:var(--green);font-weight:700">●</span>':''}${favorites.has(u.id)?'<span style="font-size:11px">⭐</span>':''}</div>
         <div style="font-size:11px;color:var(--muted2)">${esc(u.city||'—')} · <span class="level-badge ${lvl.cls}" style="padding:1px 5px;font-size:9px">${lvl.label}</span>${ar?' · ⭐'+ar:''}</div>
       </div>`;
     div.onclick=()=>openDM(u);c.appendChild(div);
@@ -1745,10 +1775,16 @@ function renderMyOrders(){
 async function renderProfile(){
   if(!currentUser||!currentProfile)return;
   const pg=document.getElementById('profilePage'),ar=avgR(currentProfile.ratings),lvl=getLevel(currentProfile.done_count||0);
-  const{data:b}=await sb.from('badges').select('*').eq('user_id',currentUser.id).maybeSingle();//ok;
+  const{data:b}=await sb.from('badges').select('*').eq('user_id',currentUser.id).maybeSingle();
   pg.innerHTML=`
     <div class="profile-hero">
-      <div class="profile-avatar">${esc(currentProfile.name[0].toUpperCase())}</div>
+      <div style="position:relative;width:80px;height:80px;margin:0 auto 12px;cursor:pointer" onclick="document.getElementById('avatarInput').click()">
+        ${currentProfile.avatar_url
+          ?`<img src="${esc(currentProfile.avatar_url)}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid var(--accent)">`
+          :`<div class="profile-avatar">${esc(currentProfile.name[0].toUpperCase())}</div>`}
+        <div style="position:absolute;bottom:0;right:0;width:24px;height:24px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid var(--bg)">📷</div>
+      </div>
+      <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="uploadAvatar(this.files[0])">
       <div class="profile-username">${esc(currentProfile.name)}</div>
       <div style="margin-top:4px;margin-bottom:6px"><span class="level-badge ${lvl.cls}">${lvl.label}</span></div>
       <div style="margin-bottom:6px">${getBadgesHTML(b)}</div>
@@ -1958,10 +1994,17 @@ async function aUnban(id,name){
   toast('✅ Разбанен');renderAdmin();
 }
 async function aDeleteUser(id,name){
-  if(!confirm(`Удалить аккаунт ${name}? Войти будет невозможно.`))return;
+  if(!confirm(`Удалить аккаунт ${name}? Войти с этого email будет невозможно.`))return;
   try {
-    // Помечаем как удалённый (нельзя удалить из auth.users без service_role)
-    await sb.from('profiles').update({is_deleted:true,is_banned:true,ban_reason:'Аккаунт удалён администратором'}).eq('id',id);
+    // Получаем email пользователя
+    const{data:prof}=await sb.from('profiles').select('*').eq('id',id).single();
+    // Добавляем email в чёрный список
+    if(prof){
+      // Пробуем получить email из auth (если есть доступ)
+      await sb.from('deleted_accounts').insert({email:prof.account_id||id,deleted_by:currentProfile.name}).catch(()=>{});
+    }
+    // Помечаем профиль
+    await sb.from('profiles').update({is_deleted:true,is_banned:true,ban_reason:'Аккаунт удалён администратором',is_online:false}).eq('id',id);
     // Чистим данные
     await sb.from('direct_messages').delete().eq('from_id',id);
     await sb.from('direct_messages').delete().eq('to_id',id);
