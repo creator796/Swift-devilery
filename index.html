@@ -1120,7 +1120,134 @@ async function submitHelp(){
   toast('✅ Обращение отправлено!',4000);closeDrawer();
 }
 
-function openPrivacy(){showDrawer('🔒 Конфиденциальность',`<div style="font-size:13px;color:var(--muted2);line-height:1.8"><p style="margin-bottom:10px"><b style="color:var(--text)">Что храним:</b> имя, email, город, история заказов и оценки.</p><p style="margin-bottom:10px"><b style="color:var(--text)">Для чего:</b> работа сервиса доставки.</p><p style="margin-bottom:10px"><b style="color:var(--text)">Третьим лицам:</b> не передаём.</p><p style="color:var(--muted)">SWIFT · Севастополь · 2025</p></div>`);}
+function openPrivacy(tab){
+  const e=document.getElementById('legalModal');if(e)e.remove();
+  const modal=document.createElement('div');modal.id='legalModal';
+  modal.style.cssText='position:fixed;inset:0;background:var(--bg);z-index:500;display:flex;flex-direction:column;overflow:hidden';
+  modal.innerHTML=`
+    <div style="padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;background:var(--bg2);flex-shrink:0">
+      <button onclick="document.getElementById('legalModal').remove()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);width:36px;height:36px;border-radius:10px;cursor:pointer;font-size:16px;flex-shrink:0">←</button>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px">Документы SWIFT</div>
+    </div>
+    <div style="display:flex;border-bottom:1px solid var(--border);background:var(--bg2);flex-shrink:0">
+      <button id="legalTab0" onclick="setLegalTab(0)" style="flex:1;padding:11px;background:none;border:none;border-bottom:2px solid var(--accent);color:var(--accent);font-size:11px;font-weight:700;cursor:pointer;font-family:Manrope,sans-serif">🔒 Конфиденциальность</button>
+      <button id="legalTab1" onclick="setLegalTab(1)" style="flex:1;padding:11px;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted2);font-size:11px;font-weight:700;cursor:pointer;font-family:Manrope,sans-serif">📋 Правила</button>
+    </div>
+    <div id="legalContent" style="flex:1;overflow-y:auto;padding:20px;font-size:13px;line-height:1.8;color:var(--muted2)"></div>`;
+  document.body.appendChild(modal);
+  setLegalTab(tab||0);
+}
+
+function setLegalTab(i){
+  [0,1].forEach(j=>{
+    const btn=document.getElementById('legalTab'+j);if(!btn)return;
+    btn.style.color=j===i?'var(--accent)':'var(--muted2)';
+    btn.style.borderBottomColor=j===i?'var(--accent)':'transparent';
+  });
+  const c=document.getElementById('legalContent');if(!c)return;
+  if(i===0){
+    c.innerHTML=`
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--text);margin-bottom:4px">Политика конфиденциальности</h2>
+      <p style="font-size:11px;color:var(--muted);margin-bottom:20px">SWIFT · Севастополь · 2025</p>
+
+      <h3 style="color:var(--text);margin-bottom:8px;font-size:14px">1. Общие положения</h3>
+      <p style="margin-bottom:12px">Настоящая Политика конфиденциальности регулирует обработку персональных данных пользователей сервиса SWIFT в соответствии с Федеральным законом № 152-ФЗ «О персональных данных».</p>
+      <p style="margin-bottom:16px">Используя SWIFT, вы соглашаетесь с условиями настоящей Политики. Если вам нет 14 лет — для регистрации требуется согласие родителя или законного представителя.</p>
+
+      <h3 style="color:var(--text);margin-bottom:8px;font-size:14px">2. Какие данные мы собираем</h3>
+      <div style="background:var(--bg3);border-radius:10px;padding:12px;margin-bottom:16px">
+        <p style="margin-bottom:6px">• <b style="color:var(--text)">Имя и город</b> — указываются при регистрации</p>
+        <p style="margin-bottom:6px">• <b style="color:var(--text)">Email-адрес</b> — для входа и уведомлений</p>
+        <p style="margin-bottom:6px">• <b style="color:var(--text)">Фото профиля</b> — загружается по желанию</p>
+        <p style="margin-bottom:6px">• <b style="color:var(--text)">История заказов</b> — созданные и выполненные доставки</p>
+        <p style="margin-bottom:6px">• <b style="color:var(--text)">Переписка</b> — сообщения в чатах заказов и личные сообщения</p>
+        <p style="margin-bottom:6px">• <b style="color:var(--text)">Оценки и рейтинг</b> — выставленные оценки курьерам</p>
+        <p style="margin-bottom:0">• <b style="color:var(--text)">Технические данные</b> — тип браузера, дата и время входа</p>
+      </div>
+
+      <h3 style="color:var(--text);margin-bottom:8px;font-size:14px">3. Для чего используются данные</h3>
+      <p style="margin-bottom:6px">• Обеспечение работы сервиса доставки</p>
+      <p style="margin-bottom:6px">• Отображение профиля и рейтинга</p>
+      <p style="margin-bottom:6px">• Отправка уведомлений о заказах</p>
+      <p style="margin-bottom:16px">• Обеспечение безопасности и модерации</p>
+
+      <h3 style="color:var(--text);margin-bottom:8px;font-size:14px">4. Передача данных третьим лицам</h3>
+      <div style="background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.2);border-radius:10px;padding:12px;margin-bottom:16px">
+        <p style="color:var(--green);font-weight:700;margin-bottom:4px">✅ Мы не продаём и не передаём ваши данные третьим лицам.</p>
+        <p>Данные хранятся на серверах Supabase (Ирландия, ЕС) и защищены шифрованием.</p>
+      </div>
+
+      <h3 style="color:var(--text);margin-bottom:8px;font-size:14px">5. Хранение данных</h3>
+      <p style="margin-bottom:6px">• Данные хранятся пока существует аккаунт</p>
+      <p style="margin-bottom:16px">• При удалении аккаунта — переписка, уведомления и личные данные удаляются</p>
+
+      <h3 style="color:var(--text);margin-bottom:8px;font-size:14px">6. Ваши права (152-ФЗ)</h3>
+      <p style="margin-bottom:6px">• Получить информацию о своих данных</p>
+      <p style="margin-bottom:6px">• Исправить неточные данные</p>
+      <p style="margin-bottom:6px">• Удалить аккаунт и все данные</p>
+      <p style="margin-bottom:16px">• Отозвать согласие на обработку</p>
+      <p style="margin-bottom:16px">Для реализации прав: <b style="color:var(--accent)">mccheatmine@gmail.com</b></p>
+
+      <h3 style="color:var(--text);margin-bottom:8px;font-size:14px">7. Cookies и локальное хранилище</h3>
+      <p style="margin-bottom:16px">Сервис использует localStorage браузера для хранения сессии. Данные не передаются на сторонние серверы.</p>
+
+      <h3 style="color:var(--text);margin-bottom:8px;font-size:14px">8. Изменения политики</h3>
+      <p style="margin-bottom:16px">При существенных изменениях мы уведомим пользователей через системное сообщение в приложении.</p>
+
+      <p style="font-size:11px;color:var(--muted);border-top:1px solid var(--border);padding-top:12px">SWIFT · Севастополь, Россия · mccheatmine@gmail.com · 2025</p>
+    `;
+  } else {
+    c.innerHTML=`
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--text);margin-bottom:4px">Правила использования</h2>
+      <p style="font-size:11px;color:var(--muted);margin-bottom:20px">SWIFT · Севастополь · 2025</p>
+
+      <h3 style="color:var(--text);margin-bottom:8px;font-size:14px">1. О сервисе</h3>
+      <p style="margin-bottom:16px">SWIFT — платформа для организации доставки между школьниками г. Севастополя. Сервис предназначен для пользователей в возрасте 10–17 лет.</p>
+
+      <h3 style="color:var(--text);margin-bottom:8px;font-size:14px">2. Регистрация</h3>
+      <p style="margin-bottom:6px">• Один человек — один аккаунт</p>
+      <p style="margin-bottom:6px">• Запрещено передавать или продавать аккаунт другому лицу</p>
+      <p style="margin-bottom:16px">• Регистрируясь, вы подтверждаете что ознакомились с правилами</p>
+
+      <h3 style="color:var(--text);margin-bottom:8px;font-size:14px">3. Запрещённые заказы</h3>
+      <div style="background:rgba(255,60,60,.08);border:1px solid rgba(255,60,60,.2);border-radius:10px;padding:12px;margin-bottom:16px">
+        <p style="color:var(--accent);font-weight:700;margin-bottom:10px">🚫 Строго запрещено доставлять:</p>
+        <p style="margin-bottom:6px">🍺 <b style="color:var(--text)">Алкоголь</b> — пиво, вино, крепкие напитки любого вида</p>
+        <p style="margin-bottom:6px">🚬 <b style="color:var(--text)">Табак и никотин</b> — сигареты, вейпы, снюс, насвай, IQOS</p>
+        <p style="margin-bottom:6px">⚡ <b style="color:var(--text)">Энергетики</b> — продажа несовершеннолетним запрещена законом РФ</p>
+        <p style="margin-bottom:6px">💊 <b style="color:var(--text)">Наркотики и психотропы</b> — в любом виде, включая "соли" и спайсы</p>
+        <p style="margin-bottom:6px">🔪 <b style="color:var(--text)">Оружие и опасные предметы</b> — ножи, пиротехника, газовые баллончики</p>
+        <p style="margin-bottom:6px">💉 <b style="color:var(--text)">Рецептурные лекарства</b> — без рецепта врача</p>
+        <p style="margin-bottom:6px">🔞 <b style="color:var(--text)">Материалы 18+</b> — любой контент для взрослых</p>
+        <p style="margin-bottom:6px">🤚 <b style="color:var(--text)">Чужое имущество</b> — краденые или найденные вещи</p>
+        <p style="margin-bottom:6px">💳 <b style="color:var(--text)">Чужие документы и карты</b> — без подтверждения владельца</p>
+        <p style="margin-bottom:0">⚠️ <b style="color:var(--text)">Всё незаконное</b> — любые товары, запрещённые законодательством РФ</p>
+      </div>
+
+      <h3 style="color:var(--text);margin-bottom:8px;font-size:14px">4. Правила общения</h3>
+      <p style="margin-bottom:6px">• Запрещены оскорбления, угрозы, мат</p>
+      <p style="margin-bottom:6px">• Запрещён спам и реклама в чате</p>
+      <p style="margin-bottom:16px">• Уважай других пользователей</p>
+
+      <h3 style="color:var(--text);margin-bottom:8px;font-size:14px">5. Ответственность</h3>
+      <p style="margin-bottom:6px">• Курьер несёт ответственность за сохранность доставляемого</p>
+      <p style="margin-bottom:6px">• Заказчик обязан честно описывать содержимое заказа</p>
+      <p style="margin-bottom:16px">• За нарушения — блокировка без предупреждения</p>
+
+      <h3 style="color:var(--text);margin-bottom:8px;font-size:14px">6. Санкции</h3>
+      <div style="background:var(--bg3);border-radius:10px;padding:12px;margin-bottom:16px">
+        <p style="margin-bottom:6px">⚠️ <b style="color:var(--yellow)">Предупреждение</b> — за первичное нарушение</p>
+        <p style="margin-bottom:6px">⏳ <b style="color:var(--accent)">Временная блокировка</b> — от 1 часа до 30 дней</p>
+        <p style="margin-bottom:0">🚫 <b style="color:#ff4444">Постоянная блокировка</b> — за грубые или повторные нарушения</p>
+      </div>
+
+      <h3 style="color:var(--text);margin-bottom:8px;font-size:14px">7. Обжалование</h3>
+      <p style="margin-bottom:16px">Считаешь блокировку несправедливой? Напиши в поддержку или на <b style="color:var(--accent)">mccheatmine@gmail.com</b></p>
+
+      <p style="font-size:11px;color:var(--muted);border-top:1px solid var(--border);padding-top:12px">SWIFT · Севастополь, Россия · mccheatmine@gmail.com · 2025</p>
+    `;
+  }
+}
 
 // ══ INIT ══
 async function init(){
@@ -1198,6 +1325,11 @@ function renderAuth(){
         <button onclick="showForgotPass()" style="background:none;border:none;color:var(--muted2);font-size:12px;cursor:pointer;font-family:Manrope,sans-serif;padding:4px">🔑 Забыл пароль</button>
         <button onclick="showUnbanRequest()" style="background:none;border:none;color:var(--muted2);font-size:12px;cursor:pointer;font-family:Manrope,sans-serif;padding:4px">🔓 Снять бан</button>
         <button onclick="showLoginHelp()" style="background:none;border:none;color:var(--muted2);font-size:12px;cursor:pointer;font-family:Manrope,sans-serif;padding:4px">🆘 Помощь</button>
+      </div>
+      <div style="display:flex;gap:12px;margin-top:8px;justify-content:center">
+        <span style="cursor:pointer;color:var(--muted);font-size:11px" onclick="openPrivacy(0)">Политика конфиденциальности</span>
+        <span style="color:var(--muted)">·</span>
+        <span style="cursor:pointer;color:var(--muted);font-size:11px" onclick="openPrivacy(1)">Правила использования</span>
       </div>`;
   } else if(authStep==='register'){
     s.innerHTML=`<img src="data:image/png;base64,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" style="width:90px;height:70px;object-fit:contain;margin-bottom:8px"><div class="auth-tagline">доставка · мгновенно</div>
@@ -1209,11 +1341,11 @@ function renderAuth(){
       <div style="margin:10px 0;display:flex;flex-direction:column;gap:8px">
         <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:12px;color:var(--muted2);line-height:1.5">
           <input type="checkbox" id="chkPrivacy" style="width:18px;height:18px;flex-shrink:0;margin-top:1px;accent-color:var(--accent)">
-          <span>Я ознакомился с <span style="color:var(--accent);cursor:pointer" onclick="openPrivacy()">Политикой конфиденциальности</span> и соглашаюсь с обработкой персональных данных</span>
+          <span>Я ознакомился с <span style="color:var(--accent);cursor:pointer" onclick="openPrivacy(0)">Политикой конфиденциальности</span> и соглашаюсь с обработкой персональных данных</span>
         </label>
         <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:12px;color:var(--muted2);line-height:1.5">
           <input type="checkbox" id="chkRules" style="width:18px;height:18px;flex-shrink:0;margin-top:1px;accent-color:var(--accent)">
-          <span>Я ознакомился с <span style="color:var(--accent);cursor:pointer" onclick="openPrivacy();setTimeout(()=>setLegalTab(1),100)">Правилами использования</span> и обязуюсь не создавать запрещённые заказы</span>
+          <span>Я ознакомился с <span style="color:var(--accent);cursor:pointer" onclick="openPrivacy(1)">Правилами использования</span> и обязуюсь не создавать запрещённые заказы</span>
         </label>
       </div>
       <div id="authErr" style="color:#ff6b6b;font-size:12px;min-height:18px;text-align:center;margin-bottom:4px"></div>
