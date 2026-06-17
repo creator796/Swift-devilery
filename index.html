@@ -753,6 +753,12 @@ document.head.appendChild(link);
     <div id="doneList"></div>
   </div>
 
+  <!-- NEWS PAGE -->
+  <div id="newsPage" class="page">
+    <div class="page-title">📰 Новости</div>
+    <div id="newsList"></div>
+  </div>
+
   <!-- CREATE PAGE -->
   <div id="createPage" class="page">
     <div class="page-title">➕ Создать</div>
@@ -934,6 +940,7 @@ nav button{font-size:9px;padding:6px 2px}
     <img src="data:image/png;base64,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" style="width:36px;height:36px;object-fit:contain">
     <button onclick="closeBurger()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);width:30px;height:30px;border-radius:8px;cursor:pointer">✕</button>
   </div>
+  <div class="bmenu-item" onclick="closeBurger();showPage('newsPage');renderNews()"><span>📰</span>Новости</div>
   <div class="bmenu-item" onclick="closeBurger();openSettings()"><span>⚙️</span>Настройки</div>
   <div class="bmenu-item" onclick="closeBurger();openHelp()"><span>🆘</span>Помощь</div>
   <div class="bmenu-item" onclick="closeBurger();openPrivacy()"><span>🔒</span>Конфиденциальность</div>
@@ -1578,6 +1585,7 @@ function showPage(pageId){
   if(pageId==='myOrdersPage')renderMyOrders();
   if(pageId==='createPage')ensureCreateForm();
   if(pageId==='adminPage')renderAdmin();
+  if(pageId==='newsPage')renderNews();
 }
 
 // ══ BADGES AUTO-UPDATE ══
@@ -1810,10 +1818,16 @@ async function createOrder(){
     photo_url=urlData.publicUrl;
   }
   const confirm_code=String(Math.floor(1000+Math.random()*9000));
-  const{error}=await sb.from('orders').insert({title:what,from:shop,to:where,price,deadline,comment,payment,photo_url,confirm_code,status:'open',is_approved:false,creator_id:currentUser.id,creator_name:currentProfile.name,creator_city:currentProfile.city||'',worker_id:null,worker_name:null,rating:null,worker_confirmed:false,creator_confirmed:false,cancel_deadline:null,cancel_reason:null});
+  const items=getMultiItems();
+  const promo=window._appliedPromo||null;
+  const discount=promo?promo.discount:0;
+  const finalPrice=Math.max(0,price-discount);
+  const{error}=await sb.from('orders').insert({title:what,from:shop,to:where,price:finalPrice,deadline,comment,payment,photo_url,confirm_code,items:items.length?items:null,promo_code:promo?.code||null,discount,status:'open',is_approved:false,creator_id:currentUser.id,creator_name:currentProfile.name,creator_city:currentProfile.city||'',worker_id:null,worker_name:null,rating:null,worker_confirmed:false,creator_confirmed:false,cancel_deadline:null,cancel_reason:null});
   if(error){toast('❌ Ошибка: '+error.message);return;}
+  if(promo)await sb.from('promo_codes').update({used_count:(promo.used_count||0)+1}).eq('id',promo.id);
+  window._appliedPromo=null;
   await sb.from('profiles').update({created_count:(currentProfile.created_count||0)+1}).eq('id',currentUser.id);currentProfile.created_count=(currentProfile.created_count||0)+1;
-  ['cWhat','cShop','cWhere','cPrice','cDeadline','cComment'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});if(document.getElementById('cPayment'))document.getElementById('cPayment').value='';if(document.getElementById('cPhoto'))document.getElementById('cPhoto').value='';
+  ['cWhat','cShop','cWhere','cPrice','cDeadline','cComment','cPromo'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});if(document.getElementById('cPayment'))document.getElementById('cPayment').value='';if(document.getElementById('cPhoto'))document.getElementById('cPhoto').value='';document.getElementById('multiItems').innerHTML='';document.getElementById('promoResult').textContent='';
   toast('✅ Заказ отправлен на проверку!');showPage('myOrdersPage');
   const{data:admins}=await sb.from('profiles').select('id').eq('is_admin',true);
   for(const a of admins||[])await sendNotif(a.id,'📦 Новый заказ на модерацию',`${currentProfile.name}: ${what}`,'order');
@@ -1903,9 +1917,12 @@ function ensureCreateForm(){
   pg.innerHTML=`<div class="page-title">➕ Создать</div>
     <div style="background:rgba(255,214,0,.08);border:1px solid rgba(255,214,0,.2);border-radius:10px;padding:10px;margin-bottom:14px;font-size:12px;color:var(--yellow)">⏳ Заказы проходят проверку перед публикацией</div>
     <div class="form-group"><label class="form-label">Что купить / доставить</label><input class="form-input" id="cWhat" placeholder="Бургер, лекарства, посылка..."></div>
+    <div id="multiItems" style="margin-bottom:8px"></div>
+    <button class="btn btn-ghost" onclick="addMultiItem()" style="margin-bottom:14px;font-size:12px">＋ Ещё товар (мультизаказ)</button>
     <div class="form-group"><label class="form-label">Магазин / откуда забрать</label><input class="form-input" id="cShop" placeholder="McDonald's, Пятёрочка..."></div>
     <div class="form-group"><label class="form-label">Куда доставить</label><input class="form-input" id="cWhere" placeholder="Школа №3, ул. Ленина 5..."></div>
     <div class="form-group"><label class="form-label">Цена (₽)</label><input class="form-input" id="cPrice" type="number" placeholder="0 = договорная"></div>
+    <div class="form-group"><label class="form-label">Промокод</label><div style="display:flex;gap:8px"><input class="form-input" id="cPromo" placeholder="Введи код..." style="flex:1"><button class="btn btn-ghost" onclick="applyPromo()" style="white-space:nowrap">Применить</button></div><div id="promoResult" style="font-size:11px;margin-top:4px"></div></div>
     <div class="form-group"><label class="form-label">Дедлайн (необязательно)</label><input class="form-input" id="cDeadline" type="datetime-local"></div>
     <div class="form-group"><label class="form-label">Комментарий</label><input class="form-input" id="cComment" placeholder="Доп. детали..."></div>
     <div class="form-group"><label class="form-label">Фото (необязательно)</label><input class="form-input" id="cPhoto" type="file" accept="image/*" style="padding:10px"></div>
@@ -1938,6 +1955,7 @@ function renderOrders(){
       `<div style="margin-top:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">${ctag(o.creator_name,o.creator_city||'')} ${pbadge(o.payment)}</div>`;
     const acts=document.createElement('div');acts.className='card-actions';
     if(o.creator_id!==currentUser.id){const b=document.createElement('button');b.className='btn btn-red';b.innerHTML='🚴 Взять';b.onclick=()=>take(o.id);acts.appendChild(b);}
+    if(o.creator_id===currentUser.id){const ab=document.createElement('button');ab.className='btn btn-green';ab.innerHTML='🤖 Автоподбор';ab.onclick=()=>autoAssign(o.id);acts.appendChild(ab);}
     const cb=document.createElement('button');cb.className='btn btn-ghost';cb.innerHTML='💬 Чат';cb.onclick=()=>openChat(o.id);acts.appendChild(cb);
     if(o.creator_id!==currentUser.id){const rb=document.createElement('button');rb.className='btn btn-ghost';rb.innerHTML='⚠️';rb.onclick=()=>showReportModal(o.id);acts.appendChild(rb);}
     div.appendChild(acts);c.appendChild(div);
@@ -1970,12 +1988,17 @@ function renderMyOrders(){
       for(let s=1;s<=5;s++){const btn=document.createElement('button');btn.className='star-btn';btn.textContent='★';btn.onmouseover=()=>sw.querySelectorAll('.star-btn').forEach((b,j)=>b.classList.toggle('lit',j<s));btn.onmouseout=()=>sw.querySelectorAll('.star-btn').forEach(b=>b.classList.remove('lit'));btn.onclick=()=>submitRating(o.id,s);sw.appendChild(btn);}
       rd.appendChild(sw);div.appendChild(rd);
     }else if(o.status==='done'&&o.rating!==null)div.innerHTML+=`<div style="color:var(--yellow);margin-top:8px;font-size:13px">${starsStr(o.rating)} ${o.rating}/5</div>`;
+    if(o.status==='done'&&isC&&!o.tip){div.innerHTML+=`<div style="margin-top:8px"><button class="btn btn-ghost" onclick="showTipModal('${o.id}')" style="font-size:12px">💰 Оставить чаевые</button></div>`;}
+    if(o.status==='done'&&o.tip)div.innerHTML+=`<div style="margin-top:6px;font-size:12px;color:var(--green)">💰 Чаевые: ${o.tip}₽</div>`;
+    if(o.status==='done'&&isW&&!o.creator_rating){div.innerHTML+=`<div style="margin-top:8px"><button class="btn btn-ghost" onclick="showRateCreatorModal('${o.id}')" style="font-size:12px">⭐ Оценить заказчика</button></div>`;}
+    if(o.status==='done'&&o.creator_rating)div.innerHTML+=`<div style="margin-top:4px;font-size:11px;color:var(--muted2)">Заказчик: ${starsStr(o.creator_rating)} ${o.creator_rating}/5</div>`;
     const acts=document.createElement('div');acts.className='card-actions';
     if(o.status==='work'&&(isW||isC)&&!myConf){const b=document.createElement('button');b.className='btn btn-green';b.innerHTML='✅ Подтвердить';b.onclick=()=>confirmDone(o.id,isW?'worker':'creator');acts.appendChild(b);}
     if(o.status==='work'&&isW&&ct){const cb2=document.createElement('button');cb2.className='btn btn-ghost';cb2.innerHTML=`⏱ Отменить (${ct})`;cb2.onclick=()=>showCancelModal(o.id);acts.appendChild(cb2);}
     const cb=document.createElement('button');cb.className='btn btn-ghost';cb.innerHTML='💬 Чат';cb.onclick=()=>openChat(o.id);acts.appendChild(cb);
     if(o.status==='work'){const rb=document.createElement('button');rb.className='btn btn-ghost';rb.innerHTML='⚠️';rb.onclick=()=>showReportModal(o.id);acts.appendChild(rb);}
     if(o.status==='done'||o.status==='work'){const cpb=document.createElement('button');cpb.className='btn btn-ghost';cpb.innerHTML='📝';cpb.title='Жалоба на заказ';cpb.onclick=()=>showComplaintModal(o.id);acts.appendChild(cpb);}
+    if(o.status==='done'&&isC){const rpb=document.createElement('button');rpb.className='btn btn-ghost';rpb.innerHTML='🔄';rpb.title='Повторить заказ';rpb.onclick=()=>repeatOrder(o);acts.appendChild(rpb);}
     div.appendChild(acts);c.appendChild(div);
   });
   clearTimeout(window._mt);window._mt=setTimeout(renderMyOrders,1000);
@@ -2028,11 +2051,11 @@ function updateBadgeNums(){
 async function renderAdmin(){
   if(!currentProfile?.is_admin)return;
   const c=document.getElementById('adminContent');
-  const tabs=[{id:'dashboard',l:'📊'},{id:'moderation',l:'⏳'},{id:'orders',l:'📦'},{id:'users',l:'👤'},{id:'tickets',l:'🆘'},{id:'reports',l:'⚠️'},{id:'complaints',l:'📝'},{id:'bans',l:'🚫'},{id:'logs',l:'👁'},{id:'archived',l:'🗂️'},{id:'chats',l:'💬'}];
-  const labels={dashboard:'Обзор',moderation:'Модер.',orders:'Сделки',users:'Юзеры',tickets:'Тикеты',reports:'Жалобы',complaints:'На заказ',bans:'Баны',logs:'Логи',archived:'Архив',chats:'Чаты'};
+  const tabs=[{id:'dashboard',l:'📊'},{id:'stats',l:'📈'},{id:'moderation',l:'⏳'},{id:'orders',l:'📦'},{id:'users',l:'👤'},{id:'news',l:'📰'},{id:'tickets',l:'🆘'},{id:'reports',l:'⚠️'},{id:'complaints',l:'📝'},{id:'bans',l:'🚫'},{id:'logs',l:'👁'},{id:'archived',l:'🗂️'},{id:'chats',l:'💬'}];
+  const labels={dashboard:'Обзор',stats:'Стат.',moderation:'Модер.',orders:'Сделки',users:'Юзеры',news:'Новости',tickets:'Тикеты',reports:'Жалобы',complaints:'На заказ',bans:'Баны',logs:'Логи',archived:'Архив',chats:'Чаты'};
   c.innerHTML=`<div class="tab-row">${tabs.map(t=>`<button class="tab-btn ${adminTab===t.id?'active':''}" onclick="adminTab='${t.id}';renderAdmin()">${t.l} ${labels[t.id]}</button>`).join('')}</div><div id="adminTab"></div>`;
   const ct=document.getElementById('adminTab');
-  const fns={dashboard:aDB,moderation:aMod,orders:aOrders,users:aUsers,tickets:aTickets,reports:aReports,complaints:aComplaints,bans:aBans,logs:aLogs,archived:aArchived,chats:aChats};
+  const fns={dashboard:aDB,stats:aStats,moderation:aMod,orders:aOrders,users:aUsers,news:aNews,tickets:aTickets,reports:aReports,complaints:aComplaints,bans:aBans,logs:aLogs,archived:aArchived,chats:aChats};
   if(fns[adminTab])await fns[adminTab](ct);
 }
 
@@ -2492,6 +2515,189 @@ function requestNotifPermission(){
   if(Notification.permission==='default'){
     setTimeout(()=>Notification.requestPermission(),3000);
   }
+}
+
+// ══ MULTI-ORDER ══
+function addMultiItem(){
+  const wrap=document.getElementById('multiItems');
+  if(!wrap){const d=document.createElement('div');d.id='multiItems';document.getElementById('cPromo')?.closest('.form-group')?.before(d);}
+  const w=document.getElementById('multiItems');
+  const idx=w.children.length+2;
+  w.insertAdjacentHTML('beforeend',`<div class="form-group" style="display:flex;gap:8px;align-items:center"><input class="form-input" placeholder="Товар #${idx}" style="flex:1"><button class="btn btn-ghost" onclick="this.parentElement.remove()" style="padding:4px 8px">✕</button></div>`);
+}
+function getMultiItems(){
+  const main=document.getElementById('cTitle')?.value.trim();
+  const items=[main];
+  const wrap=document.getElementById('multiItems');
+  if(wrap){wrap.querySelectorAll('input').forEach(inp=>{const v=inp.value.trim();if(v)items.push(v);});}
+  return items.filter(Boolean);
+}
+
+// ══ PROMO CODES ══
+async function applyPromo(){
+  const code=document.getElementById('cPromo')?.value.trim();
+  const res=document.getElementById('promoResult');
+  if(!code){res.textContent='Введи код';return;}
+  const{data}=await sb.from('promo_codes').select('*').eq('code',code.toUpperCase()).eq('active',true).single();
+  if(!data){res.innerHTML='<span style="color:var(--danger)">❌ Код не найден</span>';window._appliedPromo=null;return;}
+  if(data.max_uses && data.used_count>=data.max_uses){res.innerHTML='<span style="color:var(--danger)">❌ Код исчерпан</span>';window._appliedPromo=null;return;}
+  if(data.expires_at && new Date(data.expires_at)<new Date()){res.innerHTML='<span style="color:var(--danger)">❌ Код истёк</span>';window._appliedPromo=null;return;}
+  window._appliedPromo=data;
+  res.innerHTML=`<span style="color:var(--success)">✅ Скидка ${data.discount_percent}% применена!</span>`;
+}
+
+// ══ TIPS ══
+function showTipModal(orderId){
+  showDrawer('💰 Чаевые курьеру',`
+    <div class="form-group"><label class="form-label">Сумма (₽)</label><input class="form-input" id="tipAmount" type="number" min="1" placeholder="50"></div>
+    <button class="btn btn-green btn-full" onclick="submitTip('${orderId}')">Отправить</button>
+  `);
+}
+async function submitTip(orderId){
+  const amount=parseInt(document.getElementById('tipAmount')?.value);
+  if(!amount||amount<1){toast('Укажи сумму');return;}
+  await sb.from('orders').update({tip:amount}).eq('id',orderId);
+  const{data:order}=await sb.from('orders').select('worker_id,title').eq('id',orderId).single();
+  if(order?.worker_id)await sendNotif(order.worker_id,'💰 Чаевые!',`+${amount}₽ за "${order.title}"`,'tip');
+  closeDrawer();toast('💰 Чаевые отправлены!');loadOrders();
+}
+
+// ══ RATE CREATOR ══
+function showRateCreatorModal(orderId){
+  let html='<div style="text-align:center;margin-bottom:16px"><p style="margin-bottom:12px">Оцени заказчика:</p><div id="rateCreatorStars" style="font-size:28px;cursor:pointer">';
+  for(let i=1;i<=5;i++)html+=`<span onclick="submitCreatorRating('${orderId}',${i})" style="margin:0 4px">${i<=3?'⭐':'☆'}</span>`;
+  html+='</div></div>';
+  showDrawer('⭐ Оценка заказчика',html);
+}
+async function submitCreatorRating(orderId,star){
+  await sb.from('orders').update({creator_rating:star}).eq('id',orderId);
+  const{data:order}=await sb.from('orders').select('creator_id,title').eq('id',orderId).single();
+  if(order?.creator_id)await sendNotif(order.creator_id,'⭐ Вас оценили',`Оценка ${star}/5 за "${order.title}"`,'rating');
+  closeDrawer();toast(`⭐ Оценка ${star}/5 отправлена`);loadOrders();
+}
+
+// ══ REPEAT ORDER ══
+function repeatOrder(order){
+  showPage('createPage');
+  setTimeout(()=>{
+    ensureCreateForm();
+    const t=document.getElementById('cTitle');if(t)t.value=order.title||'';
+    const d=document.getElementById('cDesc');if(d)d.value=order.description||'';
+    const p=document.getElementById('cPrice');if(p)p.value=order.price||'';
+    const from=document.getElementById('cFrom');if(from)from.value=order.pickup_address||'';
+    const to=document.getElementById('cTo');if(to)to.value=order.delivery_address||'';
+    toast('🔄 Данные заполнены, проверь и отправь');
+  },100);
+}
+
+// ══ AUTO-ASSIGN COURIER ══
+async function autoAssign(orderId){
+  const{data:couriers}=await sb.from('profiles').select('id,name,rating,is_online').eq('is_online',true).eq('is_banned',false);
+  if(!couriers?.length){toast('Нет курьеров онлайн');return;}
+  const sorted=[...couriers].sort((a,b)=>(b.rating||0)-(a.rating||0));
+  const best=sorted[0];
+  if(!confirm(`Назначить ${best.name} (рейтинг ${best.rating||0})?`))return;
+  await sb.from('orders').update({status:'in_progress',worker_id:best.id,worker_name:best.name}).eq('id',orderId);
+  await sendNotif(best.id,'🤖 Автоподбор','Вам назначен заказ','order');
+  toast(`✅ Назначен: ${best.name}`);loadOrders();
+}
+
+// ══ NEWS FEED ══
+async function renderNews(){
+  const list=document.getElementById('newsList');if(!list)return;
+  const{data}=await sb.from('news').select('*').order('created_at',{ascending:false}).limit(30);
+  if(!data?.length){list.innerHTML='<div style="text-align:center;color:var(--muted);padding:30px">Пока нет новостей</div>';return;}
+  list.innerHTML=data.map(n=>`
+    <div class="card" style="margin-bottom:12px;${n.pinned?'border-left:3px solid var(--accent)':''}">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-weight:700;font-size:14px">${n.pinned?'📌 ':''}${esc(n.title)}</span>
+        <span style="font-size:10px;color:var(--muted2)">${new Date(n.created_at).toLocaleDateString('ru')}</span>
+      </div>
+      <div style="margin-top:6px;font-size:13px;color:var(--text2)">${esc(n.body)}</div>
+      <div style="margin-top:4px;font-size:10px;color:var(--muted)">— ${esc(n.author_name||'Администрация')}</div>
+    </div>
+  `).join('');
+}
+
+// ══ ADMIN NEWS ══
+async function aNews(ct){
+  ct.innerHTML=`<div style="margin-bottom:12px"><button class="btn btn-green" onclick="showCreateNews()">＋ Создать новость</button></div><div id="adminNewsList">Загрузка...</div>`;
+  const{data}=await sb.from('news').select('*').order('created_at',{ascending:false}).limit(30);
+  const list=document.getElementById('adminNewsList');
+  if(!data?.length){list.innerHTML='<div style="color:var(--muted)">Нет новостей</div>';return;}
+  list.innerHTML=data.map(n=>`
+    <div class="card" style="margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
+      <div><b>${n.pinned?'📌 ':''}${esc(n.title)}</b><br><span style="font-size:11px;color:var(--muted2)">${esc(n.body).slice(0,60)}</span></div>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-ghost" onclick="togglePinNews('${n.id}',${!n.pinned})">${n.pinned?'Открепить':'📌'}</button>
+        <button class="btn btn-ghost" onclick="deleteNews('${n.id}')">🗑</button>
+      </div>
+    </div>
+  `).join('');
+}
+function showCreateNews(){
+  showDrawer('📰 Новая новость',`
+    <div class="form-group"><label class="form-label">Заголовок</label><input class="form-input" id="newsTitle" placeholder="Заголовок"></div>
+    <div class="form-group"><label class="form-label">Текст</label><textarea class="form-input" id="newsBody" rows="4" placeholder="Текст новости..."></textarea></div>
+    <label style="font-size:12px;display:flex;align-items:center;gap:6px;margin-bottom:12px"><input type="checkbox" id="newsPinned"> Закрепить</label>
+    <button class="btn btn-green btn-full" onclick="submitNews()">Опубликовать</button>
+  `);
+}
+async function submitNews(){
+  const title=document.getElementById('newsTitle')?.value.trim();
+  const body=document.getElementById('newsBody')?.value.trim();
+  const pinned=document.getElementById('newsPinned')?.checked||false;
+  if(!title){toast('Введи заголовок');return;}
+  await sb.from('news').insert({title,body,pinned,author_name:currentProfile.name});
+  await adminLog('Создал новость',null,title);
+  closeDrawer();toast('📰 Опубликовано!');renderAdmin();
+}
+async function togglePinNews(id,pin){
+  await sb.from('news').update({pinned:pin}).eq('id',id);renderAdmin();
+}
+async function deleteNews(id){
+  if(!confirm('Удалить новость?'))return;
+  await sb.from('news').delete().eq('id',id);renderAdmin();
+}
+
+// ══ ADMIN STATS ══
+async function aStats(ct){
+  const[{data:orders},{data:users},{data:complaints}]=await Promise.all([
+    sb.from('orders').select('id,status,price,tip,created_at'),
+    sb.from('profiles').select('id,created_at,is_online,rating'),
+    sb.from('order_complaints').select('id,status')
+  ]);
+  const o=orders||[],u=users||[];
+  const done=o.filter(x=>x.status==='done');
+  const revenue=done.reduce((s,x)=>s+(x.price||0),0);
+  const tips=done.reduce((s,x)=>s+(x.tip||0),0);
+  const avgPrice=done.length?Math.round(revenue/done.length):0;
+  const online=u.filter(x=>x.is_online).length;
+  const avgRating=u.length?((u.reduce((s,x)=>s+(x.rating||0),0))/u.length).toFixed(1):'—';
+  const today=new Date().toISOString().slice(0,10);
+  const todayOrders=o.filter(x=>x.created_at?.startsWith(today)).length;
+  const openComplaints=(complaints||[]).filter(x=>x.status==='open').length;
+
+  ct.innerHTML=`
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px">
+      <div class="card" style="text-align:center"><div style="font-size:22px;font-weight:700">${o.length}</div><div style="font-size:11px;color:var(--muted)">Всего заказов</div></div>
+      <div class="card" style="text-align:center"><div style="font-size:22px;font-weight:700">${done.length}</div><div style="font-size:11px;color:var(--muted)">Выполнено</div></div>
+      <div class="card" style="text-align:center"><div style="font-size:22px;font-weight:700">${revenue}₽</div><div style="font-size:11px;color:var(--muted)">Оборот</div></div>
+      <div class="card" style="text-align:center"><div style="font-size:22px;font-weight:700">${tips}₽</div><div style="font-size:11px;color:var(--muted)">Чаевые</div></div>
+      <div class="card" style="text-align:center"><div style="font-size:22px;font-weight:700">${avgPrice}₽</div><div style="font-size:11px;color:var(--muted)">Ср. чек</div></div>
+      <div class="card" style="text-align:center"><div style="font-size:22px;font-weight:700">${u.length}</div><div style="font-size:11px;color:var(--muted)">Юзеров</div></div>
+      <div class="card" style="text-align:center"><div style="font-size:22px;font-weight:700">${online}</div><div style="font-size:11px;color:var(--muted)">Онлайн</div></div>
+      <div class="card" style="text-align:center"><div style="font-size:22px;font-weight:700">${avgRating}</div><div style="font-size:11px;color:var(--muted)">Ср. рейтинг</div></div>
+      <div class="card" style="text-align:center"><div style="font-size:22px;font-weight:700">${todayOrders}</div><div style="font-size:11px;color:var(--muted)">Сегодня</div></div>
+      <div class="card" style="text-align:center"><div style="font-size:22px;font-weight:700">${openComplaints}</div><div style="font-size:11px;color:var(--muted)">Жалоб (откр.)</div></div>
+    </div>
+    <div class="card"><div style="font-weight:600;margin-bottom:8px">По статусам:</div>
+      <div style="font-size:13px">🟢 Открыто: ${o.filter(x=>x.status==='open').length}</div>
+      <div style="font-size:13px">🔵 В работе: ${o.filter(x=>x.status==='in_progress').length}</div>
+      <div style="font-size:13px">✅ Выполнено: ${done.length}</div>
+      <div style="font-size:13px">❌ Отменено: ${o.filter(x=>x.status==='cancelled').length}</div>
+    </div>
+  `;
 }
 
 // ══ SERVICE WORKER ══
