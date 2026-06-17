@@ -2605,7 +2605,9 @@ async function autoAssign(orderId){
 // ══ NEWS FEED ══
 async function renderNews(){
   const list=document.getElementById('newsList');if(!list)return;
-  const{data}=await sb.from('news').select('*').order('created_at',{ascending:false}).limit(30);
+  list.innerHTML='<div style="text-align:center;color:var(--muted);padding:30px">Загрузка...</div>';
+  const{data,error}=await sb.from('news').select('*').order('created_at',{ascending:false}).limit(30);
+  if(error){list.innerHTML=`<div style="text-align:center;color:var(--danger);padding:30px">Ошибка: ${esc(error.message)}</div>`;return;}
   if(!data?.length){list.innerHTML='<div style="text-align:center;color:var(--muted);padding:30px">Пока нет новостей</div>';return;}
   list.innerHTML=data.map(n=>`
     <div class="card" style="margin-bottom:12px;${n.pinned?'border-left:3px solid var(--accent)':''}">
@@ -2613,7 +2615,7 @@ async function renderNews(){
         <span style="font-weight:700;font-size:14px">${n.pinned?'📌 ':''}${esc(n.title)}</span>
         <span style="font-size:10px;color:var(--muted2)">${new Date(n.created_at).toLocaleDateString('ru')}</span>
       </div>
-      <div style="margin-top:6px;font-size:13px;color:var(--text2)">${esc(n.body)}</div>
+      <div style="margin-top:6px;font-size:13px;color:var(--muted)">${esc(n.body)}</div>
       <div style="margin-top:4px;font-size:10px;color:var(--muted)">— ${esc(n.author_name||'Администрация')}</div>
     </div>
   `).join('');
@@ -2648,7 +2650,8 @@ async function submitNews(){
   const body=document.getElementById('newsBody')?.value.trim();
   const pinned=document.getElementById('newsPinned')?.checked||false;
   if(!title){toast('Введи заголовок');return;}
-  await sb.from('news').insert({title,body,pinned,author_name:currentProfile.name});
+  const{error}=await sb.from('news').insert({title,body,pinned,author_name:currentProfile.name});
+  if(error){toast('Ошибка: '+error.message);return;}
   await adminLog('Создал новость',null,title);
   closeDrawer();toast('📰 Опубликовано!');renderAdmin();
 }
