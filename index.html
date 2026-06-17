@@ -737,6 +737,7 @@ document.head.appendChild(link);
   <!-- ORDERS PAGE -->
   <div id="ordersPage" class="page active">
     <div class="page-title">📦 Заказы</div>
+    <input class="form-input" id="orderSearch" placeholder="🔍 Поиск по заказам..." oninput="renderOrders()" style="margin-bottom:12px">
     <div id="ordersList"></div>
   </div>
 
@@ -1784,16 +1785,27 @@ async function toggleOnline(){
 // ══ CREATE ══
 async function createOrder(){
   if(isBanCreate(currentProfile)){toast('❌ Создание заблокировано');return;}
-  // Кулдаун — нельзя создать если есть активный заказ как заказчик
   const hasActive=getOrders().some(o=>o.creator_id===currentUser.id&&(o.status==='open'||o.status==='work'));
   if(hasActive){toast('❌ У тебя уже есть активный заказ. Дождись завершения.');return;}
   const what=document.getElementById('cWhat')?.value.trim(),shop=document.getElementById('cShop')?.value.trim(),where=document.getElementById('cWhere')?.value.trim();
   const price=parseInt(document.getElementById('cPrice')?.value)||0,deadline=document.getElementById('cDeadline')?.value||null,comment=document.getElementById('cComment')?.value.trim(),payment=document.getElementById('cPayment')?.value;
   if(!what){toast('❌ Напиши что купить');return;}if(!shop){toast('❌ Укажи магазин');return;}if(!where){toast('❌ Укажи куда доставить');return;}if(!payment){toast('❌ Выбери способ оплаты');return;}
-  const{error}=await sb.from('orders').insert({title:what,from:shop,to:where,price,deadline,comment,payment,status:'open',is_approved:false,creator_id:currentUser.id,creator_name:currentProfile.name,creator_city:currentProfile.city||'',worker_id:null,worker_name:null,rating:null,worker_confirmed:false,creator_confirmed:false,cancel_deadline:null,cancel_reason:null});
+  let photo_url=null;
+  const photoFile=document.getElementById('cPhoto')?.files[0];
+  if(photoFile){
+    if(photoFile.size>5*1024*1024){toast('❌ Фото больше 5MB');return;}
+    const ext=photoFile.name.split('.').pop();
+    const path=`${currentUser.id}_${Date.now()}.${ext}`;
+    const{error:upErr}=await sb.storage.from('order_photos').upload(path,photoFile,{contentType:photoFile.type});
+    if(upErr){toast('❌ Ошибка фото: '+upErr.message);return;}
+    const{data:urlData}=sb.storage.from('order_photos').getPublicUrl(path);
+    photo_url=urlData.publicUrl;
+  }
+  const confirm_code=String(Math.floor(1000+Math.random()*9000));
+  const{error}=await sb.from('orders').insert({title:what,from:shop,to:where,price,deadline,comment,payment,photo_url,confirm_code,status:'open',is_approved:false,creator_id:currentUser.id,creator_name:currentProfile.name,creator_city:currentProfile.city||'',worker_id:null,worker_name:null,rating:null,worker_confirmed:false,creator_confirmed:false,cancel_deadline:null,cancel_reason:null});
   if(error){toast('❌ Ошибка: '+error.message);return;}
   await sb.from('profiles').update({created_count:(currentProfile.created_count||0)+1}).eq('id',currentUser.id);currentProfile.created_count=(currentProfile.created_count||0)+1;
-  ['cWhat','cShop','cWhere','cPrice','cDeadline','cComment'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});if(document.getElementById('cPayment'))document.getElementById('cPayment').value='';
+  ['cWhat','cShop','cWhere','cPrice','cDeadline','cComment'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});if(document.getElementById('cPayment'))document.getElementById('cPayment').value='';if(document.getElementById('cPhoto'))document.getElementById('cPhoto').value='';
   toast('✅ Заказ отправлен на проверку!');showPage('myOrdersPage');
   const{data:admins}=await sb.from('profiles').select('id').eq('is_admin',true);
   for(const a of admins||[])await sendNotif(a.id,'📦 Новый заказ на модерацию',`${currentProfile.name}: ${what}`,'order');
@@ -1824,6 +1836,14 @@ async function cancelOrder(id,reason){
 
 // ══ CONFIRM ══
 async function confirmDone(id,role){
+  if(role==='worker'){
+    const o=getOrders().find(x=>x.id===id);
+    if(o&&o.confirm_code){
+      const code=prompt('🔐 Введи код подтверждения от заказчика:');
+      if(!code){toast('❌ Код обязателен');return;}
+      if(code.trim()!==o.confirm_code){toast('❌ Неверный код!');return;}
+    }
+  }
   const field=role==='worker'?'worker_confirmed':'creator_confirmed';
   await sb.from('orders').update({[field]:true}).eq('id',id);
   const{data}=await sb.from('orders').select('*').eq('id',id).single();
@@ -1880,14 +1900,22 @@ function ensureCreateForm(){
     <div class="form-group"><label class="form-label">Цена (₽)</label><input class="form-input" id="cPrice" type="number" placeholder="0 = договорная"></div>
     <div class="form-group"><label class="form-label">Дедлайн (необязательно)</label><input class="form-input" id="cDeadline" type="datetime-local"></div>
     <div class="form-group"><label class="form-label">Комментарий</label><input class="form-input" id="cComment" placeholder="Доп. детали..."></div>
+    <div class="form-group"><label class="form-label">Фото (необязательно)</label><input class="form-input" id="cPhoto" type="file" accept="image/*" style="padding:10px"></div>
     <div class="form-group"><label class="form-label">Способ оплаты</label>
       <select class="form-input" id="cPayment"><option value="" disabled selected>Выбери способ</option><option value="cash">💵 Наличные</option><option value="card">💳 Безналичные</option></select></div>
+    <div id="calcBlock" style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:14px">
+      <div style="font-size:12px;font-weight:600;margin-bottom:8px">📐 Калькулятор стоимости</div>
+      <div style="display:flex;gap:8px;align-items:center"><input class="form-input" id="calcDist" type="number" placeholder="Расстояние (км)" style="flex:1"><button class="btn btn-ghost" onclick="calcCost()" style="white-space:nowrap">Рассчитать</button></div>
+      <div id="calcResult" style="font-size:12px;color:var(--green);margin-top:6px"></div>
+    </div>
     <button class="btn btn-red btn-full" onclick="createOrder()">ОПУБЛИКОВАТЬ</button>`;
 }
 
 function renderOrders(){
   const c=document.getElementById('ordersList');if(!c)return;
-  const open=getOrders().filter(o=>o.status==='open'&&o.is_approved===true);
+  const q=(document.getElementById('orderSearch')?.value||'').toLowerCase().trim();
+  let open=getOrders().filter(o=>o.status==='open'&&o.is_approved===true);
+  if(q)open=open.filter(o=>(o.title||'').toLowerCase().includes(q)||(o.from||'').toLowerCase().includes(q)||(o.to||'').toLowerCase().includes(q)||(o.creator_name||'').toLowerCase().includes(q));
   if(!open.length){c.innerHTML='<div class="empty"><div class="empty-icon">📭</div><div class="empty-text">Нет открытых заказов</div></div>';return;}
   c.innerHTML='';
   open.forEach((o,i)=>{
@@ -1895,6 +1923,7 @@ function renderOrders(){
     const dl=fmtDl(o.deadline);
     div.innerHTML=
       `<div class="card-title"><span>${esc(o.title)}</span><span class="card-price">${o.price?o.price+'₽':'Договорная'}</span></div>`+
+      (o.photo_url?`<img src="${esc(o.photo_url)}" style="width:100%;max-height:180px;object-fit:cover;border-radius:8px;margin-bottom:8px" onerror="this.style.display='none'">`:'') +
       `<div class="card-meta">🛒 ${esc(o.from||'')}</div><div class="card-meta">📍 → ${esc(o.to||'')}</div>`+
       (dl?`<div class="card-meta ${dl.urgent?'deadline-urgent':'deadline-ok'}">⏰ ${dl.str}${dl.urgent?' · Срочно!':''}</div>`:'')+
       (o.comment?`<div class="card-meta">💬 ${esc(o.comment)}</div>`:'')+
@@ -1920,10 +1949,12 @@ function renderMyOrders(){
     const sl=o.status==='open'?'Открыт':o.status==='work'?'В работе':'Завершён';
     div.innerHTML=
       `<div class="card-title"><span>${esc(o.title)}</span><span class="card-price">${o.price?o.price+'₽':'—'}</span></div>`+
+      (o.photo_url?`<img src="${esc(o.photo_url)}" style="width:100%;max-height:140px;object-fit:cover;border-radius:8px;margin-bottom:8px" onerror="this.style.display='none'">`:'') +
       `<div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap"><span style="font-size:11px;font-weight:700;color:${sc}">● ${sl}</span><span style="font-size:11px;color:var(--muted2)">${isC?'📦 Ты заказчик':'🚴 Ты курьер'}</span>${o.is_approved===false&&o.status==='open'?'<span class="mod-badge">⏳ На модерации</span>':''}</div>`+
       `<div class="card-meta">🛒 ${esc(o.from||'')} → 📍 ${esc(o.to||'')}</div>`+
       (dl?`<div class="card-meta ${dl.urgent?'deadline-urgent':'deadline-ok'}">⏰ ${dl.str}</div>`:'')+
       (o.worker_name?`<div class="card-meta">🚴 ${esc(o.worker_name)}</div>`:'')+pbadge(o.payment);
+    if(o.status==='work'&&isC&&o.confirm_code)div.innerHTML+=`<div style="margin-top:8px;padding:8px;background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.2);border-radius:8px;font-size:12px;color:var(--green)">🔐 Код подтверждения: <b style="font-size:16px;letter-spacing:2px">${esc(o.confirm_code)}</b><div style="font-size:10px;color:var(--muted2);margin-top:2px">Сообщи курьеру при получении</div></div>`;
     if(o.status==='work')div.innerHTML+=`<div style="margin-top:10px;padding:8px;background:var(--bg3);border-radius:8px;font-size:12px;line-height:2"><span style="color:${o.worker_confirmed?'var(--green)':'var(--muted2)'}">🚴 ${o.worker_confirmed?'✅':'⏳'}</span> &nbsp; <span style="color:${o.creator_confirmed?'var(--green)':'var(--muted2)'}">📦 ${o.creator_confirmed?'✅':'⏳'}</span></div>`;
     if(o.status==='done'&&isC&&o.worker_id&&o.rating===null){
       const rd=document.createElement('div');rd.innerHTML='<div style="font-size:12px;color:var(--muted2);margin-top:10px">Оцени курьера:</div>';
@@ -1936,6 +1967,7 @@ function renderMyOrders(){
     if(o.status==='work'&&isW&&ct){const cb2=document.createElement('button');cb2.className='btn btn-ghost';cb2.innerHTML=`⏱ Отменить (${ct})`;cb2.onclick=()=>showCancelModal(o.id);acts.appendChild(cb2);}
     const cb=document.createElement('button');cb.className='btn btn-ghost';cb.innerHTML='💬 Чат';cb.onclick=()=>openChat(o.id);acts.appendChild(cb);
     if(o.status==='work'){const rb=document.createElement('button');rb.className='btn btn-ghost';rb.innerHTML='⚠️';rb.onclick=()=>showReportModal(o.id);acts.appendChild(rb);}
+    if(o.status==='done'||o.status==='work'){const cpb=document.createElement('button');cpb.className='btn btn-ghost';cpb.innerHTML='📝';cpb.title='Жалоба на заказ';cpb.onclick=()=>showComplaintModal(o.id);acts.appendChild(cpb);}
     div.appendChild(acts);c.appendChild(div);
   });
   clearTimeout(window._mt);window._mt=setTimeout(renderMyOrders,1000);
@@ -1988,11 +2020,11 @@ function updateBadgeNums(){
 async function renderAdmin(){
   if(!currentProfile?.is_admin)return;
   const c=document.getElementById('adminContent');
-  const tabs=[{id:'dashboard',l:'📊'},{id:'moderation',l:'⏳'},{id:'orders',l:'📦'},{id:'users',l:'👤'},{id:'tickets',l:'🆘'},{id:'reports',l:'⚠️'},{id:'bans',l:'🚫'},{id:'logs',l:'👁'},{id:'archived',l:'🗂️'},{id:'chats',l:'💬'}];
-  const labels={dashboard:'Обзор',moderation:'Модер.',orders:'Сделки',users:'Юзеры',tickets:'Тикеты',reports:'Жалобы',bans:'Баны',logs:'Логи',archived:'Архив',chats:'Чаты'};
+  const tabs=[{id:'dashboard',l:'📊'},{id:'moderation',l:'⏳'},{id:'orders',l:'📦'},{id:'users',l:'👤'},{id:'tickets',l:'🆘'},{id:'reports',l:'⚠️'},{id:'complaints',l:'📝'},{id:'bans',l:'🚫'},{id:'logs',l:'👁'},{id:'archived',l:'🗂️'},{id:'chats',l:'💬'}];
+  const labels={dashboard:'Обзор',moderation:'Модер.',orders:'Сделки',users:'Юзеры',tickets:'Тикеты',reports:'Жалобы',complaints:'На заказ',bans:'Баны',logs:'Логи',archived:'Архив',chats:'Чаты'};
   c.innerHTML=`<div class="tab-row">${tabs.map(t=>`<button class="tab-btn ${adminTab===t.id?'active':''}" onclick="adminTab='${t.id}';renderAdmin()">${t.l} ${labels[t.id]}</button>`).join('')}</div><div id="adminTab"></div>`;
   const ct=document.getElementById('adminTab');
-  const fns={dashboard:aDB,moderation:aMod,orders:aOrders,users:aUsers,tickets:aTickets,reports:aReports,bans:aBans,logs:aLogs,archived:aArchived,chats:aChats};
+  const fns={dashboard:aDB,moderation:aMod,orders:aOrders,users:aUsers,tickets:aTickets,reports:aReports,complaints:aComplaints,bans:aBans,logs:aLogs,archived:aArchived,chats:aChats};
   if(fns[adminTab])await fns[adminTab](ct);
 }
 
@@ -2025,7 +2057,7 @@ async function aMod(ct){
       ${o.comment?`<div class="card-meta">💬 ${esc(o.comment)}</div>`:''}`;
     const acts=document.createElement('div');acts.className='card-actions';
     const ap=document.createElement('button');ap.className='btn btn-green';ap.innerHTML='✅ Одобрить';
-    ap.onclick=async()=>{await sb.from('orders').update({is_approved:true}).eq('id',o.id);await sendNotif(o.creator_id,'✅ Заказ одобрен',`"${o.title}" опубликован`,'order');toast('✅ Одобрен!');renderAdmin();};acts.appendChild(ap);
+    ap.onclick=async()=>{await sb.from('orders').update({is_approved:true}).eq('id',o.id);await sendNotif(o.creator_id,'✅ Заказ одобрен',`"${o.title}" опубликован`,'order');await adminLog('Одобрил заказ',o.creator_name,o.title);toast('✅ Одобрен!');renderAdmin();};acts.appendChild(ap);
     const rj=document.createElement('button');rj.className='btn btn-red';rj.innerHTML='❌ Отклонить';
     rj.onclick=()=>{showDrawer('❌ Причина отклонения',`<input id="rejReason" class="form-input" placeholder="Причина..." style="margin-bottom:12px"><button onclick="rejectOrder('${o.id}','${o.creator_id}','${esc(o.title)}');closeDrawer()" class="btn btn-red btn-full">Отклонить</button>`);};acts.appendChild(rj);
     div.appendChild(acts);ct.appendChild(div);
@@ -2035,6 +2067,7 @@ async function rejectOrder(id,creatorId,title){
   const reason=document.getElementById('rejReason')?.value.trim()||'Не соответствует правилам';
   await sb.from('orders').delete().eq('id',id);
   await sendNotif(creatorId,'❌ Заказ отклонён',`"${title}": ${reason}`,'order');
+  await adminLog('Отклонил заказ','',title+': '+reason);
   toast('❌ Отклонён');renderAdmin();
 }
 
@@ -2146,6 +2179,35 @@ async function aReports(ct){
   });
 }
 
+async function aComplaints(ct){
+  const{data}=await sb.from('order_complaints').select('*').order('created_at',{ascending:false}).limit(30);
+  if(!data?.length){ct.innerHTML='<div class="empty"><div class="empty-icon">📝</div><div class="empty-text">Нет жалоб</div></div>';return;}
+  ct.innerHTML='';
+  const statColors={open:'var(--yellow)',reviewed:'var(--accent)',resolved:'var(--green)'};
+  data.forEach(comp=>{
+    const div=document.createElement('div');div.className='acard';
+    div.innerHTML=`<div style="display:flex;justify-content:space-between;margin-bottom:4px"><b>${esc(comp.reason)}</b><span style="font-size:10px;color:${statColors[comp.status]||'var(--muted)'}">${comp.status==='open'?'⏳ Открыта':comp.status==='reviewed'?'👁 Рассмотрена':'✅ Решена'}</span></div>
+      ${comp.message?`<div style="color:var(--muted2);font-size:12px;margin-bottom:3px">${esc(comp.message)}</div>`:''}
+      <div style="font-size:11px">От: <b>${esc(comp.reporter_name)}</b> · ${new Date(comp.created_at).toLocaleString('ru')}</div>
+      ${comp.admin_reply?`<div style="margin-top:4px;padding:6px;background:rgba(0,230,118,.06);border-radius:6px;font-size:11px;color:var(--green)">💬 ${esc(comp.admin_reply)}</div>`:''}`;
+    const acts=document.createElement('div');acts.className='card-actions';
+    if(comp.status==='open'){
+      const rb=document.createElement('button');rb.className='btn btn-ghost';rb.innerHTML='💬 Ответить';rb.onclick=()=>replyComplaint(comp.id);acts.appendChild(rb);
+      const cb=document.createElement('button');cb.className='btn btn-green';cb.innerHTML='✅ Решено';cb.onclick=async()=>{await sb.from('order_complaints').update({status:'resolved'}).eq('id',comp.id);await adminLog('Жалоба решена',comp.reporter_name,comp.reason);renderAdmin();};acts.appendChild(cb);
+    }
+    div.appendChild(acts);ct.appendChild(div);
+  });
+}
+function replyComplaint(id){
+  showDrawer('💬 Ответ на жалобу',`<input class="form-input" id="complaintReply" placeholder="Ответ..." style="margin-bottom:12px"><button class="btn btn-green btn-full" onclick="submitComplaintReply('${id}')">Отправить</button>`);
+}
+async function submitComplaintReply(id){
+  const reply=document.getElementById('complaintReply')?.value.trim();if(!reply){toast('Введи ответ');return;}
+  await sb.from('order_complaints').update({admin_reply:reply,status:'reviewed'}).eq('id',id);
+  await adminLog('Ответ на жалобу','',reply);
+  closeDrawer();toast('✅ Отправлено');renderAdmin();
+}
+
 async function aBans(ct){
   const{data}=await sb.from('ban_history').select('*').order('created_at',{ascending:false}).limit(30);
   if(!data?.length){ct.innerHTML='<div class="empty"><div class="empty-icon">🚫</div><div class="empty-text">Пусто</div></div>';return;}
@@ -2154,10 +2216,23 @@ async function aBans(ct){
 }
 
 async function aLogs(ct){
-  const{data}=await sb.from('action_logs').select('*').order('created_at',{ascending:false}).limit(30);
-  if(!data?.length){ct.innerHTML='<div class="empty"><div class="empty-icon">👁</div><div class="empty-text">Лог пуст</div></div>';return;}
+  const[{data:d1},{data:d2}]=await Promise.all([
+    sb.from('action_logs').select('*').order('created_at',{ascending:false}).limit(50),
+    sb.from('admin_logs').select('*').order('created_at',{ascending:false}).limit(50)
+  ]);
+  const all=[...(d1||[]).map(l=>({time:l.created_at,admin:l.admin_name,action:l.action,target:l.target||''})),...(d2||[]).map(l=>({time:l.created_at,admin:l.admin_name,action:l.action,target:l.target_name||'',details:l.details||''}))];
+  all.sort((a,b)=>new Date(b.time)-new Date(a.time));
+  if(!all.length){ct.innerHTML='<div class="empty"><div class="empty-icon">👁</div><div class="empty-text">Лог пуст</div></div>';return;}
+  ct.innerHTML='<input class="form-input" id="logSearch" placeholder="🔍 Поиск в логах..." oninput="filterLogs()" style="margin-bottom:10px"><div id="logsList"></div>';
+  window._adminLogs=all;filterLogs();
+}
+function filterLogs(){
+  const q=(document.getElementById('logSearch')?.value||'').toLowerCase().trim();
+  const ct=document.getElementById('logsList');if(!ct)return;
+  let logs=window._adminLogs||[];
+  if(q)logs=logs.filter(l=>(l.admin||'').toLowerCase().includes(q)||(l.action||'').toLowerCase().includes(q)||(l.target||'').toLowerCase().includes(q)||(l.details||'').toLowerCase().includes(q));
   ct.innerHTML='';
-  data.forEach(l=>{const div=document.createElement('div');div.style.cssText='padding:9px;border-bottom:1px solid var(--border);font-size:12px;display:flex;gap:8px';div.innerHTML=`<div style="color:var(--muted);white-space:nowrap">${new Date(l.created_at).toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'})}</div><div><span style="color:var(--accent)">${esc(l.admin_name)}</span> · ${esc(l.action)}: <b>${esc(l.target||'')}</b></div>`;ct.appendChild(div);});
+  logs.slice(0,50).forEach(l=>{const div=document.createElement('div');div.style.cssText='padding:9px;border-bottom:1px solid var(--border);font-size:12px;display:flex;gap:8px';div.innerHTML=`<div style="color:var(--muted);white-space:nowrap">${new Date(l.time).toLocaleString('ru',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</div><div><span style="color:var(--accent)">${esc(l.admin)}</span> · ${esc(l.action)}: <b>${esc(l.target)}</b>${l.details?' <span style="color:var(--muted2)">'+esc(l.details)+'</span>':''}</div>`;ct.appendChild(div);});
 }
 
 function aShowBan(id,name){
@@ -2338,6 +2413,45 @@ async function aReplyOk(ticketId,userId,userName){
   await sb.from('notifications').insert({user_id:userId,title:'📢 Ответ на обращение',body:reply,type:'system',is_read:false});//ok;
   await sb.from('action_logs').insert({admin_name:currentProfile.name,action:'Ответ на тикет',target:userName});
   closeDrawer();toast('✅ Отправлено!');renderAdmin();
+}
+// ══ CALCULATOR ══
+function calcCost(){
+  const dist=parseFloat(document.getElementById('calcDist')?.value)||0;
+  if(dist<=0){document.getElementById('calcResult').textContent='Укажи расстояние';return;}
+  const base=50,perKm=15,cost=Math.round(base+dist*perKm);
+  document.getElementById('calcResult').innerHTML=`💰 Рекомендуемая цена: <b>${cost}₽</b> <span style="color:var(--muted2)">(${base}₽ база + ${perKm}₽/км)</span>`;
+}
+
+// ══ ORDER COMPLAINTS ══
+function showComplaintModal(orderId){
+  const reasons=['Курьер не доставил','Повреждён товар','Неправильный заказ','Грубость','Мошенничество','Другое'];
+  showDrawer('📝 Жалоба на заказ',`
+    <div class="form-group"><label class="form-label">Причина</label>
+    <select class="form-input" id="complaintReason">${reasons.map(r=>`<option value="${r}">${r}</option>`).join('')}</select></div>
+    <div class="form-group"><label class="form-label">Описание (необязательно)</label><input class="form-input" id="complaintMsg" placeholder="Подробности..."></div>
+    <button class="btn btn-red btn-full" onclick="submitComplaint('${orderId}')">Отправить жалобу</button>
+  `);
+}
+async function submitComplaint(orderId){
+  const reason=document.getElementById('complaintReason')?.value;
+  const message=document.getElementById('complaintMsg')?.value.trim();
+  if(!reason){toast('Выбери причину');return;}
+  await sb.from('order_complaints').insert({order_id:orderId,reporter_id:currentUser.id,reporter_name:currentProfile.name,reason,message});
+  const{data:admins}=await sb.from('profiles').select('id').eq('is_admin',true);
+  for(const a of admins||[])await sendNotif(a.id,'📝 Новая жалоба',`${currentProfile.name}: ${reason}`,'info');
+  closeDrawer();toast('📝 Жалоба отправлена');
+}
+
+// ══ ADMIN LOG HELPER ══
+async function adminLog(action,targetName,details){
+  if(!currentProfile?.is_admin)return;
+  await sb.from('admin_logs').insert({admin_id:currentUser.id,admin_name:currentProfile.name,action,target_name:targetName||null,details:details||null});
+}
+
+
+// ══ SERVICE WORKER ══
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/Swift-devilery/sw.js').catch(()=>{});
 }
 </script>
 </body>
